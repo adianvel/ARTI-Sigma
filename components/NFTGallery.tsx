@@ -1,4 +1,3 @@
-import Image from "next/image"
 import Link from "next/link"
 import { C } from "lucid-cardano"
 import { PawPrint } from "lucide-react"
@@ -31,34 +30,34 @@ const fromHex = (hex: string): Uint8Array => new Uint8Array(hex.match(/.{1,2}/g)
 const decodeEternlAddress = (hex: string) => {
   const address = C.Address.from_bytes(fromHex(hex))
 
-  // Base addresses carry both payment + stake credentials
+  const networkId = address.network_id()
+  const paymentHrp = networkId === 1 ? 'addr' : 'addr_test'
+  const stakeHrp = networkId === 1 ? 'stake' : 'stake_test'
+
   const base = C.BaseAddress.from_address(address)
   if (base) {
-    const payment = base.to_address().to_bech32()
-    const stake = C.RewardAddress.new(address.network_id(), base.stake_cred())
-      .to_address()
-      .to_bech32()
-    return { payment, stake }
+    const payment = base.to_address().to_bech32(paymentHrp)
+    const stakeAddr = C.RewardAddress.new(networkId, base.stake_cred()).to_address().to_bech32(stakeHrp)
+    return { payment, stake: stakeAddr }
   }
 
-  // Reward address: expose stake only, no payment credential available
   const reward = C.RewardAddress.from_address(address)
   if (reward) {
-    return { payment: "", stake: reward.to_address().to_bech32() }
+    const stakeHrp2 = reward.network_id() === 1 ? 'stake' : 'stake_test'
+    return { payment: "", stake: reward.to_address().to_bech32(stakeHrp2) }
   }
 
   const enterprise = C.EnterpriseAddress.from_address(address)
-  if (enterprise) return { payment: enterprise.to_address().to_bech32(), stake: null }
+  if (enterprise) return { payment: enterprise.to_address().to_bech32(paymentHrp), stake: null }
 
   const pointer = C.PointerAddress.from_address(address)
-  if (pointer) return { payment: pointer.to_address().to_bech32(), stake: null }
+  if (pointer) return { payment: pointer.to_address().to_bech32(paymentHrp), stake: null }
 
   const byron = C.ByronAddress.from_address(address)
   if (byron) return { payment: byron.to_base58(), stake: null }
 
-  return { payment: address.to_bech32(), stake: null }
+  return { payment: address.to_bech32(paymentHrp), stake: null }
 }
-
 const ipfsToGateway = (url: string | null) => {
   if (!url) return null
   // Already http and not a known gateway? pass through
@@ -301,4 +300,5 @@ export const NFTGallery = ({ apiKey }: NFTGalleryProps) => {
     </div>
   )
 }
+
 
