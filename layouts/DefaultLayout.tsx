@@ -1,0 +1,30 @@
+﻿import Head from "next/head"
+import { PropsWithChildren } from "react"
+import { Footer } from "components/Footer"
+import { Navigation } from "components/Navigation"
+
+export const DefaultLayout = ({ children }: PropsWithChildren<{}>) => {
+  return (
+    <>
+      <Head>
+        <title>PetLog · Digital Paw-ssport</title>
+        <meta name="description" content="Mint and manage PetLog digital passports on Cardano" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="icon" href="/favicon.png" />
+        {/* Pixel/retro fonts */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap"
+          rel="stylesheet"
+        />
+      </Head>
+
+      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 sm:px-6 lg:px-8">
+        <Navigation />
+        <main className="flex-1 pb-16">{children}</main>
+        <Footer />
+      </div>
+    </>
+  )
+}

@@ -1,0 +1,125 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  @apply bg-slate-50 text-slate-900 dark:bg-slate-950 dark:text-slate-100;
+  font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+a {
+  @apply transition-colors;
+}
+
+/* Thematic loader: bouncing yarn ball */
+.yarn-ball {
+  width: 28px;
+  height: 28px;
+  border-radius: 9999px;
+  background: radial-gradient(circle at 30% 30%, #fdba74 0%, #fb923c 60%, #ea580c 100%);
+  position: relative;
+  animation: yarn-bounce 1s infinite ease-in-out;
+}
+
+@keyframes yarn-bounce {
+  0%, 100% { transform: translateY(0); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
+  50% { transform: translateY(-8px); box-shadow: 0 12px 0 rgba(0,0,0,0.05); }
+}
+
+
+/* === Pixel Retro Overrides (appended) === */
+:root {
+  --pixel-cyan: #00e5ff;
+  --pixel-magenta: #ff3eb5;
+  --pixel-lime: #4cff4c;
+  --pixel-blue: #1e90ff;
+  --pixel-yellow: #ffd400;
+  --pixel-bg: #f5faff;
+  --pixel-ink: #000000;
+}
+
+html, body { height: 100%; }
+
+body {
+  font-family: 'Press Start 2P', 'VT323', ui-monospace, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace !important;
+  color: var(--pixel-ink);
+  background-color: var(--pixel-bg);
+  background-image:
+    linear-gradient(90deg, rgba(0,0,0,0.04) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(0,0,0,0.04) 1px, transparent 1px);
+  background-size: 8px 8px;
+}
+
+.pixel-card { background: #fff; border: 2px solid var(--pixel-ink); border-radius: 2px; box-shadow: 3px 3px 0 0 var(--pixel-ink); }
+.pixel-btn { border: 2px solid var(--pixel-ink); border-radius: 2px; box-shadow: 2px 2px 0 0 var(--pixel-ink); transform: translate(0,0); }
+.pixel-btn:active { box-shadow: 1px 1px 0 0 var(--pixel-ink); transform: translate(1px,1px); }
+.pixel-btn--primary { background: var(--pixel-cyan); color: #000; }
+.pixel-btn--secondary { background: var(--pixel-yellow); color: #000; }
+.pixel-input { background: #fff; border: 2px solid var(--pixel-ink); border-radius: 2px; }
+.pixel-input:focus { outline: none; border-color: var(--pixel-magenta); }
+.pixel-loader { width: 16px; height: 16px; background: var(--pixel-magenta); box-shadow: 2px 2px 0 0 var(--pixel-ink); animation: pixel-blink 0.6s steps(1) infinite; }
+@keyframes pixel-blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.2; } }
+
+/* Make default rounded components sharper */
+.rounded, .rounded-md, .rounded-lg, .rounded-xl, .rounded-2xl { border-radius: 2px !important; }
+
+/* Default buttons and inputs get pixel borders (broad brush) */
+button { font-size: 12px; }
+button:not(.pixel-btn) { border: 2px solid var(--pixel-ink); border-radius: 2px; box-shadow: 2px 2px 0 0 var(--pixel-ink); }
+input:not(.pixel-input), select:not(.pixel-input), textarea:not(.pixel-input) { border: 2px solid var(--pixel-ink); border-radius: 2px; }
+
+/* === Brown & Cream Palette (PetLog) === */
+:root {
+  /* Backgrounds & surfaces */
+  --pl-bg: #F7F1E6;           /* main background */
+  --pl-bg-secondary: #EDE3D6; /* cards/sections */
+  --pl-surface: #E5D7C6;      /* panels/modals */
+  --pl-border: #D6C3AF;
+
+  /* Text */
+  --pl-text: #3E2A1E;         /* headings */
+  --pl-text-body: #5D4635;    /* body */
+  --pl-text-muted: #7A5E4A;   /* secondary */
+
+  /* Accents */
+  --pl-accent: #8A5A3B;           /* CTA */
+  --pl-accent-hover: #724A30;     /* CTA hover */
+  --pl-accent-contrast: #FFF9F2;  /* text on accent */
+  --pl-accent-subtle: #C7A27A;    /* subtle accent */
+
+  /* Highlights */
+  --pl-highlight: #FFF1D6;    /* chips/badges */
+}
+
+/* Override pixel theme to use brown/cream */
+body {
+  color: var(--pl-text-body) !important;
+  background-color: var(--pl-bg) !important;
+  background-image:
+    linear-gradient(90deg, rgba(62,42,30,0.06) 1px, transparent 1px),
+    linear-gradient(0deg, rgba(62,42,30,0.06) 1px, transparent 1px) !important;
+}
+
+.pixel-card {
+  background: var(--pl-bg-secondary) !important;
+  border-color: var(--pl-text) !important;
+  box-shadow: 3px 3px 0 0 var(--pl-text) !important;
+}
+
+.pixel-btn {
+  border-color: var(--pl-text) !important;
+  box-shadow: 2px 2px 0 0 var(--pl-text) !important;
+}
+.pixel-btn:active { box-shadow: 1px 1px 0 0 var(--pl-text) !important; }
+.pixel-btn--primary { background: var(--pl-accent) !important; color: var(--pl-accent-contrast) !important; }
+.pixel-btn--primary:hover { background: var(--pl-accent-hover) !important; }
+.pixel-btn--secondary { background: var(--pl-highlight) !important; color: var(--pl-text) !important; }
+
+.pixel-input { background: #fff; border-color: var(--pl-text) !important; }
+.pixel-input:focus { border-color: var(--pl-accent) !important; }
+
+.pixel-loader { background: var(--pl-accent) !important; box-shadow: 2px 2px 0 0 var(--pl-text) !important; }
+
+/* Default elements updated to new palette */
+button:not(.pixel-btn) { border-color: var(--pl-text) !important; box-shadow: 2px 2px 0 0 var(--pl-text) !important; }
+input:not(.pixel-input), select:not(.pixel-input), textarea:not(.pixel-input) { border-color: var(--pl-text) !important; }
