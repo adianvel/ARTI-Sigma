@@ -42,21 +42,23 @@ export const WalletSelector = ({ onConnect }: WalletSelectorProps) => {
         {WALLET_OPTIONS.map((wallet) => (
           <button
             key={wallet.id}
-            className="w-full rounded-lg border border-slate-200 dark:border-slate-700 px-4 py-3 text-left transition hover:border-blue-500 hover:shadow"
+            className="pixel-card w-full bg-pl-card p-4 text-left transition duration-120 hover:-translate-y-1 hover:shadow-pixel"
             onClick={() => handleConnect(wallet.id)}
           >
-            <div className="font-semibold text-slate-900 dark:text-slate-50">{wallet.label}</div>
-            <div className="text-xs text-slate-500 dark:text-slate-400">Cardano wallet</div>
+            <div className="font-display text-lg tracking-[0.15em] text-pl-heading">{wallet.label}</div>
+            <div className="mt-1 text-sm uppercase tracking-[0.25em] text-pl-muted">Cardano wallet</div>
           </button>
         ))}
       </div>
 
-      {status && <p className="text-sm text-blue-600 dark:text-blue-400">{status}</p>}
-      {error && <p className="text-sm text-red-600 dark:text-red-400">{error}</p>}
+      {status && <p className="text-sm text-pl-primary">{status}</p>}
+      {error && <p className="text-sm text-[color:var(--color-danger)]">{error}</p>}
 
-      <p className="text-xs text-slate-500 dark:text-slate-400">
+      <p className="text-sm leading-relaxed text-pl-muted">
         Tip: Ensure your wallet is switched to the Cardano Pre-Production testnet before connecting.
       </p>
     </div>
   )
 }
+
+

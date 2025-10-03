@@ -1,4 +1,4 @@
-import { ChangeEvent, FormEvent, useMemo, useState } from "react"
+﻿import { ChangeEvent, FormEvent, useMemo, useState } from "react"
 import { useRouter } from "next/router"
 import { PassportPreview } from "../../components/PassportPreview"
 import { useLucid } from "../../contexts/LucidContext"
@@ -51,10 +51,10 @@ export default function MintPage() {
     if (step === 0) {
       return Boolean(
         form.identity.cat_name &&
-          form.identity.date_of_birth &&
-          form.attributes.breed &&
-          form.attributes.coat_color &&
-          form.attributes.sex
+        form.identity.date_of_birth &&
+        form.attributes.breed &&
+        form.attributes.coat_color &&
+        form.attributes.sex
       )
     }
 
@@ -153,12 +153,14 @@ export default function MintPage() {
         name: form.identity.cat_name,
         cipMetadata,
       })
-      // Success microcopy
-      try {
-        window.alert(`Success! ${form.identity.cat_name}'s Paw-ssport is now officially on the blockchain!`)
-      } catch {}
+
+      const query = new URLSearchParams({ tx: txHash, asset: unit })
+      if (form.identity.cat_name) {
+        query.set('pet', form.identity.cat_name)
+      }
+
       setStatus(null)
-      router.push(`/mint/success?tx=${txHash}&asset=${unit}`)
+      router.push(`/mint/success?${query.toString()}`)
     } catch (err) {
       console.error("Mint failed", err)
       setError(err instanceof Error ? err.message : "Failed to mint passport")
@@ -168,27 +170,31 @@ export default function MintPage() {
   }
 
   return (
-    <form onSubmit={handleMint} className="mx-auto max-w-4xl space-y-10">
-      <header className="space-y-2 text-center">
-        <h1 className="text-3xl font-semibold text-slate-900 dark:text-slate-50">Mint Digital Passport</h1>
-        <p className="text-sm text-slate-500">
+    <form onSubmit={handleMint} className="mx-auto max-w-4xl space-y-10 text-pl-body">
+      <header className="space-y-3 text-center">
+        <h1 className="font-display text-3xl tracking-[0.25em] text-pl-heading">Mint Digital Passport</h1>
+        <p className="text-sm leading-relaxed text-pl-muted">
           Complete the guided flow to create a Level 1 self-attested ownership certificate for your cat.
         </p>
       </header>
 
-      <div className="flex items-center justify-center gap-3 text-sm">
+      <div className="flex items-center justify-center gap-3 text-base">
         {steps.map((label, index) => (
           <div key={label} className="flex items-center gap-2">
             <span
-              className={`flex h-8 w-8 items-center justify-center rounded-full border text-xs font-semibold ${
+              className={`flex h-8 w-8 items-center justify-center rounded-pixel border border-pl-borderStrong font-semibold tracking-[0.2em] transition duration-120 ${
                 index === step
-                  ? "border-blue-500 bg-blue-500 text-white"
-                  : "border-slate-300 bg-white text-slate-500 dark:border-slate-700 dark:bg-slate-900"
+                  ? "bg-pl-primary text-pl-primaryContrast shadow-pixel-sm"
+                  : "bg-pl-background text-pl-muted"
               }`}
             >
               {index + 1}
             </span>
-            <span className={`hidden text-slate-600 sm:inline ${index === step ? "font-medium" : "text-slate-400"}`}>
+            <span
+              className={`hidden text-sm uppercase tracking-[0.25em] sm:inline ${
+                index === step ? "text-pl-heading" : "text-pl-muted"
+              }`}
+            >
               {label}
             </span>
           </div>
@@ -196,57 +202,57 @@ export default function MintPage() {
       </div>
 
       {step === 0 && (
-        <section className="grid gap-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">Identity</h2>
+        <section className="pixel-card space-y-6 p-6">
+          <h2 className="font-display text-2xl tracking-[0.2em] text-pl-heading">Identity</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Cat name</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Cat name</span>
               <input
                 name="identity.cat_name"
                 value={form.identity.cat_name}
                 onChange={handleInput}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
                 required
               />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Date of birth</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Date of birth</span>
               <input
                 type="date"
                 name="identity.date_of_birth"
                 value={form.identity.date_of_birth}
                 onChange={handleInput}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
                 required
               />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Breed</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Breed</span>
               <input
                 name="attributes.breed"
                 value={form.attributes.breed}
                 onChange={handleInput}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
                 required
               />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Coat color</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Coat color</span>
               <input
                 name="attributes.coat_color"
                 value={form.attributes.coat_color}
                 onChange={handleInput}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
                 required
               />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Sex</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Sex</span>
               <select
                 name="attributes.sex"
                 value={form.attributes.sex}
                 onChange={handleInput}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
               >
                 <option value="Male">Male</option>
                 <option value="Female">Female</option>
@@ -257,46 +263,46 @@ export default function MintPage() {
       )}
 
       {step === 1 && (
-        <section className="grid gap-6 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">Details & Photo</h2>
+        <section className="pixel-card space-y-6 p-6">
+          <h2 className="font-display text-2xl tracking-[0.2em] text-pl-heading">Details & Photo</h2>
           <div className="grid gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Microchip number</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Microchip number</span>
               <input
                 name="unique_identification.microchip_number"
                 value={form.unique_identification.microchip_number}
                 onChange={handleInput}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
                 required
               />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Sire name (optional)</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Sire name (optional)</span>
               <input
                 name="provenance.sire_name"
                 value={form.provenance?.sire_name ?? ""}
                 onChange={handleInput}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
               />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Dam name (optional)</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Dam name (optional)</span>
               <input
                 name="provenance.dam_name"
                 value={form.provenance?.dam_name ?? ""}
                 onChange={handleInput}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
               />
             </label>
-            <label className="flex flex-col gap-1 text-sm">
-              <span>Passport photo</span>
+            <label className="flex flex-col gap-2 text-sm">
+              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Passport photo</span>
               <input
                 type="file"
                 accept="image/png,image/jpeg,image/webp"
                 onChange={handleImage}
-                className="pixel-input px-3 py-2 text-slate-800"
+                className="pixel-input text-base"
               />
-              <span className="text-xs text-slate-500">JPEG, PNG, or WebP up to 5MB.</span>
+              <span className="text-sm text-pl-muted">JPEG, PNG, or WebP up to 5MB.</span>
             </label>
           </div>
         </section>
@@ -305,11 +311,11 @@ export default function MintPage() {
       {step === 2 && (
         <section className="space-y-6">
           <PassportPreview formData={form} imagePreview={imagePreview} />
-          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 text-sm text-amber-800 dark:border-amber-900/40 dark:bg-amber-950/30 dark:text-amber-200">
-            <p className="font-medium">Heads up</p>
-            <p>
-              Level 1 passports are self-attested. Ensure all information is accurate before minting - once
-              recorded on chain it cannot be altered.
+          <div className="pixel-banner space-y-1 p-4 text-base leading-relaxed text-pl-heading">
+            <p className="font-display text-sm uppercase tracking-[0.3em]">Heads up</p>
+            <p className="text-pl-body">
+              Level 1 passports are self-attested. Ensure all information is accurate before minting — once
+              recorded on-chain it cannot be altered.
             </p>
           </div>
         </section>
@@ -317,10 +323,12 @@ export default function MintPage() {
 
       <div aria-live="polite" className="space-y-2">
         {error && (
-          <p className="rounded border border-red-200 bg-red-50 p-3 text-sm text-red-700">{error}</p>
+          <p className="pixel-banner border-[color:var(--color-danger)] bg-[color:var(--color-danger-bg)] p-3 text-sm text-[color:var(--color-danger)]">
+            {error}
+          </p>
         )}
         {status && !error && (
-          <div className="flex items-center justify-center gap-3 rounded border border-blue-200 bg-blue-50 p-3 text-sm text-blue-700 dark:border-blue-900/40 dark:bg-blue-950/30 dark:text-blue-200">
+          <div className="pixel-banner flex items-center justify-center gap-3 bg-pl-highlight p-3 text-sm text-pl-heading">
             <div className="yarn-ball" />
             <p>{status}</p>
           </div>
@@ -332,7 +340,7 @@ export default function MintPage() {
           type="button"
           onClick={goBack}
           disabled={step === 0 || isMinting}
-          className="pixel-btn bg-white px-5 py-2 text-xs disabled:opacity-50"
+          className="pixel-btn px-5 py-2 text-base uppercase tracking-[0.3em] disabled:opacity-50"
         >
           Back
         </button>
@@ -342,7 +350,7 @@ export default function MintPage() {
             type="button"
             onClick={goNext}
             disabled={!canProceed || isMinting}
-            className="pixel-btn pixel-btn--primary px-5 py-2 text-xs disabled:opacity-60"
+            className="pixel-btn pixel-btn--primary px-5 py-2 text-base uppercase tracking-[0.3em] disabled:opacity-60"
           >
             Continue
           </button>
@@ -350,7 +358,7 @@ export default function MintPage() {
           <button
             type="submit"
             disabled={isMinting}
-            className="pixel-btn pixel-btn--secondary px-6 py-2 text-xs disabled:opacity-60"
+            className="pixel-btn pixel-btn--secondary px-6 py-2 text-base uppercase tracking-[0.3em] disabled:opacity-60"
           >
             {isMinting ? "Sending your Paw-ssport..." : "Mint my Paw-ssport"}
           </button>
@@ -359,3 +367,5 @@ export default function MintPage() {
     </form>
   )
 }
+
+

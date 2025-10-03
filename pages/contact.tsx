@@ -1,20 +1,15 @@
-import { CommandLineIcon } from "components/icons/CommandLineIcon"
-
-import { Inter } from "@next/font/google"
-
-const inter = Inter({ subsets: ["latin"] })
-
-export default function About() {
+﻿const Contact = () => {
   return (
-    <div className="text-center max-w-4xl m-auto text-gray-900 dark:text-gray-100">
-      <h1
-        style={inter.style}
-        className="mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl"
-      >
-        Contact
-      </h1>
-
-      <div style={inter.style} className="mt-12 mb-4"></div>
+    <div className="mx-auto max-w-4xl space-y-6 text-pl-body">
+      <header className="space-y-3 text-center">
+        <h1 className="font-display text-4xl tracking-[0.25em] text-pl-heading">Contact</h1>
+        <p className="text-sm text-pl-muted">Reach out to the PetLog crew for support or collaboration.</p>
+      </header>
+      <div className="pixel-card p-6 text-sm leading-relaxed text-pl-body">
+        <p>Questions about integrations or feedback on the minting flow? Drop us a line at support@petlog.io and we will get back to you.</p>
+      </div>
     </div>
   )
 }
+
+export default Contact

@@ -1,18 +1,12 @@
-import { Inter } from "@next/font/google"
-
-const inter = Inter({ subsets: ["latin"] })
-
-const notFoundPage = () => {
+﻿const ServerErrorPage = () => {
   return (
-    <div className="flex justify-center items-center h-[calc(100vh-96px)] transition-all text-blue-400">
-      <h1
-        style={inter.style}
-        className="uppercase text-5xl -mt-20 font-bold tracking-wider rounded-3xl drop-shadow-2xl drop-shadow-blue-400 p-4"
-      >
-        500 <span className="font-normal">|</span> Internal Server Error
-      </h1>
+    <div className="flex h-[calc(100vh-96px)] items-center justify-center text-pl-heading">
+      <div className="pixel-card pixel-dither px-8 py-12 text-center">
+        <h1 className="font-display text-5xl tracking-[0.3em]">500</h1>
+        <p className="mt-4 text-sm uppercase tracking-[0.35em] text-pl-muted">Internal server error</p>
+      </div>
     </div>
   )
 }
 
-export default notFoundPage
+export default ServerErrorPage

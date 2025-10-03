@@ -1,20 +1,15 @@
-import { CommandLineIcon } from "components/icons/CommandLineIcon"
-
-import { Inter } from "@next/font/google"
-
-const inter = Inter({ subsets: ["latin"] })
-
-export default function About() {
+﻿const Licensing = () => {
   return (
-    <div className="text-center max-w-4xl m-auto text-gray-900 dark:text-gray-100">
-      <h1
-        style={inter.style}
-        className="mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl"
-      >
-        Licensing
-      </h1>
-
-      <div style={inter.style} className="mt-12 mb-4"></div>
+    <div className="mx-auto max-w-4xl space-y-6 text-pl-body">
+      <header className="space-y-3 text-center">
+        <h1 className="font-display text-4xl tracking-[0.25em] text-pl-heading">Licensing</h1>
+        <p className="text-sm text-pl-muted">Details on how PetLog assets and branding may be used.</p>
+      </header>
+      <div className="pixel-card p-6 text-sm leading-relaxed text-pl-body">
+        <p>All artwork and copy within PetLog are provided for non-commercial use during the testnet period. Formal licensing terms will ship with the production launch.</p>
+      </div>
     </div>
   )
 }
+
+export default Licensing

@@ -1,4 +1,4 @@
-import Link from "next/link"
+﻿import Link from "next/link"
 import { useLucid } from "../contexts/LucidContext"
 import { Cat, PawPrint } from "lucide-react"
 
@@ -12,47 +12,41 @@ export default function Home() {
   const { account } = useLucid()
 
   return (
-    <section className="mx-auto flex max-w-4xl flex-col gap-12 text-slate-900 dark:text-slate-100">
-      <header className="relative space-y-6 overflow-hidden rounded-2xl border border-slate-200 bg-white/80 p-6 text-center shadow-sm dark:border-slate-800 dark:bg-slate-900/70">
-        <p className="text-sm uppercase tracking-[0.35em] text-blue-600">PetLog V1.1</p>
-        <h1 className="text-4xl font-semibold leading-tight sm:text-5xl">
+    <section className="mx-auto flex max-w-4xl flex-col gap-12 text-pl-body">
+      <header className="pixel-card pixel-dither relative overflow-hidden p-8 text-center">
+        <p className="text-base uppercase tracking-[0.4em] text-pl-muted">PetLog V1.1</p>
+        <h1 className="mt-4 font-display text-5xl tracking-[0.18em] text-pl-heading sm:text-5xl">
           Create a self-attested digital passport for your cat in minutes.
         </h1>
-        <p className="mx-auto max-w-2xl text-base text-slate-600 dark:text-slate-300">
-          PetLog transforms your pet&apos;s core identity into a beautiful non-fungible certificate. Mint on the
-          Cardano Pre-Production testnet and keep provenance in your wallet forever.
+        <p className="mx-auto mt-4 max-w-2xl text-lg leading-relaxed text-pl-body">
+          PetLog transforms your pet&apos;s core identity into a collectible certificate. Mint on the Cardano Pre-Production testnet and preserve provenance in your wallet forever.
         </p>
-        <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+        <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <Link
             href="/mint"
-            className="pixel-btn pixel-btn--primary inline-flex items-center px-6 py-3 text-xs"
+            className="pixel-btn pixel-btn--primary inline-flex items-center gap-2 px-6 py-3 text-base uppercase tracking-[0.4em]"
           >
-            <span className="inline-flex items-center gap-2">
-              <PawPrint size={18} /> Start Creating Now
-            </span>
+            <PawPrint size={18} aria-hidden /> Start Creating Now
           </Link>
           <Link
             href="/my-passports"
-            className="pixel-btn inline-flex items-center bg-white px-6 py-3 text-xs"
+            className="pixel-btn inline-flex items-center gap-2 px-6 py-3 text-base uppercase tracking-[0.4em]"
           >
-            <span className="inline-flex items-center gap-2">
-              <Cat size={18} /> View My Cat Crew
-            </span>
+            <Cat size={18} aria-hidden /> View My Cat Crew
           </Link>
         </div>
-        {/* playful cat illustration */}
-        <div aria-hidden className="pointer-events-none absolute -right-6 -bottom-6 opacity-20">
-          <Cat size={160} />
+        <div aria-hidden className="pointer-events-none absolute -bottom-8 right-8 opacity-15">
+          <Cat size={180} />
         </div>
       </header>
 
-      <div className="grid gap-6 rounded-2xl border border-slate-200 bg-white/80 p-6 backdrop-blur dark:border-slate-800 dark:bg-slate-900/70">
-        <h2 className="text-lg font-medium">Why PetLog?</h2>
-        <ul className="grid gap-4 text-sm text-slate-600 dark:text-slate-300">
+      <div className="pixel-card space-y-6 p-6">
+        <h2 className="font-display text-lg tracking-[0.2em] text-pl-heading">Why PetLog?</h2>
+        <ul className="grid gap-4 text-base leading-relaxed text-pl-body">
           {features.map((feature) => (
             <li key={feature} className="flex items-start gap-3">
-              <span className="mt-1 inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-blue-100 text-blue-600 dark:bg-blue-900/40 dark:text-blue-300">
-                &#10003;
+              <span className="mt-[3px] inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-pixel border border-pl-borderStrong bg-pl-highlight font-display text-xs tracking-[0.2em] text-pl-heading">
+                ✓
               </span>
               <span>{feature}</span>
             </li>
@@ -60,9 +54,9 @@ export default function Home() {
         </ul>
       </div>
 
-      <div className="rounded-2xl border border-dashed border-blue-200 bg-blue-50/70 p-6 text-sm text-blue-700 dark:border-blue-900/50 dark:bg-blue-950/30 dark:text-blue-200">
-        <p className="font-medium">Coming next</p>
-        <p>
+      <div className="pixel-banner p-6 text-base leading-relaxed text-pl-heading">
+        <p className="font-display text-lg tracking-[0.2em]">Coming next</p>
+        <p className="mt-2 text-pl-body">
           This release focuses on Level 1 self-attested passports. Future versions will introduce verified partners,
           shared galleries, and validation workflows.
         </p>
@@ -70,3 +64,4 @@ export default function Home() {
     </section>
   )
 }
+

@@ -1,4 +1,4 @@
-import { useRouter } from "next/router"
+﻿import { useRouter } from "next/router"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 
@@ -56,80 +56,85 @@ export default function AssetDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="flex flex-col items-center justify-center py-12 text-center text-pl-body">
         <div className="pixel-loader" />
-        <p className="mt-3 text-sm text-slate-500">Loading NFT details…</p>
+        <p className="mt-3 text-lg text-pl-muted">Loading NFT details…</p>
       </div>
     )
   }
 
   if (error) {
-    return <p className="text-center text-red-600">{error}</p>
+    return (
+      <p className="text-center text-[color:var(--color-danger)]">{error}</p>
+    )
   }
 
   if (!detail) return null
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-8 text-pl-body">
       <header className="flex flex-col gap-2 text-center sm:text-left">
-        <h1 className="text-2xl font-semibold">{name}</h1>
-        <p className="text-xs text-slate-500 break-all">{detail.asset}</p>
+        <h1 className="font-display text-2xl tracking-[0.2em] text-pl-heading">{name}</h1>
+        <p className="break-all text-sm uppercase tracking-[0.25em] text-pl-muted">{detail.asset}</p>
       </header>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Link href="/my-passports" className="pixel-btn bg-white px-4 py-2 text-xs">
+        <Link href="/my-passports" className="pixel-btn px-4 py-2 text-base uppercase tracking-[0.3em]">
           Back to My Cat Crew
         </Link>
         <a
           href={`${explorerBase}${encodeURIComponent(unitString)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="pixel-btn pixel-btn--primary px-4 py-2 text-xs"
+          className="pixel-btn pixel-btn--primary px-4 py-2 text-base uppercase tracking-[0.3em]"
         >
           View on Explorer
         </a>
       </div>
 
       <div className="grid gap-6 sm:grid-cols-2">
-        <div className="pixel-card bg-white p-4">
+        <div className="pixel-card p-4">
           {imageUrl ? (
-            // Use standard img to avoid Next/Image domain config constraints
             <img src={imageUrl} alt={name} className="w-full" />
           ) : (
-            <div className="flex h-64 items-center justify-center text-slate-400">No image</div>
+            <div className="flex h-64 items-center justify-center text-pl-muted">No image</div>
           )}
         </div>
 
-        <div className="pixel-card bg-white p-4 text-sm">
+        <div className="pixel-card p-4 text-base">
           {description && (
-            <div className="mb-4">
-              <h2 className="mb-2 text-base font-semibold">Description</h2>
-              <p className="whitespace-pre-wrap leading-relaxed">{description}</p>
+            <div className="mb-4 space-y-2">
+              <h2 className="font-display text-lg tracking-[0.2em] text-pl-heading">Description</h2>
+              <p className="whitespace-pre-wrap leading-relaxed text-pl-body">{description}</p>
             </div>
           )}
           <div className="grid grid-cols-1 gap-3">
             <div>
-              <p className="text-xs uppercase text-slate-500">Policy ID</p>
-              <p className="font-mono break-all">{detail.policy_id}</p>
+              <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Policy ID</p>
+              <p className="mt-1 break-all font-mono text-pl-heading">{detail.policy_id}</p>
             </div>
             <div>
-              <p className="text-xs uppercase text-slate-500">Fingerprint</p>
-              <p className="font-mono break-all">{detail.fingerprint}</p>
+              <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Fingerprint</p>
+              <p className="mt-1 break-all font-mono text-pl-heading">{detail.fingerprint}</p>
             </div>
             {detail.onchain_metadata_standard && (
               <div>
-                <p className="text-xs uppercase text-slate-500">Standard</p>
-                <p>{detail.onchain_metadata_standard}</p>
+                <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Standard</p>
+                <p className="mt-1">{detail.onchain_metadata_standard}</p>
               </div>
             )}
           </div>
         </div>
       </div>
 
-      <div className="pixel-card bg-white p-4">
-        <h2 className="mb-2 text-base font-semibold">On‑chain Metadata</h2>
-        <pre className="max-h-96 overflow-auto bg-slate-50 p-3 text-[11px] leading-snug">{JSON.stringify(detail.onchain_metadata ?? {}, null, 2)}</pre>
+      <div className="pixel-card p-4">
+        <h2 className="font-display text-lg tracking-[0.2em] text-pl-heading">On-chain Metadata</h2>
+        <pre className="mt-3 max-h-96 overflow-auto rounded-pixel border border-pl-border bg-pl-background p-3 text-sm leading-snug text-pl-body">
+          {JSON.stringify(detail.onchain_metadata ?? {}, null, 2)}
+        </pre>
       </div>
     </section>
   )
 }
+
+

@@ -1,10 +1,6 @@
-import { utf8ToHex } from "lucid-cardano"
+﻿import { utf8ToHex } from "lucid-cardano"
 import { useCallback, useMemo, useState } from "react"
 import { useCardano, utility } from "use-cardano"
-
-import { Inter } from "@next/font/google"
-
-const inter = Inter({ subsets: ["latin"] })
 
 export default function Sign() {
   const {
@@ -44,54 +40,43 @@ export default function Sign() {
   const canSign = useMemo(() => isValid && !isSigning && !!message, [isValid, isSigning, message])
 
   return (
-    <div className="text-center max-w-4xl m-auto text-gray-900 dark:text-gray-100">
-      <h1
-        style={inter.style}
-        className="mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl"
-      >
-        Sign a Message
-      </h1>
+    <div className="mx-auto max-w-3xl space-y-8 text-pl-body">
+      <header className="space-y-2 text-center">
+        <h1 className="font-display text-4xl tracking-[0.25em] text-pl-heading">Sign a Message</h1>
+        <p className="text-lg leading-relaxed text-pl-muted">
+          Using Lucid, sign a message on Cardano and keep the signature as proof.
+        </p>
+      </header>
 
-      <div style={inter.style} className="my-4 text-center">
-        Using Lucid, we can sign a message on the Cardano blockchain.
-      </div>
+      <div className="pixel-card space-y-6 p-6">
+        <label className="flex flex-col gap-2 text-sm">
+          <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Message</span>
+          <input
+            className="pixel-input text-base"
+            name="message"
+            placeholder="Hello, Cardano!"
+            value={message || ""}
+            onChange={(e) => setMessage(e.target.value?.toString())}
+          />
+        </label>
 
-      <div className="text-left my-8">
-        <div className="my-4">
-          <label className="flex flex-col w-100">
-            <span className="text-sm lowercase mb-1">Message</span>
-
-            <input
-              className="rounded py-1 px-2 text-gray-800 border"
-              name="message"
-              placeholder="Hello, Cardano!"
-              value={message || ""}
-              onChange={(e) => setMessage(e.target.value?.toString())}
-            />
-          </label>
-        </div>
-
-        <div className="my-4">
+        <div className="space-y-3 text-center">
           <button
             disabled={!canSign}
-            className="border hover:bg-blue-400 text-white my-4 w-40 py-2 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:text-gray-200 rounded bg-blue-300 disabled:bg-blue-200 dark:bg-white dark:text-gray-800 dark:disabled:bg-white dark:hover:bg-white font-bold uppercase"
+            className="pixel-btn pixel-btn--primary w-full px-6 py-3 text-base uppercase tracking-[0.3em] sm:w-auto"
             onClick={() => {
               hideToaster()
               signMessage()
             }}
           >
-            sign
+            Sign message
           </button>
 
-          <div className="italic">
+          <div className="text-xs italic text-pl-muted">
             {isValid === false ? (
-              <p>
-                <small>connect a wallet to send a transaction</small>
-              </p>
+              <p>Connect a wallet to sign a message.</p>
             ) : isSigning ? (
-              <p>
-                <small>Signing...</small>
-              </p>
+              <p>Signing…</p>
             ) : null}
           </div>
         </div>
@@ -99,3 +84,5 @@ export default function Sign() {
     </div>
   )
 }
+
+

@@ -1,33 +1,33 @@
-.cardano-wallet-selector__button {
-  @apply bg-blue-300 min-w-[225px] dark:bg-transparent border-blue-300 dark:border-white text-white font-bold tracking-wider p-0 min-h-0 h-10;
+﻿.cardano-wallet-selector__button {
+  @apply bg-pl-primary min-w-[225px] border-2 border-pl-borderStrong text-pl-primaryContrast font-semibold tracking-[0.3em] p-0 min-h-0 h-10 rounded-pixel shadow-pixel-sm;
 }
 
 .cardano-wallet-selector__button img {
-  @apply w-5 h-5;
+  @apply h-5 w-5;
 }
 
 .cardano-wallet-selector__menu {
-  @apply dark:bg-gray-800 opacity-95;
+  @apply bg-pl-card text-pl-heading opacity-95;
 }
 
 .cardano-wallet-selector__menu__item,
 .cardano-wallet-selector__menu__item:last-child {
-  @apply border-blue-300 dark:border-white;
+  @apply border-pl-borderStrong;
 }
 
 .cardano-wallet-selector__menu__item button {
-  @apply bg-blue-300 dark:bg-transparent font-bold tracking-wider transition-colors duration-200 ease-in-out;
+  @apply bg-pl-card text-pl-heading font-semibold tracking-[0.25em] transition-colors duration-120 ease-in-out;
 }
 
 .cardano-wallet-selector__menu__item button:not(:disabled):hover {
-  @apply bg-blue-400 dark:bg-transparent;
+  @apply bg-pl-highlight;
 }
 
 .cardano-wallet-selector__menu__item__text,
 .cardano-wallet-selector__menu__item--current__checkmark,
 .cardano-wallet-selector__menu__item__disconnect,
 .cardano-wallet-selector__menu__item button {
-  @apply text-white;
+  @apply text-pl-heading;
 }
 
 .cardano-wallet-selector__button__loading-spinner {
@@ -35,5 +35,5 @@
 }
 
 .cardano-wallet-selector__button__loading-spinner:after {
-  @apply dark:border-t-white dark:border-b-white border-t-gray-800 border-b-gray-800;
+  @apply border-t-pl-primaryContrast border-b-pl-primaryContrast;
 }

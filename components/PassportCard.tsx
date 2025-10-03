@@ -23,7 +23,7 @@ export const PassportCard = ({ assetId, policyId, metadata }: PassportCardProps)
   return (
     <Link
       href={`/passport/${assetId}`}
-      className="block focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+      className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-pl-primary focus-visible:ring-offset-2 focus-visible:ring-offset-pl-background"
     >
       <NFTCard assetId={assetId} policyId={policyId} metadata={nftMetadata} />
     </Link>

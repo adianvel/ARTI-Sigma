@@ -7,7 +7,12 @@ import { WalletSelector } from "./WalletSelector"
 import { useLucid } from "../contexts/LucidContext"
 
 const navLinkClass = (active: boolean) =>
-  `text-sm font-medium transition hover:text-blue-600 ${active ? "text-blue-600" : "text-slate-600 dark:text-slate-300"}`
+  [
+    "inline-flex items-center gap-2 rounded-pixel px-3 py-2 text-base sm:text-lg font-medium tracking-wide transition duration-120",
+    active
+      ? "bg-pl-highlight text-pl-heading shadow-pixel-sm"
+      : "text-pl-muted hover:bg-pl-highlight hover:text-pl-heading",
+  ].join(" ")
 
 export const Navigation = () => {
   const router = useRouter()
@@ -27,31 +32,32 @@ export const Navigation = () => {
   }
 
   return (
-    <header className="flex flex-wrap items-center justify-between gap-4 py-6">
-      <Link href="/" className="text-xl font-semibold text-slate-900 dark:text-slate-50">
+    <header className="flex flex-wrap items-center justify-between gap-4 border-b border-pl-border pb-5 pt-8">
+      <Link href="/" className="font-display text-2xl uppercase tracking-[0.3em] text-pl-heading">
         PetLog
       </Link>
 
-      <nav className="flex items-center gap-6">
+      <nav className="flex items-center gap-2 sm:gap-3">
         {links.map((link) => {
           const ActiveIcon = link.icon
+          const isActive = router.pathname === link.href
           return (
-            <Link key={link.href} href={link.href} className={navLinkClass(router.pathname === link.href)}>
-              <span className="inline-flex items-center gap-2">
-                {ActiveIcon ? <ActiveIcon size={18} /> : null}
-                {link.label}
-              </span>
+            <Link key={link.href} href={link.href} className={navLinkClass(isActive)}>
+              {ActiveIcon ? <ActiveIcon size={16} aria-hidden /> : null}
+              <span>{link.label}</span>
             </Link>
           )
         })}
       </nav>
 
       <div className="flex items-center gap-3">
-        <span className="hidden text-xs text-slate-500 md:inline">Network: {network}</span>
+        <span className="hidden text-base uppercase tracking-[0.2em] text-pl-muted md:inline">
+          Network: {network}
+        </span>
         {account ? (
           <button
             onClick={handleDisconnect}
-            className="pixel-btn bg-white px-4 py-2 text-xs"
+            className="pixel-btn px-4 py-2 text-base"
           >
             {`${account.address.slice(0, 8)}...${account.address.slice(-6)}`}
           </button>
@@ -59,10 +65,10 @@ export const Navigation = () => {
           <button
             disabled={!isReady}
             onClick={() => setWalletModalOpen(true)}
-            className="pixel-btn pixel-btn--primary px-4 py-2 text-xs disabled:opacity-60"
+            className="pixel-btn pixel-btn--primary px-4 py-2 text-base disabled:opacity-50"
           >
             <span className="inline-flex items-center gap-2">
-              <PawPrint size={16} /> Connect Wallet
+              <PawPrint size={16} aria-hidden /> Connect Wallet
             </span>
           </button>
         )}
@@ -74,3 +80,5 @@ export const Navigation = () => {
     </header>
   )
 }
+
+

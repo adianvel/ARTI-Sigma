@@ -24,18 +24,18 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
   if (!isOpen) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm">
-      <div className="max-w-md w-full rounded-xl bg-white dark:bg-slate-900 shadow-xl border border-slate-200 dark:border-slate-800 p-6">
-        <div className="flex items-start justify-between mb-4">
-          <h2 className="text-lg font-semibold text-slate-900 dark:text-slate-50">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-[rgba(62,42,30,0.55)] backdrop-blur-sm">
+      <div className="pixel-card max-w-md w-full bg-pl-surface p-6 shadow-pixel">
+        <div className="mb-4 flex items-start justify-between gap-3">
+          <h2 className="font-display text-base text-pl-heading">
             {title ?? "Select Wallet"}
           </h2>
           <button
             onClick={onClose}
-            className="rounded-full h-8 w-8 inline-flex items-center justify-center text-slate-500 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
+            className="pixel-btn px-2 py-1 text-base"
             aria-label="Close modal"
           >
-            ×
+            Close
           </button>
         </div>
         {children}
@@ -43,3 +43,4 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     </div>
   )
 }
+

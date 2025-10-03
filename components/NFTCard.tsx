@@ -32,8 +32,8 @@ export const NFTCard = ({ metadata, assetId, policyId }: NFTCardProps) => {
   const imageUrl = resolveIpfsUrl(metadata.image)
 
   return (
-    <article className="flex h-full flex-col rounded-2xl border border-slate-200 bg-white shadow-sm transition hover:-translate-y-0.5 hover:shadow-md dark:border-slate-800 dark:bg-slate-900">
-      <div className="relative aspect-square w-full overflow-hidden rounded-t-2xl bg-slate-100 dark:bg-slate-800">
+    <article className="pixel-card flex h-full flex-col bg-pl-card">
+      <div className="relative aspect-square w-full overflow-hidden border-b border-pl-borderStrong bg-pl-surface">
         {imageUrl ? (
           <Image
             src={imageUrl}
@@ -43,41 +43,43 @@ export const NFTCard = ({ metadata, assetId, policyId }: NFTCardProps) => {
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         ) : (
-          <div className="flex h-full w-full items-center justify-center text-slate-400">
+          <div className="flex h-full w-full items-center justify-center text-pl-muted">
             No image
           </div>
         )}
       </div>
 
       <div className="flex flex-1 flex-col gap-4 p-4">
-        <header>
-          <h3 className="text-lg font-semibold text-slate-900 dark:text-slate-50">{metadata.name}</h3>
-          <p className="break-all text-xs text-slate-500 dark:text-slate-400">{assetId}</p>
+        <header className="space-y-1">
+          <h3 className="font-display text-xl tracking-[0.18em] text-pl-heading">{metadata.name}</h3>
+          <p className="break-all text-xs font-mono uppercase tracking-[0.3em] text-pl-muted">{assetId}</p>
         </header>
 
         {metadata.description && (
-          <p className="line-clamp-2 text-sm text-slate-600 dark:text-slate-300">{metadata.description}</p>
+          <p className="text-sm leading-relaxed text-pl-body">{metadata.description}</p>
         )}
 
         {metadata.attributes && metadata.attributes.length > 0 && (
-          <dl className="grid grid-cols-2 gap-2 text-xs text-slate-500">
+          <dl className="grid grid-cols-2 gap-2 text-sm uppercase tracking-[0.2em] text-pl-muted">
             {metadata.attributes.map((attr, index) => (
               <div
                 key={`${attr.trait_type}-${index}`}
-                className="rounded border border-slate-200 px-2 py-1 dark:border-slate-700"
+                className="rounded-pixel border border-pl-borderStrong bg-pl-background px-2 py-2"
               >
-                <dt className="font-medium text-slate-600 dark:text-slate-400">{attr.trait_type}</dt>
-                <dd className="text-slate-900 dark:text-slate-100">{attr.value}</dd>
+                <dt className="text-xs uppercase tracking-[0.3em] text-pl-muted">{attr.trait_type}</dt>
+                <dd className="mt-1 font-semibold text-pl-heading">{attr.value}</dd>
               </div>
             ))}
           </dl>
         )}
 
-        <footer className="mt-auto rounded border border-blue-100 bg-blue-50 p-2 text-xs text-blue-700 dark:border-blue-900/40 dark:bg-blue-900/20 dark:text-blue-200">
+        <footer className="mt-auto rounded-pixel border border-pl-border bg-pl-highlight p-2 text-sm uppercase tracking-[0.25em] text-pl-heading">
           <div>Policy</div>
-          <div className="break-all font-mono text-[11px]">{policyId}</div>
+          <div className="mt-1 break-all font-mono text-xs">{policyId}</div>
         </footer>
       </div>
     </article>
   )
 }
+
+

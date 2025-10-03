@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react"
+﻿import { useEffect, useMemo, useState } from "react"
 import { PawPrint } from "lucide-react"
 import { useRouter } from "next/router"
 import Link from "next/link"
@@ -69,20 +69,22 @@ export default function PassportDetailPage() {
 
   if (isLoading) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center">
+      <div className="flex flex-col items-center justify-center py-12 text-center text-pl-body">
         <div className="yarn-ball" />
-        <p className="mt-3 text-sm text-slate-500">One moment… fetching your Paw-ssport</p>
+        <p className="mt-3 text-lg text-pl-muted">One moment... fetching your Paw-ssport</p>
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="mx-auto max-w-xl rounded-2xl border border-red-200 bg-red-50 p-6 text-center text-red-700 shadow-sm dark:border-red-900/40 dark:bg-red-950/30 dark:text-red-200">
-        <p className="font-medium">Unable to load passport</p>
-        <p className="text-sm">{error}</p>
-        <Link href="/my-passports" className="mt-4 inline-flex rounded-full border border-red-400 px-4 py-2 text-sm">
-          Back to gallery
+      <div className="pixel-card mx-auto max-w-xl space-y-3 p-6 text-center text-pl-heading">
+        <p className="font-display text-lg tracking-[0.25em]">Unable to load passport</p>
+        <p className="text-base text-pl-body">{error}</p>
+        <Link href="/my-passports" className="inline-flex items-center justify-center gap-2">
+          <span className="pixel-btn pixel-btn--secondary px-5 py-2 text-base uppercase tracking-[0.3em]">
+            <PawPrint size={16} aria-hidden /> Back to gallery
+          </span>
         </Link>
       </div>
     )
@@ -93,18 +95,20 @@ export default function PassportDetailPage() {
   }
 
   return (
-    <section className="space-y-8">
-      <div className="flex items-center justify-between gap-3">
-        <div>
-          <p className="text-sm uppercase tracking-[0.35em] text-blue-600">Passport #{normalizedAsset.slice(-6)}</p>
-          <h1 className="text-3xl font-semibold text-slate-900 dark:text-slate-50">
+    <section className="space-y-8 text-pl-body">
+      <div className="flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+        <div className="space-y-2">
+          <p className="text-sm uppercase tracking-[0.35em] text-pl-muted">
+            Passport #{normalizedAsset.slice(-6)}
+          </p>
+          <h1 className="font-display text-4xl tracking-[0.2em] text-pl-heading">
             {passport.identity.cat_name}&apos;s Digital Passport
           </h1>
-          <p className="text-sm text-slate-500">Level 1 self-attested certificate - Cardano Pre-Production</p>
+          <p className="text-sm text-pl-muted">Level 1 self-attested certificate · Cardano Pre-Production</p>
         </div>
         <Link
           href="/my-passports"
-          className="rounded-full border border-slate-300 px-4 py-2 text-sm font-medium text-slate-600 hover:border-slate-400 hover:text-slate-900"
+          className="pixel-btn px-5 py-2 text-base uppercase tracking-[0.3em]"
         >
           Back
         </Link>
@@ -112,25 +116,25 @@ export default function PassportDetailPage() {
 
       <PassportPreview formData={passport} imagePreview={imagePreview} />
 
-      <div className="grid gap-4 rounded-2xl border border-slate-200 bg-white p-6 text-sm text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+      <div className="pixel-card grid gap-4 p-6 text-base">
         <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Asset unit</p>
-          <p className="break-all font-mono text-slate-800 dark:text-slate-100">{normalizedAsset}</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Asset unit</p>
+          <p className="mt-1 break-all font-mono text-pl-heading">{normalizedAsset}</p>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Minted on</p>
-          <p>{new Date(passport.platform_info.minted_on).toLocaleString()}</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Minted on</p>
+          <p className="mt-1">{new Date(passport.platform_info.minted_on).toLocaleString()}</p>
         </div>
         <div>
-          <p className="text-xs uppercase tracking-wide text-slate-400">Status</p>
-          <p>Self-attested (Level 1). Verification not yet requested.</p>
+          <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Status</p>
+          <p className="mt-1">Self-attested (Level 1). Verification not yet requested.</p>
         </div>
         <div className="flex flex-wrap gap-3 pt-2">
           <a
             href={`${explorerBase}${normalizedAsset}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center rounded-full border border-blue-400 px-4 py-2 text-xs font-semibold text-blue-600 transition hover:border-blue-500 hover:text-blue-700 dark:text-blue-300"
+            className="pixel-btn pixel-btn--primary inline-flex items-center gap-2 px-5 py-2 text-base uppercase tracking-[0.3em]"
           >
             View on explorer
           </a>
@@ -139,3 +143,5 @@ export default function PassportDetailPage() {
     </section>
   )
 }
+
+

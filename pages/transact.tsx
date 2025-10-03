@@ -1,10 +1,6 @@
+﻿import { useEffect } from "react"
 import { useTransaction } from "hooks/use-transaction"
-import { useEffect } from "react"
 import { useCardano } from "use-cardano"
-
-import { Inter } from "@next/font/google"
-
-const inter = Inter({ subsets: ["latin"] })
 
 export default function Transact() {
   const { isValid, hideToaster, showToaster } = useCardano()
@@ -19,39 +15,30 @@ export default function Transact() {
   }, [tx.successMessage, hideToaster, showToaster])
 
   return (
-    <div className="text-center max-w-4xl m-auto text-gray-900 dark:text-gray-100">
-      <h1
-        style={inter.style}
-        className="mb-4 text-4xl font-extrabold tracking-tight leading-none md:text-5xl lg:text-6xl"
-      >
-        Transact
-      </h1>
+    <div className="mx-auto max-w-3xl space-y-8 text-pl-body">
+      <header className="space-y-2 text-center">
+        <h1 className="font-display text-4xl tracking-[0.25em] text-pl-heading">Transact</h1>
+        <p className="text-lg leading-relaxed text-pl-muted">
+          Using Lucid, you can send transactions directly on the Cardano blockchain.
+        </p>
+      </header>
 
-      <div style={inter.style} className="my-4 text-center">
-        Using Lucid, we can easily send transactions on the Cardano blockchain.
-      </div>
-
-      <div className="text-left my-8">
-        <div className="my-4">
-          <label className="flex flex-col w-100">
-            <span className="text-sm lowercase mb-1">To Account</span>
-
+      <div className="pixel-card space-y-6 p-6">
+        <div className="grid gap-4 sm:grid-cols-2">
+          <label className="flex flex-col gap-2 text-sm">
+            <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">To account</span>
             <input
-              className="rounded py-1 px-2 text-gray-800 border"
+              className="pixel-input text-base"
               type="text"
               placeholder="addr..."
               value={tx.toAccount}
               onChange={(e) => tx.setToAccount(e.target.value?.toString())}
             />
           </label>
-        </div>
-
-        <div className="my-4">
-          <label className="flex flex-col w-40">
-            <span className="text-sm lowercase mb-1">Lovelace</span>
-
+          <label className="flex flex-col gap-2 text-sm">
+            <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Lovelace</span>
             <input
-              className="rounded py-1 px-2 text-gray-800 border"
+              className="pixel-input text-base"
               type="number"
               min="0"
               step="1000"
@@ -62,28 +49,22 @@ export default function Transact() {
           </label>
         </div>
 
-        <div className="my-4">
+        <div className="space-y-3 text-center">
           <button
-            className="border hover:bg-blue-400 text-white my-4 w-40 py-2 cursor-pointer transition-colors disabled:cursor-not-allowed disabled:text-gray-200 rounded bg-blue-300 disabled:bg-blue-200 dark:bg-white dark:text-gray-800 dark:disabled:bg-white dark:hover:bg-white font-bold uppercase"
+            className="pixel-btn pixel-btn--primary w-full px-6 py-3 text-base uppercase tracking-[0.3em] sm:w-auto"
             disabled={!tx.canTransact || !!tx.error}
             onClick={tx.sendTransaction}
           >
-            Send
+            Send transaction
           </button>
 
-          <div className="italic">
+          <div className="text-xs italic text-pl-muted">
             {isValid === false ? (
-              <p>
-                <small>connect a wallet to send a transaction</small>
-              </p>
+              <p>Connect a wallet to send a transaction.</p>
             ) : !tx.successMessage && !tx.error && !tx.canTransact ? (
-              <p>
-                <small>specify a lovelace amount and account to send a transaction</small>
-              </p>
+              <p>Specify a lovelace amount and account to send a transaction.</p>
             ) : tx.error ? (
-              <p>
-                <small>{tx.error.message}</small>
-              </p>
+              <p className="text-[color:var(--color-danger)]">{tx.error.message}</p>
             ) : null}
           </div>
         </div>
@@ -91,3 +72,6 @@ export default function Transact() {
     </div>
   )
 }
+
+
+

@@ -1,5 +1,4 @@
-// Use standard img to avoid Next/Image remote domain constraints for previews
-import { DigitalPetPassport, DigitalPetPassportForm } from "../types/passport"
+﻿import { DigitalPetPassport, DigitalPetPassportForm } from "../types/passport"
 
 type PassportPreviewProps = {
   formData: DigitalPetPassportForm | DigitalPetPassport
@@ -8,11 +7,11 @@ type PassportPreviewProps = {
 
 export const PassportPreview = ({ formData, imagePreview }: PassportPreviewProps) => {
   return (
-    <div className="pixel-card bg-white p-6">
-      <div className="flex flex-col md:flex-row gap-6">
+    <div className="pixel-card p-6">
+      <div className="flex flex-col gap-6 md:flex-row">
         <div className="md:w-48">
           {imagePreview ? (
-            <div className="overflow-hidden rounded-xl border border-slate-200 dark:border-slate-700 aspect-square">
+            <div className="aspect-square overflow-hidden rounded-pixel border border-pl-borderStrong bg-pl-surface">
               <img
                 src={imagePreview}
                 alt={`Preview of ${formData.identity.cat_name || "pet"}`}
@@ -20,69 +19,64 @@ export const PassportPreview = ({ formData, imagePreview }: PassportPreviewProps
               />
             </div>
           ) : (
-            <div className="flex aspect-square items-center justify-center rounded-xl border border-dashed border-slate-300 text-slate-400">
+            <div className="flex aspect-square items-center justify-center rounded-pixel border border-dashed border-pl-borderStrong text-pl-muted">
               No image
             </div>
           )}
         </div>
 
         <div className="flex-1 space-y-4">
-          <header>
-            <p className="text-xs uppercase tracking-wider text-blue-600">PetLog Digital Paw-ssport</p>
-            <h3 className="text-2xl font-semibold text-slate-900 dark:text-slate-50">
+          <header className="space-y-1">
+            <p className="text-sm uppercase tracking-[0.35em] text-pl-muted">PetLog Digital Paw-ssport</p>
+            <h3 className="font-display text-2xl tracking-[0.2em] text-pl-heading">
               {formData.identity.cat_name || "Your cat"}
             </h3>
-            <p className="text-sm text-slate-500">Level 1 · Self Attested Certificate of Ownership</p>
+            <p className="text-base text-pl-muted">Level 1 - Self Attested Certificate of Ownership</p>
           </header>
 
           <dl className="grid grid-cols-1 gap-3 text-sm md:grid-cols-2">
             <div>
-              <dt className="text-slate-500">Date of Birth</dt>
-              <dd className="font-medium text-slate-900 dark:text-slate-100">
-                {formData.identity.date_of_birth || "--"}
-              </dd>
+              <dt className="text-sm uppercase tracking-[0.25em] text-pl-muted">Date of Birth</dt>
+              <dd className="font-semibold text-pl-heading">{formData.identity.date_of_birth || "--"}</dd>
             </div>
             <div>
-              <dt className="text-slate-500">Breed</dt>
-              <dd className="font-medium text-slate-900 dark:text-slate-100">{formData.attributes.breed || "--"}</dd>
+              <dt className="text-sm uppercase tracking-[0.25em] text-pl-muted">Breed</dt>
+              <dd className="font-semibold text-pl-heading">{formData.attributes.breed || "--"}</dd>
             </div>
             <div>
-              <dt className="text-slate-500">Coat Color</dt>
-              <dd className="font-medium text-slate-900 dark:text-slate-100">{formData.attributes.coat_color || "--"}</dd>
+              <dt className="text-sm uppercase tracking-[0.25em] text-pl-muted">Coat Color</dt>
+              <dd className="font-semibold text-pl-heading">{formData.attributes.coat_color || "--"}</dd>
             </div>
             <div>
-              <dt className="text-slate-500">Sex</dt>
-              <dd className="font-medium text-slate-900 dark:text-slate-100">{formData.attributes.sex || "--"}</dd>
+              <dt className="text-sm uppercase tracking-[0.25em] text-pl-muted">Sex</dt>
+              <dd className="font-semibold text-pl-heading">{formData.attributes.sex || "--"}</dd>
             </div>
             <div>
-              <dt className="text-slate-500">Microchip Number</dt>
-              <dd className="font-medium text-slate-900 dark:text-slate-100">
+              <dt className="text-sm uppercase tracking-[0.25em] text-pl-muted">Microchip Number</dt>
+              <dd className="font-semibold text-pl-heading">
                 {formData.unique_identification.microchip_number || "--"}
               </dd>
             </div>
             {formData.provenance?.sire_name && (
               <div>
-                <dt className="text-slate-500">Sire</dt>
-                <dd className="font-medium text-slate-900 dark:text-slate-100">
-                  {formData.provenance.sire_name}
-                </dd>
+                <dt className="text-sm uppercase tracking-[0.25em] text-pl-muted">Sire</dt>
+                <dd className="font-semibold text-pl-heading">{formData.provenance.sire_name}</dd>
               </div>
             )}
             {formData.provenance?.dam_name && (
               <div>
-                <dt className="text-slate-500">Dam</dt>
-                <dd className="font-medium text-slate-900 dark:text-slate-100">
-                  {formData.provenance.dam_name}
-                </dd>
+                <dt className="text-sm uppercase tracking-[0.25em] text-pl-muted">Dam</dt>
+                <dd className="font-semibold text-pl-heading">{formData.provenance.dam_name}</dd>
               </div>
             )}
           </dl>
 
-          <footer className="pixel-card bg-slate-50 p-3 text-xs text-slate-700">
-            <p>Pre-Production Testnet · Not yet verified</p>
+          <footer className="rounded-pixel border border-pl-border bg-pl-highlight p-3 text-sm uppercase tracking-[0.25em] text-pl-heading">
+            Pre-Production Testnet - Not yet verified
           </footer>
         </div>
       </div>
     </div>
   )
 }
+
