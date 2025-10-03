@@ -16,7 +16,7 @@ const navLinkClass = (active: boolean) =>
 
 export const Navigation = () => {
   const router = useRouter()
-  const { account, disconnect, isReady, network } = useLucid()
+  const { account, disconnect, isReady, network, initializationError } = useLucid()
   const [isWalletModalOpen, setWalletModalOpen] = useState(false)
 
   const links = useMemo(
@@ -63,7 +63,7 @@ export const Navigation = () => {
           </button>
         ) : (
           <button
-            disabled={!isReady}
+            disabled={!isReady || Boolean(initializationError)}
             onClick={() => setWalletModalOpen(true)}
             className="pixel-btn pixel-btn--primary px-4 py-2 text-base disabled:opacity-50"
           >

@@ -1,4 +1,4 @@
-﻿import { useState } from "react"
+﻿import { useEffect, useState } from "react"
 import { useLucid } from "../contexts/LucidContext"
 
 const WALLET_OPTIONS = [
@@ -13,9 +13,16 @@ interface WalletSelectorProps {
 }
 
 export const WalletSelector = ({ onConnect }: WalletSelectorProps) => {
-  const { connect } = useLucid()
+  const { connect, initializationError, isReady } = useLucid()
   const [status, setStatus] = useState<string | null>(null)
   const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    if (initializationError) {
+      setError(initializationError)
+      setStatus(null)
+    }
+  }, [initializationError])
 
   const handleConnect = async (walletId: string) => {
     setStatus(`Connecting to ${walletId}...`)
@@ -42,7 +49,8 @@ export const WalletSelector = ({ onConnect }: WalletSelectorProps) => {
         {WALLET_OPTIONS.map((wallet) => (
           <button
             key={wallet.id}
-            className="pixel-card w-full bg-pl-card p-4 text-left transition duration-120 hover:-translate-y-1 hover:shadow-pixel"
+            disabled={!isReady || Boolean(initializationError)}
+            className="pixel-card w-full bg-pl-card p-4 text-left transition duration-120 hover:-translate-y-1 hover:shadow-pixel disabled:pointer-events-none disabled:opacity-50"
             onClick={() => handleConnect(wallet.id)}
           >
             <div className="font-display text-lg tracking-[0.15em] text-pl-heading">{wallet.label}</div>
