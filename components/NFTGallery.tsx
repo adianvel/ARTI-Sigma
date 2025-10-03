@@ -1,4 +1,4 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 
 
 
@@ -358,7 +358,7 @@ const decodeEternlAddress = (hex: string) => {
 
 
 
-    const stakeHrp2 = reward.network_id() === 1 ? 'stake' : 'stake_test'
+    const stakeHrp2 = networkId === 1 ? 'stake' : 'stake_test'
 
 
 

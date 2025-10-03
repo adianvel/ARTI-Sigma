@@ -1,4 +1,5 @@
-﻿import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react"
+import type { Network } from "lucid-cardano"
 
 interface WalletAccount {
   address: string
@@ -11,7 +12,7 @@ interface LucidContextState {
   connect: (walletName: string) => Promise<void>
   disconnect: () => void
   isReady: boolean
-  network: string
+  network: Network
 }
 
 const BLOCKFROST_API_URL =
@@ -20,7 +21,26 @@ const BLOCKFROST_API_URL =
 const BLOCKFROST_PROJECT_ID =
   process.env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID ?? process.env.BLOCKFROST_PROJECT_ID ?? ""
 
-const CARDANO_NETWORK = process.env.NEXT_PUBLIC_CARDANO_NETWORK ?? "Preprod"
+const resolveNetwork = (value?: string | null): Network => {
+  const normalized = value?.trim()
+
+  switch (normalized) {
+    case "Mainnet":
+    case "Testnet":
+    case "Preview":
+    case "Preprod":
+      return normalized
+    default:
+      if (normalized) {
+        console.warn(
+          `Unsupported NEXT_PUBLIC_CARDANO_NETWORK value "${normalized}", defaulting to "Preprod"`
+        )
+      }
+      return "Preprod"
+  }
+}
+
+const CARDANO_NETWORK: Network = resolveNetwork(process.env.NEXT_PUBLIC_CARDANO_NETWORK)
 
 const LucidContext = createContext<LucidContextState>({
   lucid: null,

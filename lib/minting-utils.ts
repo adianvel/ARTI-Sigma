@@ -1,13 +1,30 @@
-﻿import { Blockfrost, Lucid, MintingPolicy, PolicyId, TxHash, Unit, utf8ToHex } from "lucid-cardano"
+import { Blockfrost, Lucid, MintingPolicy, Network, PolicyId, TxHash, Unit, utf8ToHex } from "lucid-cardano"
 import { DigitalPetPassport, PetLogCipMetadata } from "../types/passport"
-
-type CardanoNetwork = "Mainnet" | "Preprod" | "Preview" | "Testnet" | string
 
 export interface MintOptions {
   lucid: Lucid
   address: string
   name: string
   cipMetadata: PetLogCipMetadata
+}
+
+const resolveNetwork = (value?: string | null): Network => {
+  const normalized = value?.trim()
+
+  switch (normalized) {
+    case "Mainnet":
+    case "Testnet":
+    case "Preview":
+    case "Preprod":
+      return normalized
+    default:
+      if (normalized) {
+        console.warn(
+          `Unsupported NEXT_PUBLIC_CARDANO_NETWORK value "${normalized}", defaulting to "Preprod"`
+        )
+      }
+      return "Preprod"
+  }
 }
 
 const getUnit = (policyId: PolicyId, name: string): Unit => policyId + utf8ToHex(name)
@@ -80,7 +97,7 @@ export const burnPassport = async ({ lucid, address, name }: { lucid: Lucid; add
 }
 
 export const createLucid = async (): Promise<Lucid> => {
-  const network = (process.env.NEXT_PUBLIC_CARDANO_NETWORK ?? "Preprod") as CardanoNetwork
+  const network = resolveNetwork(process.env.NEXT_PUBLIC_CARDANO_NETWORK)
   const projectId = process.env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID ?? process.env.BLOCKFROST_PROJECT_ID
   if (!projectId) throw new Error("Missing Blockfrost project id")
 
