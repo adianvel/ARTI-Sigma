@@ -1,10 +1,13 @@
 ﻿# 🐾 PetLog – Blockchain Pet Identity Platform
+> **"Every pet deserves a verified story."**
 
-> **Hackathon Project**: Building trust in pet ownership through decentralized digital passports on Cardano
+PetLog is a **Web3-based decentralized biodata system for pets**, built to store and verify **lineage, vaccination, and health records** on-chain.  
+By connecting breeders, veterinarians, and owners through **validator-based smart contracts**, PetLog eliminates fake certificates and fragmented data — creating **trust, transparency, and traceability** across the global pet ecosystem.
 
-**Live Demo**: [https://petlog-jktji8nw4-mofttachs-projects.vercel.app](https://petlog-jktji8nw4-mofttachs-projects.vercel.app)
 
 PetLog revolutionizes pet ownership verification by creating immutable, blockchain-based digital identities for pets. Built on Cardano Pre-Production testnet, each pet receives a unique NFT passport containing verified lineage, health records, and ownership history.
+
+> **Hackathon Project**: Building trust in pet ownership through decentralized digital passports on Cardano
 
 ## 🎯 Problem Statement
 
@@ -29,41 +32,21 @@ PetLog creates a **blockchain-based trust network** where:
 - **⚡ CIP-25 Compliant**: Following Cardano NFT metadata standards
 - **🌐 IPFS Integration**: Decentralized storage via Pinata for pet photos and documents
 
-## 🚀 Quick Start
+## 🔗 Quick Links
 
-### Prerequisites
-- Node.js 18+ and pnpm
-- Cardano wallet (Nami, Eternl, etc.) configured for **Pre-Production** testnet
-- Pinata account for IPFS storage
-- Blockfrost API access
+| Resource | Link |
+|----------|------|
+| 🌐 **Live Demo** | https://petlog-wheat.vercel.app/ |
+| 📊 **Pitch Deck** | [View Presentation](https://drive.google.com/drive/folders/1oNKyiE2myjvWursm05h_ApxYVjej9p_4?usp=sharing) |
+| 🎥 **Demo Video** | [Watch Demo](https://drive.google.com/drive/folders/1ksKw64Bm0dSxVcXe5uGIyl83EHhYDgYi?usp=sharing) |
+| 📱 **Instagram** | [@petlog.dapp](https://instagram.com/petlog.dapp) |
+| 💻 **GitHub** | [Mofttach/petlog](https://github.com/Mofttach/petlog) |
 
-### Installation
-
-1. **Clone and setup environment**:
-   ```bash
-   git clone https://github.com/Mofttach/petlog.git
-   cd petlog
-   cp .env.template .env.local
-   ```
-
-2. **Configure environment variables**:
-   ```env
-   PINATA_API_KEY=your_pinata_api_key
-   PINATA_API_SECRET=your_pinata_secret
-   BLOCKFROST_PROJECT_ID=your_preprod_project_id
-   ```
-
-3. **Install and run**:
-   ```bash
-   pnpm install
-   pnpm dev
-   ```
-
-4. **Connect wallet and mint**: Visit `http://localhost:3000`, connect your Pre-Production wallet, and navigate to `/mint` to create your first pet passport!
+---
 
 ## 🎮 Try the Demo
 
-1. **Visit**: [https://petlog-jktji8nw4-mofttachs-projects.vercel.app](https://petlog-jktji8nw4-mofttachs-projects.vercel.app)
+1. **Visit**: 
 2. **Explore** the landing page design and problem/solution overview
 3. **Connect** your Cardano Pre-Production wallet
 4. **Mint** a pet passport NFT with custom metadata
