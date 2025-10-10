@@ -19,7 +19,7 @@ const MarketingNavigation = () => {
     <header className="flex items-center justify-center py-8">
       <Link href="/" className="rounded-full bg-white/90 px-6 py-3 shadow-[0_18px_36px_rgba(244,175,208,0.35)] ring-1 ring-rose-100 backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_24px_48px_rgba(244,175,208,0.45)]">
         <img
-          src="/Petlog-logo.png"
+          src="/petlog-logo.png"
           alt="PetLog - Digital Pet Passport Platform"
           className="h-8 w-auto"
         />
@@ -50,7 +50,7 @@ const AppNavigation = ({ currentPath }: { currentPath: string }) => {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <Link href="/" className="hover:opacity-80 transition-opacity">
           <img
-            src="/Petlog-logo.png"
+            src="/petlog-logo.png"
             alt="PetLog - Digital Pet Passport Platform"
             className="h-8 w-auto"
           />
