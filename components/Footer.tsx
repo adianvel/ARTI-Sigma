@@ -5,7 +5,7 @@
         <div className="flex flex-col gap-4 text-center md:flex-row md:items-center md:justify-between">
           <div className="flex items-center justify-center gap-3 md:justify-start">
             <img 
-              src="/petlog-logo.png" 
+              src="/Petlog-logo.png" 
               alt="PetLog" 
               className="h-8 w-auto"
             />
