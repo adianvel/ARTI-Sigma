@@ -244,6 +244,28 @@ button {
   letter-spacing: 0.02em;
 }
 
+/* Pixel Art Styles */
+.pixel-card {
+  border-radius: 0;
+  image-rendering: pixelated;
+  image-rendering: -moz-crisp-edges;
+  image-rendering: crisp-edges;
+}
+
+.pixel-text {
+  font-family: 'Courier New', monospace;
+  image-rendering: pixelated;
+  text-rendering: geometricPrecision;
+}
+
+.shadow-pixel {
+  box-shadow: 
+    4px 0px 0px rgba(0,0,0,0.2),
+    0px 4px 0px rgba(0,0,0,0.2),
+    4px 4px 0px rgba(0,0,0,0.2),
+    8px 8px 0px rgba(0,0,0,0.1);
+}
+
 
 
 

@@ -1,5 +1,32 @@
 ﻿import Link from "next/link"
 
+const nftCards = [
+  {
+    title: "Luna",
+    stat: "Silver Bengal - Born 2021",
+    description: "Starlight Navigator",
+    gradient: "from-red-100 via-rose-50 to-pink-100",
+  },
+  {
+    title: "Mochi", 
+    stat: "Ragdoll - Born 2020",
+    description: "Cuddle Diplomat",
+    gradient: "from-blue-100 via-cyan-50 to-sky-100",
+  },
+  {
+    title: "Aster",
+    stat: "Scottish Fold - Born 2023", 
+    description: "Whisker Archivist",
+    gradient: "from-green-100 via-emerald-50 to-teal-100",
+  },
+  {
+    title: "Pixel",
+    stat: "Sphynx - Born 2019",
+    description: "Warmth Seeker", 
+    gradient: "from-purple-100 via-violet-50 to-indigo-100",
+  },
+]
+
 const problemCards = [
   {
     title: "Fake Pedigree Certificates",
@@ -51,24 +78,70 @@ export default function LandingPage() {
     <div className="mx-auto max-w-6xl px-4 pb-24 pt-12 sm:px-6 lg:px-8">
       {/* Hero Section */}
       <section className="rounded-[40px] bg-gradient-to-br from-amber-50 via-rose-50 to-sky-50 px-6 py-14 shadow-[0_28px_80px_rgba(244,175,208,0.35)] ring-1 ring-rose-100 sm:px-12">
-        <div className="text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-rose-500 ring-1 ring-white/60">
-            Blockchain Pet Registry
-          </span>
-          <h1 className="mt-6 text-4xl font-semibold leading-tight text-pl-heading sm:text-5xl md:text-6xl">
-            Your Pet&apos;s Legacy,
-            <br />
-            Written on Blockchain.
-          </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-pl-body opacity-80">
-            PetLog connects every pet&apos;s lineage, vaccine, and health record into one verifiable digital identity.
-          </p>
-          <Link
-            href="/app"
-            className="mt-8 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300 px-10 py-3 text-base font-semibold uppercase tracking-[0.3em] text-pl-heading shadow-[0_20px_50px_rgba(244,175,208,0.45)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_rgba(244,175,208,0.55)]"
-          >
-            Create Pet Passport
-          </Link>
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Left Content */}
+          <div className="text-center lg:text-left">
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-rose-500 ring-1 ring-white/60">
+              Cardano Pre-Production
+            </span>
+            <h1 className="mt-6 text-4xl font-semibold leading-tight text-pl-heading sm:text-5xl lg:text-6xl">
+              Welcome to the
+              <br />
+            
+                PetLog Crew.
+              
+            </h1>
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-pl-body opacity-80">
+              Meet PetLog&apos;s warm, friendly universe before you ever connect a wallet. Explore the art direction, picture your cat&apos;s debut, and join the crew when you are ready to mint.
+            </p>
+            <Link
+              href="/mint"
+              className="mt-8 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-rose-400 via-amber-400 to-orange-400 px-10 py-4 text-base font-bold uppercase tracking-[0.3em] text-white shadow-[0_20px_50px_rgba(244,175,208,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(244,175,208,0.55)]"
+            >
+              Create a Paw-ssport
+            </Link>
+          </div>
+
+          {/* Right Content - NFT Cards */}
+          <div className="relative">
+            {/* Main NFT Cards Grid */}
+            <div className="grid grid-cols-2 gap-4">
+              {nftCards.map((card, index) => {
+                const rotations = ['-rotate-2', 'rotate-3', 'rotate-1', '-rotate-1']
+                const margins = ['', 'mt-8', '-mt-4', '']
+                return (
+                  <div key={card.title} className={`relative group ${margins[index]}`}>
+                    <div className={`rounded-[32px] bg-gradient-to-br ${card.gradient} p-6 ring-1 ring-white/30 shadow-[0_20px_40px_rgba(0,0,0,0.12)] transform ${rotations[index]} group-hover:rotate-0 transition-all duration-300 hover:shadow-[0_28px_50px_rgba(0,0,0,0.15)]`}>
+                      {/* Header */}
+                      <div className="text-center mb-6">
+                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-600 mb-2">PETLOG LEVEL 1</p>
+                        <h3 className="text-3xl font-black text-gray-800 pixel-text tracking-wider">{card.title}</h3>
+                      </div>
+                      
+                      {/* Breed & Birth Info */}
+                      <div className="text-center mb-6">
+                        <p className="text-sm font-bold uppercase tracking-[0.15em] text-gray-700 leading-tight whitespace-pre-line">
+                          {card.stat.replace(' - Born ', '\n- BORN ')}
+                        </p>
+                      </div>
+                      
+                      {/* Description Badge */}
+                      <div className="rounded-2xl bg-white/80 px-4 py-3 text-center shadow-inner">
+                        <p className="text-sm font-black uppercase tracking-[0.1em] text-gray-800 pixel-text whitespace-pre-line">
+                          {card.description.replace(' ', '\n')}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                )
+              })}
+            </div>
+
+            {/* Floating Elements */}
+            <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-full opacity-60 animate-pulse"></div>
+            <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-50 animate-pulse delay-700"></div>
+            <div className="absolute top-1/2 -right-6 w-4 h-4 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full opacity-40 animate-pulse delay-1000"></div>
+          </div>
         </div>
       </section>
 
