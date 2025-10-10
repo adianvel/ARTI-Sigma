@@ -20,10 +20,12 @@ export const DefaultLayout = ({ children }: PropsWithChildren<{}>) => {
         />
       </Head>
 
-      <div className="mx-auto flex min-h-screen max-w-6xl flex-col px-4 sm:px-6 lg:px-8">
-        <Navigation />
-        <main className="flex-1 pb-16">{children}</main>
-        <Footer />
+      <div className="min-h-screen bg-gradient-to-br from-neutral-50 via-white to-gray-50">
+        <div className="mx-auto flex min-h-screen max-w-6xl flex-col">
+          <Navigation />
+          <main className="flex-1 px-4 pb-16 sm:px-6 lg:px-8">{children}</main>
+          <Footer />
+        </div>
       </div>
     </>
   )

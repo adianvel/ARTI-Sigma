@@ -170,201 +170,251 @@ export default function MintPage() {
   }
 
   return (
-    <form onSubmit={handleMint} className="mx-auto max-w-4xl space-y-10 text-pl-body">
-      <header className="space-y-3 text-center">
-        <h1 className="font-display text-3xl tracking-[0.25em] text-pl-heading">Mint Digital Passport</h1>
-        <p className="text-sm leading-relaxed text-pl-muted">
-          Complete the guided flow to create a Level 1 self-attested ownership certificate for your cat.
+    <div className="mx-auto max-w-4xl space-y-8 pt-8">
+      {/* Header Section */}
+      <section className="rounded-[32px] bg-white/80 px-6 py-8 shadow-[0_24px_60px_rgba(212,177,189,0.25)] ring-1 ring-rose-100 text-center">
+        <span className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-100 to-amber-100 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-rose-700 ring-1 ring-rose-200">
+          Digital Pet Passport
+        </span>
+        <h1 className="mt-4 text-3xl font-semibold text-pl-heading sm:text-4xl">Create Your Pet&apos;s Digital Identity</h1>
+        <p className="mt-4 text-lg leading-relaxed text-pl-body opacity-80">
+          Complete the guided flow to create a Level 1 self-attested ownership certificate for your pet.
         </p>
-      </header>
+      </section>
 
-      <div className="flex items-center justify-center gap-3 text-base">
+      {/* Progress Steps */}
+      <div className="flex items-center justify-center gap-3">
         {steps.map((label, index) => (
-          <div key={label} className="flex items-center gap-2">
-            <span
-              className={`flex h-8 w-8 items-center justify-center rounded-pixel border border-pl-borderStrong font-semibold tracking-[0.2em] transition duration-120 ${
-                index === step
-                  ? "bg-pl-primary text-pl-primaryContrast shadow-pixel-sm"
-                  : "bg-pl-background text-pl-muted"
-              }`}
-            >
-              {index + 1}
-            </span>
-            <span
-              className={`hidden text-sm uppercase tracking-[0.25em] sm:inline ${
-                index === step ? "text-pl-heading" : "text-pl-muted"
-              }`}
-            >
-              {label}
-            </span>
+          <div key={label} className="flex items-center gap-3">
+            <div className="flex flex-col items-center gap-2">
+              <span
+                className={`flex h-12 w-12 items-center justify-center rounded-full border-2 font-semibold text-lg transition-all duration-300 ${
+                  index === step
+                    ? "bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300 border-rose-300 text-white shadow-[0_8px_24px_rgba(244,175,208,0.4)]"
+                    : index < step
+                    ? "bg-green-100 border-green-300 text-green-700"
+                    : "bg-white border-gray-300 text-gray-500"
+                }`}
+              >
+                {index < step ? "✓" : index + 1}
+              </span>
+              <span
+                className={`text-xs uppercase tracking-[0.2em] font-semibold ${
+                  index === step ? "text-pl-heading" : "text-pl-muted"
+                }`}
+              >
+                {label}
+              </span>
+            </div>
+            {index < steps.length - 1 && (
+              <div className={`h-px w-8 ${index < step ? "bg-green-300" : "bg-gray-300"}`} />
+            )}
           </div>
         ))}
       </div>
 
-      {step === 0 && (
-        <section className="pixel-card space-y-6 p-6">
-          <h2 className="font-display text-2xl tracking-[0.2em] text-pl-heading">Identity</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Cat name</span>
-              <input
-                name="identity.cat_name"
-                value={form.identity.cat_name}
-                onChange={handleInput}
-                className="pixel-input text-base"
-                required
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Date of birth</span>
-              <input
-                type="date"
-                name="identity.date_of_birth"
-                value={form.identity.date_of_birth}
-                onChange={handleInput}
-                className="pixel-input text-base"
-                required
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Breed</span>
-              <input
-                name="attributes.breed"
-                value={form.attributes.breed}
-                onChange={handleInput}
-                className="pixel-input text-base"
-                required
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Coat color</span>
-              <input
-                name="attributes.coat_color"
-                value={form.attributes.coat_color}
-                onChange={handleInput}
-                className="pixel-input text-base"
-                required
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Sex</span>
-              <select
-                name="attributes.sex"
-                value={form.attributes.sex}
-                onChange={handleInput}
-                className="pixel-input text-base"
-              >
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-            </label>
-          </div>
-        </section>
-      )}
+      <form onSubmit={handleMint} className="space-y-8">
 
-      {step === 1 && (
-        <section className="pixel-card space-y-6 p-6">
-          <h2 className="font-display text-2xl tracking-[0.2em] text-pl-heading">Details & Photo</h2>
-          <div className="grid gap-4 sm:grid-cols-2">
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Microchip number</span>
-              <input
-                name="unique_identification.microchip_number"
-                value={form.unique_identification.microchip_number}
-                onChange={handleInput}
-                className="pixel-input text-base"
-                required
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Sire name (optional)</span>
-              <input
-                name="provenance.sire_name"
-                value={form.provenance?.sire_name ?? ""}
-                onChange={handleInput}
-                className="pixel-input text-base"
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Dam name (optional)</span>
-              <input
-                name="provenance.dam_name"
-                value={form.provenance?.dam_name ?? ""}
-                onChange={handleInput}
-                className="pixel-input text-base"
-              />
-            </label>
-            <label className="flex flex-col gap-2 text-sm">
-              <span className="text-sm uppercase tracking-[0.25em] text-pl-muted">Passport photo</span>
-              <input
-                type="file"
-                accept="image/png,image/jpeg,image/webp"
-                onChange={handleImage}
-                className="pixel-input text-base"
-              />
-              <span className="text-sm text-pl-muted">JPEG, PNG, or WebP up to 5MB.</span>
-            </label>
-          </div>
-        </section>
-      )}
-
-      {step === 2 && (
-        <section className="space-y-6">
-          <PassportPreview formData={form} imagePreview={imagePreview} />
-          <div className="pixel-banner space-y-1 p-4 text-base leading-relaxed text-pl-heading">
-            <p className="font-display text-sm uppercase tracking-[0.3em]">Heads up</p>
-            <p className="text-pl-body">
-              Level 1 passports are self-attested. Ensure all information is accurate before minting — once
-              recorded on-chain it cannot be altered.
-            </p>
-          </div>
-        </section>
-      )}
-
-      <div aria-live="polite" className="space-y-2">
-        {error && (
-          <p className="pixel-banner border-[color:var(--color-danger)] bg-[color:var(--color-danger-bg)] p-3 text-sm text-[color:var(--color-danger)]">
-            {error}
-          </p>
+        {step === 0 && (
+          <section className="rounded-[32px] bg-gradient-to-br from-blue-50 via-sky-50 to-cyan-50 px-6 py-8 shadow-[0_20px_40px_rgba(0,0,0,0.08)] ring-1 ring-blue-100">
+            <h2 className="text-2xl font-semibold text-pl-heading mb-6">Pet Identity</h2>
+            <div className="grid gap-6 sm:grid-cols-2">
+              <label className="flex flex-col gap-3">
+                <span className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">Pet Name</span>
+                <input
+                  name="identity.cat_name"
+                  value={form.identity.cat_name}
+                  onChange={handleInput}
+                  className="rounded-xl border-2 border-blue-200 bg-white/70 px-4 py-3 text-base focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200/50"
+                  placeholder="Enter your pet's name"
+                  required
+                />
+              </label>
+              <label className="flex flex-col gap-3">
+                <span className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">Date of Birth</span>
+                <input
+                  type="date"
+                  name="identity.date_of_birth"
+                  value={form.identity.date_of_birth}
+                  onChange={handleInput}
+                  className="rounded-xl border-2 border-blue-200 bg-white/70 px-4 py-3 text-base focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200/50"
+                  required
+                />
+              </label>
+              <label className="flex flex-col gap-3">
+                <span className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">Breed</span>
+                <input
+                  name="attributes.breed"
+                  value={form.attributes.breed}
+                  onChange={handleInput}
+                  className="rounded-xl border-2 border-blue-200 bg-white/70 px-4 py-3 text-base focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200/50"
+                  placeholder="e.g., Persian, Siamese"
+                  required
+                />
+              </label>
+              <label className="flex flex-col gap-3">
+                <span className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">Coat Color</span>
+                <input
+                  name="attributes.coat_color"
+                  value={form.attributes.coat_color}
+                  onChange={handleInput}
+                  className="rounded-xl border-2 border-blue-200 bg-white/70 px-4 py-3 text-base focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200/50"
+                  placeholder="e.g., Orange Tabby, Black"
+                  required
+                />
+              </label>
+              <label className="flex flex-col gap-3">
+                <span className="text-sm font-semibold uppercase tracking-[0.25em] text-blue-700">Gender</span>
+                <select
+                  name="attributes.sex"
+                  value={form.attributes.sex}
+                  onChange={handleInput}
+                  className="rounded-xl border-2 border-blue-200 bg-white/70 px-4 py-3 text-base focus:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-200/50"
+                >
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+              </label>
+            </div>
+          </section>
         )}
-        {status && !error && (
-          <div className="pixel-banner flex items-center justify-center gap-3 bg-pl-highlight p-3 text-sm text-pl-heading">
-            <div className="yarn-ball" />
-            <p>{status}</p>
-          </div>
+
+        {step === 1 && (
+          <section className="rounded-[32px] bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 px-6 py-8 shadow-[0_20px_40px_rgba(0,0,0,0.08)] ring-1 ring-green-100">
+            <h2 className="text-2xl font-semibold text-pl-heading mb-6">Additional Details & Photo</h2>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <div className="space-y-6">
+                <label className="flex flex-col gap-3">
+                  <span className="text-sm font-semibold uppercase tracking-[0.25em] text-green-700">Microchip Number</span>
+                  <input
+                    name="unique_identification.microchip_number"
+                    value={form.unique_identification.microchip_number}
+                    onChange={handleInput}
+                    className="rounded-xl border-2 border-green-200 bg-white/70 px-4 py-3 text-base focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-200/50"
+                    placeholder="Enter microchip number"
+                    required
+                  />
+                </label>
+                <label className="flex flex-col gap-3">
+                  <span className="text-sm font-semibold uppercase tracking-[0.25em] text-green-700">Sire Name (Optional)</span>
+                  <input
+                    name="provenance.sire_name"
+                    value={form.provenance?.sire_name ?? ""}
+                    onChange={handleInput}
+                    className="rounded-xl border-2 border-green-200 bg-white/70 px-4 py-3 text-base focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-200/50"
+                    placeholder="Father's name"
+                  />
+                </label>
+                <label className="flex flex-col gap-3">
+                  <span className="text-sm font-semibold uppercase tracking-[0.25em] text-green-700">Dam Name (Optional)</span>
+                  <input
+                    name="provenance.dam_name"
+                    value={form.provenance?.dam_name ?? ""}
+                    onChange={handleInput}
+                    className="rounded-xl border-2 border-green-200 bg-white/70 px-4 py-3 text-base focus:border-green-400 focus:outline-none focus:ring-2 focus:ring-green-200/50"
+                    placeholder="Mother's name"
+                  />
+                </label>
+              </div>
+              <div className="space-y-4">
+                <label className="flex flex-col gap-3">
+                  <span className="text-sm font-semibold uppercase tracking-[0.25em] text-green-700">Passport Photo</span>
+                  <input
+                    type="file"
+                    accept="image/png,image/jpeg,image/webp"
+                    onChange={handleImage}
+                    className="rounded-xl border-2 border-green-200 bg-white/70 px-4 py-3 text-base focus:border-green-400 focus:outline-none file:mr-3 file:rounded-lg file:border-0 file:bg-green-100 file:px-3 file:py-1 file:text-sm file:font-semibold file:text-green-700 hover:file:bg-green-200"
+                  />
+                  <span className="text-sm text-green-600">JPEG, PNG, or WebP up to 5MB</span>
+                </label>
+                {imagePreview && (
+                  <div className="rounded-xl border-2 border-green-200 bg-white/70 p-4">
+                    <img
+                      src={imagePreview}
+                      alt="Preview"
+                      className="mx-auto h-48 w-48 rounded-lg object-cover shadow-md"
+                    />
+                  </div>
+                )}
+              </div>
+            </div>
+          </section>
         )}
-      </div>
 
-      <div className="flex items-center justify-between">
-        <button
-          type="button"
-          onClick={goBack}
-          disabled={step === 0 || isMinting}
-          className="pixel-btn px-5 py-2 text-base uppercase tracking-[0.3em] disabled:opacity-50"
-        >
-          Back
-        </button>
+        {step === 2 && (
+          <section className="rounded-[32px] bg-gradient-to-br from-purple-50 via-violet-50 to-indigo-50 px-6 py-8 shadow-[0_20px_40px_rgba(0,0,0,0.08)] ring-1 ring-purple-100">
+            <h2 className="text-2xl font-semibold text-pl-heading mb-6">Preview & Confirm</h2>
+            <PassportPreview formData={form} imagePreview={imagePreview} />
+            <div className="mt-6 rounded-xl bg-amber-50 border-2 border-amber-200 p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">⚠️</span>
+                <div>
+                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-amber-800 mb-2">Important Notice</p>
+                  <p className="text-sm text-amber-700 leading-relaxed">
+                    Level 1 passports are self-attested. Ensure all information is accurate before minting — once
+                    recorded on-chain it cannot be altered.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
 
-        {step < steps.length - 1 ? (
+        {/* Status Messages */}
+        <div aria-live="polite" className="space-y-4">
+          {error && (
+            <div className="rounded-xl bg-red-50 border-2 border-red-200 p-4">
+              <div className="flex items-start gap-3">
+                <span className="text-2xl">❌</span>
+                <div>
+                  <p className="text-sm font-semibold text-red-800 mb-1">Error</p>
+                  <p className="text-sm text-red-700">{error}</p>
+                </div>
+              </div>
+            </div>
+          )}
+          {status && !error && (
+            <div className="rounded-xl bg-blue-50 border-2 border-blue-200 p-4">
+              <div className="flex items-center justify-center gap-3">
+                <div className="h-5 w-5 animate-spin rounded-full border-2 border-blue-600 border-t-transparent" />
+                <p className="text-sm font-semibold text-blue-800">{status}</p>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Navigation Buttons */}
+        <div className="flex items-center justify-between pt-4">
           <button
             type="button"
-            onClick={goNext}
-            disabled={!canProceed || isMinting}
-            className="pixel-btn pixel-btn--primary px-5 py-2 text-base uppercase tracking-[0.3em] disabled:opacity-60"
+            onClick={goBack}
+            disabled={step === 0 || isMinting}
+            className="inline-flex items-center rounded-full bg-white/80 px-6 py-3 text-base font-semibold text-pl-heading ring-1 ring-gray-200 shadow-md transition-all duration-200 hover:bg-white hover:shadow-lg disabled:cursor-not-allowed disabled:opacity-50"
           >
-            Continue
+            ← Back
           </button>
-        ) : (
-          <button
-            type="submit"
-            disabled={isMinting}
-            className="pixel-btn pixel-btn--secondary px-6 py-2 text-base uppercase tracking-[0.3em] disabled:opacity-60"
-          >
-            {isMinting ? "Sending your Paw-ssport..." : "Mint my Paw-ssport"}
-          </button>
-        )}
-      </div>
-    </form>
+
+          {step < steps.length - 1 ? (
+            <button
+              type="button"
+              onClick={goNext}
+              disabled={!canProceed || isMinting}
+              className="inline-flex items-center rounded-full bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300 px-6 py-3 text-base font-semibold text-white shadow-[0_8px_24px_rgba(244,175,208,0.4)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(244,175,208,0.5)] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              Continue →
+            </button>
+          ) : (
+            <button
+              type="submit"
+              disabled={isMinting}
+              className="inline-flex items-center rounded-full bg-gradient-to-r from-green-400 to-emerald-400 px-8 py-3 text-base font-semibold text-white shadow-[0_8px_24px_rgba(34,197,94,0.4)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(34,197,94,0.5)] disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {isMinting ? "Minting..." : "🎉 Mint Pet Passport"}
+            </button>
+          )}
+        </div>
+      </form>
+    </div>
   )
 }
 
