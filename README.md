@@ -43,6 +43,13 @@ PetLog creates a **blockchain-based trust network** where:
 | 💻 **GitHub** | [Mofttach/petlog](https://github.com/Mofttach/petlog) |
 
 ---
+## 👥 Our Team
+
+**1. Project Manager** : Mohammad Fattachul 'Alim | ig : @mofttach
+**2. Smart Contract Developer** : Mohammad Ilham Adiansyah | ig : @adianvel
+**3. Frontend Developer** : Faiz Abdurrachman | ig : @faiz.abdurrachman
+**4. **UI/UX Designer + Branding** : Danu Prianto | ig : @danu_prianto
+**5. **Business & Documentation Specialist** : Adyana Wabilhadi Chanigia | ig : @adyanawabilhadi
 
 ## 🎮 Try the Demo
 
