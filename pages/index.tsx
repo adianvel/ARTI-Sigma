@@ -84,58 +84,60 @@ export default function LandingPage() {
     <div className="mx-auto max-w-6xl px-4 pb-24 pt-12 text-as-body sm:px-6 lg:px-8">
       <section className="pixel-card relative overflow-hidden px-8 py-14 sm:px-12">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_60%)]" />
-        <div className="relative grid gap-10 lg:grid-cols-[1.4fr_1fr]">
-          <div className="space-y-6 text-left">
-            <div className="flex items-center justify-start">
-              <img
-                src="/logoarti.jpg"
-                alt="ARTI Sigma logo"
-                className="h-16 w-auto rounded-[12px] border border-as-border/50 bg-as-surface/80 shadow-pixel-sm sm:h-20"
-              />
-            </div>
-            <span className="inline-flex items-center gap-2 rounded-full border border-as-border px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.45em] text-as-muted">
-              Arti - Immersive art registry
-            </span>
-            <h1 className="text-4xl font-semibold text-as-heading sm:text-5xl">
-              A premium digital canvas for your masterpiece.
-            </h1>
-            <p className="max-w-xl text-lg leading-relaxed text-as-muted">
-              Mint cinematic videos, volumetric sculptures, and generative worlds with uncompromised
-              fidelity. Arti captures your intent, packages the experience, and anchors provenance
-              permanently on Cardano.
-            </p>
-            <div className="flex flex-col items-start gap-4 sm:flex-row">
-              <Link href="/mint" className="pixel-btn pixel-btn--primary px-8 py-3 text-[0.65rem]">
-                Mint a new drop
-              </Link>
-              <Link
-                href="/my-passports"
-                className="pixel-btn pixel-btn--secondary px-8 py-3 text-[0.65rem]"
-              >
-                Enter my gallery
-              </Link>
-            </div>
+        <div className="relative space-y-8">
+          <div className="flex justify-center">
+            <img
+              src="/logoarti.jpg"
+              alt="ARTI Sigma logo"
+              className="w-full max-w-sm rounded-[18px] border border-as-border/40 bg-as-surface/80 object-cover shadow-pixel-lg"
+            />
           </div>
+          <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+            <div className="space-y-6 text-left">
+              <span className="inline-flex items-center gap-2 rounded-full border border-as-border px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.45em] text-as-muted">
+                Arti - Immersive art registry
+              </span>
+              <h1 className="text-4xl font-semibold text-as-heading sm:text-5xl">
+                A premium digital canvas for your masterpiece.
+              </h1>
+              <p className="max-w-xl text-lg leading-relaxed text-as-muted">
+                Mint cinematic videos, volumetric sculptures, and generative worlds with uncompromised
+                fidelity. Arti captures your intent, packages the experience, and anchors provenance
+                permanently on Cardano.
+              </p>
+              <div className="flex flex-col items-start gap-4 sm:flex-row">
+                <Link href="/mint" className="pixel-btn pixel-btn--primary px-8 py-3 text-[0.65rem]">
+                  Mint a new drop
+                </Link>
+                <Link
+                  href="/my-passports"
+                  className="pixel-btn pixel-btn--secondary px-8 py-3 text-[0.65rem]"
+                >
+                  Enter my gallery
+                </Link>
+              </div>
+            </div>
 
-          <div className="grid gap-4 sm:grid-cols-2">
-            {showcaseHighlights.map((highlight) => (
-              <article
-                key={highlight.id}
-                className="rounded-[18px] border border-as-border bg-as-highlight/20 p-5 text-[0.75rem] uppercase tracking-[0.35em] text-as-muted transition-all duration-300 hover:border-as-borderStrong hover:bg-as-highlight/35"
-              >
-                <p className="text-[0.55rem] text-as-muted/70">{highlight.id}</p>
-                <h3 className="mt-2 text-base normal-case tracking-normal text-as-heading">
-                  {highlight.title}
-                </h3>
-                <p className="mt-1 text-[0.7rem] normal-case tracking-[0.2em] text-as-muted">
-                  {highlight.creator}
-                </p>
-                <div className="mt-4 space-y-2 text-[0.55rem] leading-relaxed text-as-muted/80">
-                  <p>{highlight.format}</p>
-                  <p>{highlight.duration}</p>
-                </div>
-              </article>
-            ))}
+            <div className="grid gap-4 sm:grid-cols-2">
+              {showcaseHighlights.map((highlight) => (
+                <article
+                  key={highlight.id}
+                  className="rounded-[18px] border border-as-border bg-as-highlight/20 p-5 text-[0.75rem] uppercase tracking-[0.35em] text-as-muted transition-all duration-300 hover:border-as-borderStrong hover:bg-as-highlight/35"
+                >
+                  <p className="text-[0.55rem] text-as-muted/70">{highlight.id}</p>
+                  <h3 className="mt-2 text-base normal-case tracking-normal text-as-heading">
+                    {highlight.title}
+                  </h3>
+                  <p className="mt-1 text-[0.7rem] normal-case tracking-[0.2em] text-as-muted">
+                    {highlight.creator}
+                  </p>
+                  <div className="mt-4 space-y-2 text-[0.55rem] leading-relaxed text-as-muted/80">
+                    <p>{highlight.format}</p>
+                    <p>{highlight.duration}</p>
+                  </div>
+                </article>
+              ))}
+            </div>
           </div>
         </div>
       </section>
@@ -240,6 +242,9 @@ export default function LandingPage() {
     </div>
   )
 }
+
+
+
 
 
 

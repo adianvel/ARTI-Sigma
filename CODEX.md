@@ -1,26 +1,67 @@
 
-**Objective:** Integrate the new ARTI Sigma logo and favicon (provided in the images) across the application, specifically updating the header and making the full square logo prominent on the landing page.
+**Objective:** Your task is to perform a global update of the ARTI Sigma project's UI. The goal is to replace the current accent color (e.g., gold, cyan) with the **official brand blue** from the new logo and pitch deck, while maintaining the existing premium dark theme.
 
-**Instructions:**
+**Design Direction:** The final aesthetic should be professional, tech-focused, and cohesive, using a dark background with a vibrant blue as the primary highlight.
 
-1.  **Update Favicon:**
+-----
 
-      * Locate the existing favicon (currently showing the PetLog paw icon, as seen in Image 2).
-      * Replace it with a new favicon that is a **clean, monochromatic, simplified version of the 'ARTI' text from the new logo, or a simplified version of the 'Sigma' symbol.** The color should match the blue of the new logo.
+#### **Phase 1: Update the Global Theme Configuration**
 
-2.  **Update Header Logo:**
+**Action:** The first and most important step is to update the single source of truth for your application's colors.
 
-      * Locate the logo/project title in the application's header (currently "PetLog" or a placeholder).
-      * Replace it with the **text "ARTI Sigma"** rendered in a font that closely matches the new logo's typography. The color should be the same blue as in Image 1.
-      * Ensure the logo is appropriately sized and aligned within the header.
+1.  **Modify `tailwind.config.js`:**
 
-3.  **Landing Page Full Logo Showcase:**
+      * Open the `tailwind.config.js` file.
 
-      * On the main landing page (`/pages/index.tsx`), place the **full ARTI Sigma logo (as seen in Image 1, including the tagline)** prominently.
-      * The logo should be centered or strategically placed to be a primary visual element, demonstrating the brand identity.
-      * Ensure the logo scales responsively for different screen sizes.
+      * Locate the `colors` object within `theme.extend`.
 
-**Reference Images:**
+      * **Replace the old accent color** (e.g., `accent-gold` or `primary` with a cyan value) with the new brand blue. Define it clearly.
 
-* **Image 1 (Full Logo):** The primary reference for the logo design, typography, and color.
-* **Image 2 (Favicon Reference):** Indicates the location of the old favicon that needs to be replaced.
+      * Ensure the rest of the dark theme palette remains consistent.
+
+      * **Example of the new `colors` object:**
+
+        ```javascript
+        // tailwind.config.js
+        colors: {
+          'background': '#0A0F19', // Or your existing very dark background
+          'primary-blue': '#3B82F6', // A vibrant, professional blue that matches the logo
+          'text-primary': '#F3F4F6', // Soft white for main text/headings
+          'text-secondary': '#9CA3AF', // Lighter gray for descriptions
+          'border-neutral': '#374151', // Subtle gray for borders and dividers
+        },
+        ```
+
+2.  **Update `globals.css` (if applicable):**
+
+      * If you are using ShadCN UI, update the CSS variables in the `:root` selector of your global CSS file to use the new color definitions, especially for `--primary`.
+
+-----
+
+#### **Phase 2: Apply the New Blue Color Across All Components**
+
+**Action:** Perform a comprehensive audit of all UI components to ensure they now use the new `primary-blue` for all interactive and highlighted elements.
+
+1.  **Buttons:**
+
+      * All primary action buttons (e.g., "Tokenize Artwork", "Connect Wallet") must now use the new `primary-blue` for their background or border.
+      * Update their `:hover` and `:active` states to be slightly lighter or darker shades of this blue.
+
+2.  **Links & Active States:**
+
+      * Standard text links and the active state in navigation menus should now use the `primary-blue` text color.
+
+3.  **Glow & Shadow Effects:**
+
+      * Find all instances of `box-shadow` or `drop-shadow` that create a "glow" effect.
+      * Change the color of these glows from the old accent color to the new `primary-blue`. This is crucial for maintaining the futuristic aesthetic.
+
+4.  **Icons & Decorative Elements:**
+
+      * Any icons or thin decorative lines that previously used an accent color must be updated to the new `primary-blue`.
+
+5.  **Focus Rings:**
+
+      * Ensure that the focus outline on interactive elements (like form inputs and buttons) uses the new `primary-blue` to provide accessible and on-brand feedback.
+
+**Final Result:** The entire application should feel unified under the new brand identity. The dark theme remains, but all key interactions and highlights are now driven by the professional and trustworthy blue from the official ARTI Sigma logo.

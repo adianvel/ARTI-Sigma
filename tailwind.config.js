@@ -30,8 +30,8 @@ module.exports = {
         },
       },
       boxShadow: {
-        pixel: "0 24px 60px rgba(212, 175, 55, 0.18)",
-        "pixel-sm": "0 12px 30px rgba(212, 175, 55, 0.12)",
+        pixel: "0 24px 60px rgba(47, 97, 255, 0.18)",
+        "pixel-sm": "0 12px 30px rgba(47, 97, 255, 0.12)",
       },
       borderRadius: {
         pixel: "14px",
@@ -58,3 +58,4 @@ module.exports = {
   },
   plugins: [],
 }
+

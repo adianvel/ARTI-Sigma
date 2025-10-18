@@ -10,8 +10,8 @@ const navLinkClass = (active: boolean) =>
   [
     "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] transition-all duration-200",
     active
-      ? "border-as-borderStrong bg-as-highlight/40 text-as-heading shadow-pixel-sm"
-      : "border-transparent text-as-muted hover:border-as-border hover:bg-as-highlight/20 hover:text-as-heading",
+      ? "border-as-borderStrong bg-as-highlight/40 text-as-primary shadow-pixel-sm"
+      : "border-transparent text-as-muted hover:border-as-border hover:bg-as-highlight/20 hover:text-as-primary",
   ].join(" ")
 
 const BRAND_COLOR = "#2F61FF"
