@@ -17,7 +17,7 @@ type AssetPreview = {
   duration_or_dimensions?: string
 }
 
-const ipfsToGateway = (url: unknown) => {
+const ipfsToGateway = (url: unknown): string | null => {
   if (!url) return null
   if (typeof url === "object" && url !== null) {
     if ("src" in (url as any)) {
@@ -397,6 +397,7 @@ export const NFTGallery = () => {
     </div>
   )
 }
+
 
 
 
