@@ -1,5 +1,6 @@
 {
-    "name": "petlog",
+    "name": "arti",
+    "description": "Arti - A curator-grade registry for immersive video and 3D art",
     "engines": {
         "node": "22.x"
     },

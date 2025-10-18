@@ -1,4 +1,5 @@
-﻿import { ReactNode, useEffect } from "react"
+import { createPortal } from "react-dom"
+import { ReactNode, useEffect, useState } from "react"
 
 interface ModalProps {
   isOpen: boolean
@@ -8,6 +9,8 @@ interface ModalProps {
 }
 
 export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
+  const [container, setContainer] = useState<HTMLDivElement | null>(null)
+
   useEffect(() => {
     if (!isOpen) return
 
@@ -21,18 +24,32 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
     return () => document.removeEventListener("keydown", onKeyDown)
   }, [isOpen, onClose])
 
-  if (!isOpen) return null
+  useEffect(() => {
+    if (!isOpen) return
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
-      <div className="max-w-md w-full mx-4 rounded-[32px] bg-white p-8 shadow-[0_32px_80px_rgba(0,0,0,0.25)] ring-1 ring-gray-100">
+    const node = document.createElement("div")
+    document.body.appendChild(node)
+    setContainer(node)
+
+    return () => {
+      setContainer(null)
+      document.body.removeChild(node)
+    }
+  }, [isOpen])
+
+  if (!isOpen || !container) return null
+
+  return createPortal(
+    <div className="fixed inset-0 z-[2000] flex items-center justify-center">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-md" onClick={onClose} />
+      <div className="relative z-[2001] w-full max-w-md rounded-[26px] border border-as-borderStrong/30 bg-as-surface/90 p-8 shadow-pixel">
         <div className="mb-6 flex items-start justify-between gap-4">
-          <h2 className="text-xl font-semibold text-pl-heading">
+          <h2 className="text-lg font-semibold text-as-heading">
             {title ?? "Select Wallet"}
           </h2>
           <button
             onClick={onClose}
-            className="rounded-full bg-gray-100 px-3 py-1 text-sm font-medium text-gray-600 hover:bg-gray-200 transition-colors"
+            className="pixel-btn px-3 py-1 text-[0.6rem]"
             aria-label="Close modal"
           >
             Close
@@ -40,7 +57,7 @@ export const Modal = ({ isOpen, onClose, title, children }: ModalProps) => {
         </div>
         {children}
       </div>
-    </div>
+    </div>,
+    container
   )
 }
-

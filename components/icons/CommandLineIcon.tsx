@@ -7,8 +7,5 @@ type Props = {
 }
 
 export const CommandLineIcon = ({ className, size = 24 }: Props) => (
-  <Terminal 
-    size={size} 
-    className={twMerge("text-current", className)} 
-  />
+  <Terminal size={size} className={twMerge("text-current", className)} />
 )

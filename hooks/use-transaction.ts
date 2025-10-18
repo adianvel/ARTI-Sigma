@@ -1,5 +1,5 @@
-import { useCallback, useState } from "react"
-import { useCardano } from "use-cardano"
+﻿import { useCallback, useState } from \"react\"
+import { useCardano } from \"use-cardano\"
 
 const useTransaction = () => {
   const { isValid, lucid } = useCardano()
@@ -7,7 +7,7 @@ const useTransaction = () => {
   const [successMessage, setSuccessMessage] = useState<string>()
   const [error, setError] = useState<Error | undefined>()
   const [lovelace, setLovelace] = useState(0)
-  const [toAccount, setToAccount] = useState("")
+  const [toAccount, setToAccount] = useState(\"\")
 
   const sendTransaction = useCallback(async () => {
     if (!lucid || !toAccount || !lovelace) return
@@ -19,12 +19,11 @@ const useTransaction = () => {
         .complete()
 
       const signedTx = await tx.sign().complete()
-
       const txHash = await signedTx.submit()
 
       setLovelace(0)
-      setToAccount("")
-      setSuccessMessage(`Transaction submitted with hash ${txHash}`)
+      setToAccount(\"\")
+      setSuccessMessage(Transaction submitted with hash )
     } catch (e) {
       if (e instanceof Error) setError(e)
       else console.error(e)
@@ -34,9 +33,8 @@ const useTransaction = () => {
   const lovelaceSetter = useCallback((value: string) => {
     setError(undefined)
     setSuccessMessage(undefined)
-
     const parsed = parseInt(value)
-    if (isNaN(parsed)) return
+    if (Number.isNaN(parsed)) return
     setLovelace(parsed)
   }, [])
 
@@ -54,7 +52,7 @@ const useTransaction = () => {
     toAccount,
     setToAccount: toAccountSetter,
     sendTransaction,
-    canTransact: isValid && lovelace > 0 && toAccount,
+    canTransact: Boolean(isValid && lovelace > 0 && toAccount),
   }
 }
 

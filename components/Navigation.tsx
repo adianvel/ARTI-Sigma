@@ -1,32 +1,43 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { useRouter } from "next/router"
 import { useMemo, useState } from "react"
-import { Cat, PawPrint, Home } from "lucide-react"
+import { Sparkles, Shapes, GalleryHorizontalEnd, Wallet } from "lucide-react"
 import { Modal } from "./Modal"
 import { WalletSelector } from "./WalletSelector"
 import { useLucid } from "../contexts/LucidContext"
 
 const navLinkClass = (active: boolean) =>
   [
-    "inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] transition-all duration-200",
+    "inline-flex items-center gap-2 rounded-full border px-4 py-2 text-xs font-semibold uppercase tracking-[0.35em] transition-all duration-200",
     active
-      ? "bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300 text-white shadow-[0_8px_24px_rgba(244,175,208,0.4)]"
-      : "bg-white/60 text-pl-heading hover:bg-white/80 hover:shadow-[0_4px_12px_rgba(0,0,0,0.1)] ring-1 ring-rose-100",
+      ? "border-as-borderStrong bg-as-highlight/40 text-as-heading shadow-pixel-sm"
+      : "border-transparent text-as-muted hover:border-as-border hover:bg-as-highlight/20 hover:text-as-heading",
   ].join(" ")
 
-const MarketingNavigation = () => {
-  return (
-    <header className="flex items-center justify-center py-8">
-      <Link href="/" className="rounded-full bg-white/90 px-6 py-3 shadow-[0_18px_36px_rgba(244,175,208,0.35)] ring-1 ring-rose-100 backdrop-blur transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_24px_48px_rgba(244,175,208,0.45)]">
-        <img
-          src="/petlog-logo.png"
-          alt="PetLog - Digital Pet Passport Platform"
-          className="h-8 w-auto"
-        />
-      </Link>
-    </header>
-  )
-}
+const BRAND_COLOR = "#2F61FF"
+
+const BrandMark = () => (
+  <Link href="/" className="group inline-flex flex-col text-left leading-tight">
+    <span
+      className="text-sm font-semibold uppercase tracking-[0.45em] transition-colors group-hover:text-as-heading"
+      style={{ color: BRAND_COLOR }}
+    >
+      ARTI Sigma
+    </span>
+    <span className="text-[0.7rem] uppercase tracking-[0.4em] text-as-muted transition-colors group-hover:text-as-heading">
+      Immersive registry
+    </span>
+  </Link>
+)
+
+const MarketingNavigation = () => (
+  <header className="flex items-center justify-between py-8">
+    <BrandMark />
+    <Link href="/mint" className="pixel-btn pixel-btn--primary px-6 py-2 text-[0.65rem]">
+      Mint a showcase
+    </Link>
+  </header>
+)
 
 const AppNavigation = ({ currentPath }: { currentPath: string }) => {
   const { account, disconnect, isReady, network, initializationError } = useLucid()
@@ -34,35 +45,25 @@ const AppNavigation = ({ currentPath }: { currentPath: string }) => {
 
   const links = useMemo(
     () => [
-      { href: "/app", label: "Home", icon: Home },
-      { href: "/my-passports", label: "Pet Crew", icon: Cat },
-      { href: "/mint", label: "Create", icon: PawPrint },
+      { href: "/app", label: "Studio", icon: Shapes },
+      { href: "/my-passports", label: "My collection", icon: GalleryHorizontalEnd },
+      { href: "/mint", label: "Tokenize", icon: Sparkles },
     ],
     []
   )
 
-  const handleDisconnect = () => {
-    disconnect()
-  }
-
   return (
-    <header className="rounded-[32px] bg-white/80 mx-4 mt-6 px-6 py-4 shadow-[0_20px_40px_rgba(212,177,189,0.25)] ring-1 ring-rose-100 sm:mx-6">
+    <header className="mt-6 rounded-[26px] border border-as-border bg-as-surface/60 px-6 py-5 backdrop-blur">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <Link href="/" className="hover:opacity-80 transition-opacity">
-          <img
-            src="/petlog-logo.png"
-            alt="PetLog - Digital Pet Passport Platform"
-            className="h-8 w-auto"
-          />
-        </Link>
+        <BrandMark />
 
         <nav className="flex items-center gap-2">
           {links.map((link) => {
-            const ActiveIcon = link.icon
+            const Icon = link.icon
             const isActive = currentPath === link.href
             return (
               <Link key={link.href} href={link.href} className={navLinkClass(isActive)}>
-                {ActiveIcon ? <ActiveIcon size={16} aria-hidden /> : null}
+                {Icon ? <Icon size={14} aria-hidden /> : null}
                 <span className="hidden sm:inline">{link.label}</span>
               </Link>
             )
@@ -70,38 +71,34 @@ const AppNavigation = ({ currentPath }: { currentPath: string }) => {
         </nav>
 
         <div className="flex items-center gap-3">
-          <div className="hidden md:flex flex-col items-end">
-            <span className="text-xs uppercase tracking-[0.2em] text-pl-muted">
-              Network: {network}
-            </span>
+          <div className="hidden text-[0.6rem] uppercase tracking-[0.35em] text-as-muted md:flex md:flex-col md:items-end">
+            <span>Network - {network}</span>
             {account && (
-              <span className="text-xs text-pl-muted">
-                {`${account.address.slice(0, 8)}...${account.address.slice(-6)}`}
-              </span>
+              <span>{`${account.address.slice(0, 6)}...${account.address.slice(-5)}`}</span>
             )}
           </div>
           {account ? (
-            <button 
-              onClick={handleDisconnect} 
-              className="rounded-full bg-white/60 px-4 py-2 text-sm font-semibold text-pl-heading ring-1 ring-rose-100 hover:bg-white/80 transition-all duration-200"
-            >
+            <button onClick={disconnect} className="pixel-btn px-5 py-2 text-[0.6rem]">
               Disconnect
             </button>
           ) : (
             <button
               disabled={!isReady || Boolean(initializationError)}
               onClick={() => setWalletModalOpen(true)}
-              className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300 px-4 py-2 text-sm font-semibold text-white shadow-[0_8px_24px_rgba(244,175,208,0.4)] transition-all duration-200 hover:-translate-y-0.5 hover:shadow-[0_12px_32px_rgba(244,175,208,0.5)] disabled:opacity-50 disabled:cursor-not-allowed"
+              className="pixel-btn pixel-btn--primary inline-flex items-center gap-2 px-5 py-2 text-[0.6rem] disabled:cursor-not-allowed disabled:opacity-60"
             >
-              <PawPrint size={16} aria-hidden /> 
-              <span className="hidden sm:inline">Connect Wallet</span>
-              <span className="sm:hidden">Connect</span>
+              <Wallet size={14} aria-hidden />
+              Connect wallet
             </button>
           )}
         </div>
       </div>
 
-      <Modal isOpen={isWalletModalOpen} onClose={() => setWalletModalOpen(false)} title="Connect your wallet">
+      <Modal
+        isOpen={isWalletModalOpen}
+        onClose={() => setWalletModalOpen(false)}
+        title="Connect your wallet"
+      >
         <WalletSelector onConnect={() => setWalletModalOpen(false)} />
       </Modal>
     </header>
@@ -111,10 +108,8 @@ const AppNavigation = ({ currentPath }: { currentPath: string }) => {
 export const Navigation = () => {
   const router = useRouter()
   const currentPath = router.pathname
-
   if (currentPath === "/") {
     return <MarketingNavigation />
   }
-
   return <AppNavigation currentPath={currentPath} />
 }

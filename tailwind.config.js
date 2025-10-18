@@ -10,7 +10,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        pl: {
+        as: {
           background: "var(--color-background-main)",
           card: "var(--color-background-card)",
           surface: "var(--color-surface)",
@@ -30,18 +30,18 @@ module.exports = {
         },
       },
       boxShadow: {
-        pixel: "4px 4px 0 0 var(--color-shadow)",
-        "pixel-sm": "2px 2px 0 0 var(--color-shadow)",
+        pixel: "0 24px 60px rgba(212, 175, 55, 0.18)",
+        "pixel-sm": "0 12px 30px rgba(212, 175, 55, 0.12)",
       },
       borderRadius: {
-        pixel: "4px",
+        pixel: "14px",
       },
       transitionDuration: {
         120: "120ms",
       },
       fontFamily: {
-        display: ['"Press Start 2P"', '"VT323"', ...fontFamily.mono],
-        body: ['"VT323"', ...fontFamily.sans],
+        display: ['"Playfair Display"', ...fontFamily.serif],
+        body: ['"Inter"', ...fontFamily.sans],
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1rem' }],

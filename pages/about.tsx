@@ -1,91 +1,122 @@
 ﻿import Link from "next/link"
-import { Heart, Shield, Globe, Users } from "lucide-react"
+import { Sparkles, Globe2, ShieldCheck, Users } from "lucide-react"
+
+const studioValues = [
+  {
+    icon: ShieldCheck,
+    title: "Preserve intent",
+    copy: "Every Arti token is signed with artist-approved metadata that captures narrative, render specs, and licensing guidance.",
+  },
+  {
+    icon: Sparkles,
+    title: "Celebrate innovation",
+    copy: "We platform moving images, volumetric sculptures, and generative experiments that deserve gallery-grade presentation.",
+  },
+  {
+    icon: Users,
+    title: "Bridge communities",
+    copy: "Artists, collectors, technologists, and curators collaborate on Arti to build trust around immersive art.",
+  },
+]
+
+const globalFocus = [
+  {
+    heading: "Cultural exchanges",
+    description:
+      "We partner with festivals and residencies to debut time-based works with transparent provenance.",
+  },
+  {
+    heading: "Open tooling",
+    description:
+      "Our metadata schema is public, composable, and designed to integrate with custom viewers or marketplace rails.",
+  },
+  {
+    heading: "Long-term access",
+    description:
+      "Media is pinned redundantly across IPFS gateways so drops remain replayable decades from now.",
+  },
+]
 
 const About = () => {
   return (
-    <div className="mx-auto max-w-6xl space-y-8 pt-8">
-      {/* Header Section */}
-      <section className="rounded-[40px] bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 px-6 py-12 shadow-[0_28px_80px_rgba(99,102,241,0.25)] ring-1 ring-indigo-100 text-center">
-        <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-indigo-600 ring-1 ring-indigo-200 mb-6">
-          <Heart size={14} />
-          Our Mission
+    <div className="mx-auto max-w-6xl space-y-10 pt-10 text-as-body">
+      <section className="pixel-card px-8 py-12 text-left sm:px-12">
+        <span className="inline-flex items-center gap-2 rounded-full border border-as-border px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-as-muted">
+          Our intent
         </span>
-        <h1 className="text-4xl font-semibold text-pl-heading sm:text-5xl mb-6">About PetLog</h1>
-        <p className="text-lg leading-relaxed text-pl-body opacity-80 max-w-3xl mx-auto">
-          Building the future of pet documentation through blockchain technology. 
-          We're creating a trusted, decentralized layer for pet identity that connects owners, breeders, and veterinarians.
+        <h1 className="mt-6 text-4xl font-semibold text-as-heading sm:text-5xl">About Arti.</h1>
+        <p className="mt-5 max-w-3xl text-lg leading-relaxed text-as-muted">
+          Arti is a curator-grade registry for video and 3D artists. Born out of collaborations with
+          motion designers, immersive storytellers, and digital galleries, we preserve the full
+          fidelity of every drop and connect it to a transparent on-chain record.
         </p>
+        <div className="mt-6 flex flex-col items-start gap-4 sm:flex-row">
+          <Link href="/mint" className="pixel-btn pixel-btn--primary px-6 py-3 text-[0.65rem]">
+            Mint a showcase
+          </Link>
+          <Link href="/contact" className="pixel-btn px-6 py-3 text-[0.65rem]">
+            Talk with the team
+          </Link>
+        </div>
       </section>
 
-      {/* Mission Cards */}
-      <div className="grid gap-8 lg:grid-cols-3">
-        <div className="rounded-[32px] bg-gradient-to-br from-rose-50 to-pink-100 px-6 py-8 shadow-[0_20px_40px_rgba(244,175,208,0.2)] ring-1 ring-rose-100">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="rounded-2xl bg-rose-100 p-3">
-              <Shield size={24} className="text-rose-600" />
-            </div>
-            <h3 className="text-xl font-semibold text-pl-heading">Trust & Security</h3>
-          </div>
-          <p className="text-pl-body opacity-80 leading-relaxed">
-            Immutable blockchain records ensure your pet's identity and health history can never be forged or lost.
-          </p>
-        </div>
-
-        <div className="rounded-[32px] bg-gradient-to-br from-blue-50 to-cyan-100 px-6 py-8 shadow-[0_20px_40px_rgba(59,130,246,0.2)] ring-1 ring-blue-100">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="rounded-2xl bg-blue-100 p-3">
-              <Globe size={24} className="text-blue-600" />
-            </div>
-            <h3 className="text-xl font-semibold text-pl-heading">Global Standard</h3>
-          </div>
-          <p className="text-pl-body opacity-80 leading-relaxed">
-            Creating a universal standard for pet documentation that works across borders and institutions.
-          </p>
-        </div>
-
-        <div className="rounded-[32px] bg-gradient-to-br from-green-50 to-emerald-100 px-6 py-8 shadow-[0_20px_40px_rgba(34,197,94,0.2)] ring-1 ring-green-100">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="rounded-2xl bg-green-100 p-3">
-              <Users size={24} className="text-green-600" />
-            </div>
-            <h3 className="text-xl font-semibold text-pl-heading">Community Driven</h3>
-          </div>
-          <p className="text-pl-body opacity-80 leading-relaxed">
-            Built by pet lovers, for pet lovers. Every feature is designed with the pet community in mind.
-          </p>
-        </div>
-      </div>
-
-      {/* Vision Section */}
-      <section className="rounded-[32px] bg-gradient-to-r from-orange-200/60 via-white/80 to-pink-200/60 px-6 py-12 shadow-[0_20px_60px_rgba(244,175,208,0.28)] ring-1 ring-rose-100">
-        <div className="max-w-4xl mx-auto text-center space-y-6">
-          <h2 className="text-3xl font-semibold text-pl-heading">Our Vision</h2>
-          <p className="text-lg text-pl-body opacity-80 leading-relaxed">
-            We envision a world where every pet has a verified digital identity that travels with them throughout their life. 
-            From birth certificates to medical records, from breeding documentation to ownership transfers – 
-            all secured on an immutable, transparent blockchain network.
-          </p>
-          
-          <div className="pt-6">
-            <Link
-              href="/app"
-              className="group relative inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-orange-400 via-pink-500 to-purple-600 p-1 shadow-[0_20px_60px_rgba(249,115,22,0.4)] transition-all duration-300 hover:shadow-[0_30px_80px_rgba(249,115,22,0.6)] hover:-translate-y-1"
-            >
-              <div className="rounded-full bg-white px-8 py-4 text-base font-bold text-transparent bg-gradient-to-r from-orange-600 via-pink-600 to-purple-700 bg-clip-text uppercase tracking-[0.2em]">
-                Join the Revolution
+      <section className="grid gap-8 lg:grid-cols-3">
+        {studioValues.map((value) => {
+          const Icon = value.icon
+          return (
+            <article key={value.title} className="pixel-card space-y-4 p-6">
+              <div className="rounded-[16px] border border-as-border bg-as-highlight/20 p-3 text-as-heading">
+                <Icon size={22} />
               </div>
-            </Link>
-          </div>
+              <h2 className="text-xl font-semibold text-as-heading">{value.title}</h2>
+              <p className="text-sm leading-relaxed text-as-muted">{value.copy}</p>
+            </article>
+          )
+        })}
+      </section>
+
+      <section className="pixel-card grid gap-6 px-8 py-12 sm:grid-cols-[1.1fr_1fr] sm:px-12">
+        <div className="space-y-4">
+          <h2 className="text-3xl font-semibold text-as-heading">Our global focus.</h2>
+          <p className="text-lg leading-relaxed text-as-muted">
+            Arti is headquartered between Yogyakarta and Singapore with collaborators in Berlin,
+            Seoul, and Sao Paulo. Together we are proving that immersive art deserves a durable,
+            interoperable home.
+          </p>
+          <Link href="/licensing" className="pixel-btn pixel-btn--secondary inline-flex px-6 py-3 text-[0.65rem]">
+            Explore licensing
+          </Link>
+        </div>
+        <div className="space-y-4">
+          {globalFocus.map((item) => (
+            <div
+              key={item.heading}
+              className="rounded-[18px] border border-as-border bg-as-highlight/15 p-5 text-sm leading-relaxed text-as-muted"
+            >
+              <p className="text-[0.7rem] uppercase tracking-[0.3em] text-as-heading">
+                {item.heading}
+              </p>
+              <p className="mt-2">{item.description}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Coming Soon */}
-      <section className="rounded-[32px] bg-white/80 px-6 py-8 shadow-[0_24px_60px_rgba(212,177,189,0.25)] ring-1 ring-rose-100">
-        <div className="text-center space-y-4">
-          <h3 className="text-xl font-semibold text-pl-heading">More Coming Soon</h3>
-          <p className="text-pl-body opacity-80">
-            We are crafting a richer story for this page. For now, keep an eye on the release notes and PetLog updates.
-          </p>
+      <section className="pixel-card flex flex-col gap-6 px-8 py-12 sm:px-12">
+        <div className="flex items-center gap-3 text-[0.65rem] uppercase tracking-[0.35em] text-as-muted">
+          <Globe2 size={16} />
+          Community
+        </div>
+        <h2 className="text-3xl font-semibold text-as-heading">Join the creator circle.</h2>
+        <p className="max-w-3xl text-lg leading-relaxed text-as-muted">
+          We host quarterly listening sessions with artists, collectors, and partners to co-design
+          the roadmap. Contribute ideas, surface needs, or propose collaborations - Arti is built in
+          the open.
+        </p>
+        <div>
+          <Link href="/contact" className="pixel-btn px-6 py-3 text-[0.65rem]">
+            Share your practice
+          </Link>
         </div>
       </section>
     </div>

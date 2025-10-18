@@ -1,226 +1,246 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 
-const nftCards = [
+const showcaseHighlights = [
   {
-    title: "Luna",
-    stat: "Silver Bengal - Born 2021",
-    description: "Starlight Navigator",
-    gradient: "from-red-100 via-rose-50 to-pink-100",
+    id: "arti-101",
+    title: "Spectral Bloom",
+    creator: "Mika Rinaldi",
+    format: "8K ray-traced GLB - Spatial audio",
+    duration: "03:18 continuous loop",
   },
   {
-    title: "Mochi", 
-    stat: "Ragdoll - Born 2020",
-    description: "Cuddle Diplomat",
-    gradient: "from-blue-100 via-cyan-50 to-sky-100",
+    id: "arti-102",
+    title: "Velvet Frequency",
+    creator: "Hanif Ramadhan",
+    format: "CinemaScope HDR - MP4",
+    duration: "02:04 narrative short",
   },
   {
-    title: "Aster",
-    stat: "Scottish Fold - Born 2023", 
-    description: "Whisker Archivist",
-    gradient: "from-green-100 via-emerald-50 to-teal-100",
+    id: "arti-103",
+    title: "Memory Atlas",
+    creator: "Aveline Noor",
+    format: "Immersive panorama - WebM",
+    duration: "04:45 guided experience",
   },
   {
-    title: "Pixel",
-    stat: "Sphynx - Born 2019",
-    description: "Warmth Seeker", 
-    gradient: "from-purple-100 via-violet-50 to-indigo-100",
+    id: "arti-104",
+    title: "Delta Bloom",
+    creator: "Satriya Irawan",
+    format: "Realtime shader study - GLTF",
+    duration: "Interactive tempo sync",
   },
 ]
 
-const problemCards = [
+const galleryPillars = [
   {
-    title: "Fake Pedigree Certificates",
-    stat: "42% of pedigree certificates in Asia are unverifiable",
-    description: "Too many breeders still rely on paper-based proof that can be forged, lost, or duplicated — breaking trust between buyers and associations.",
-    source: "(Source: Asian Kennel Network, 2024)",
-    gradient: "from-red-100 via-rose-50 to-pink-100",
+    title: "Motion preserved",
+    description:
+      "Encode true-to-studio frame rates, grades, and multi-channel audio so your audience experiences the piece exactly as rendered.",
   },
   {
-    title: "Scattered Vaccine & Health Records",
-    stat: "73% of veterinary clinics in Indonesia still use manual or Excel-based records",
-    description: "When health data lives in silos, owners lose track and vets lose visibility.",
-    source: "(Source: Indonesian Veterinary Association, 2023)",
-    gradient: "from-orange-100 via-amber-50 to-yellow-100",
+    title: "3D ready on arrival",
+    description:
+      "Deliver GLB/GLTF packages with lighting notes and AR fallbacks, viewable directly in the browser or via model-viewer enabled devices.",
   },
   {
-    title: "Fragmented & Unverified Pet Data",
-    description: "There's no standardized system to verify a pet's lineage, vaccine history, or ownership — especially in developing markets. That means one thing: no real proof of authenticity or care.",
-    gradient: "from-blue-100 via-sky-50 to-cyan-100",
+    title: "Collector-grade provenance",
+    description:
+      "Arti tokens carry immutable artist credits, edition notes, and transfer-safe licensing terms anchored on Cardano.",
   },
 ]
 
-const solutionCards = [
+const mintPipeline = [
   {
-    title: "Immutable Lineage Record",
-    description: "Pedigree data from certified breeders is stored directly on blockchain, verifiable anytime.",
-    impact: "Eliminates up to 90% of fake pedigree cases.",
-    gradient: "from-green-100 via-emerald-50 to-teal-100",
-    emoji: "🧬",
+    label: "Compose",
+    detail: "Capture the artist statement, narrative, and staging notes that frame the release.",
   },
   {
-    title: "Verified Vaccine & Health Log",
-    description: "Veterinary clinics digitally sign every vaccination and health update — ensuring traceable, tamper-proof medical history.",
-    impact: "Guarantees 100% data integrity across connected clinics.",
-    gradient: "from-blue-100 via-cyan-50 to-sky-100",
-    emoji: "💉",
+    label: "Encode",
+    detail: "Upload master video or 3D assets with pristine fidelity - no auto compression, ever.",
   },
   {
-    title: "NFT Pet Passport",
-    description: "Each pet receives a unique NFT ID — containing verified lineage, vaccine, and health metadata — transferable between owners or breeders.",
-    impact: "Transparency that travels with every pet.",
-    gradient: "from-purple-100 via-violet-50 to-indigo-100",
-    emoji: "🪪",
+    label: "Premiere",
+    detail: "Seal the drop on Cardano and share a verifiable showcase link with collectors.",
+  },
+]
+
+const ecosystemCommitments = [
+  {
+    heading: "For studios",
+    copy: "Manage cinematic drops, stage private previews, and syndicate proof with curators worldwide.",
+  },
+  {
+    heading: "For collectors",
+    copy: "Receive archival metadata, verify ownership, and transfer tokens with auditable signatures.",
+  },
+  {
+    heading: "For technologists",
+    copy: "Build on a stable metadata schema purpose-built for motion, volumetric capture, and generative work.",
   },
 ]
 
 export default function LandingPage() {
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-24 pt-12 sm:px-6 lg:px-8">
-      {/* Hero Section */}
-      <section className="rounded-[40px] bg-gradient-to-br from-amber-50 via-rose-50 to-sky-50 px-6 py-14 shadow-[0_28px_80px_rgba(244,175,208,0.35)] ring-1 ring-rose-100 sm:px-12">
-        <div className="grid lg:grid-cols-2 gap-12 items-center">
-          {/* Left Content */}
-          <div className="text-center lg:text-left">
-            <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-rose-500 ring-1 ring-white/60">
-              Cardano Pre-Production
+    <div className="mx-auto max-w-6xl px-4 pb-24 pt-12 text-as-body sm:px-6 lg:px-8">
+      <section className="pixel-card relative overflow-hidden px-8 py-14 sm:px-12">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,rgba(255,255,255,0.12),transparent_60%)]" />
+        <div className="relative grid gap-10 lg:grid-cols-[1.4fr_1fr]">
+          <div className="space-y-6 text-left">
+            <div className="flex items-center justify-start">
+              <img
+                src="/logoarti.jpg"
+                alt="ARTI Sigma logo"
+                className="h-16 w-auto rounded-[12px] border border-as-border/50 bg-as-surface/80 shadow-pixel-sm sm:h-20"
+              />
+            </div>
+            <span className="inline-flex items-center gap-2 rounded-full border border-as-border px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.45em] text-as-muted">
+              Arti - Immersive art registry
             </span>
-            <h1 className="mt-6 text-4xl font-semibold leading-tight text-pl-heading sm:text-5xl lg:text-6xl">
-              Welcome to the
-              <br />
-            
-                PetLog Crew.
-              
+            <h1 className="text-4xl font-semibold text-as-heading sm:text-5xl">
+              A premium digital canvas for your masterpiece.
             </h1>
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-pl-body opacity-80">
-              Meet PetLog&apos;s warm, friendly universe before you ever connect a wallet. Explore the art direction, picture your cat&apos;s debut, and join the crew when you are ready to mint.
+            <p className="max-w-xl text-lg leading-relaxed text-as-muted">
+              Mint cinematic videos, volumetric sculptures, and generative worlds with uncompromised
+              fidelity. Arti captures your intent, packages the experience, and anchors provenance
+              permanently on Cardano.
             </p>
-            <Link
-              href="/mint"
-              className="mt-8 inline-flex items-center justify-center rounded-full bg-gradient-to-r from-rose-400 via-amber-400 to-orange-400 px-10 py-4 text-base font-bold uppercase tracking-[0.3em] text-white shadow-[0_20px_50px_rgba(244,175,208,0.45)] transition-all duration-300 hover:-translate-y-1 hover:shadow-[0_28px_70px_rgba(244,175,208,0.55)]"
-            >
-              Create a Paw-ssport
-            </Link>
-          </div>
-
-          {/* Right Content - NFT Cards */}
-          <div className="relative">
-            {/* Main NFT Cards Grid */}
-            <div className="grid grid-cols-2 gap-4">
-              {nftCards.map((card, index) => {
-                const rotations = ['-rotate-2', 'rotate-3', 'rotate-1', '-rotate-1']
-                const margins = ['', 'mt-8', '-mt-4', '']
-                return (
-                  <div key={card.title} className={`relative group ${margins[index]}`}>
-                    <div className={`rounded-[32px] bg-gradient-to-br ${card.gradient} p-6 ring-1 ring-white/30 shadow-[0_20px_40px_rgba(0,0,0,0.12)] transform ${rotations[index]} group-hover:rotate-0 transition-all duration-300 hover:shadow-[0_28px_50px_rgba(0,0,0,0.15)]`}>
-                      {/* Header */}
-                      <div className="text-center mb-6">
-                        <p className="text-xs font-bold uppercase tracking-[0.2em] text-gray-600 mb-2">PETLOG LEVEL 1</p>
-                        <h3 className="text-3xl font-black text-gray-800 pixel-text tracking-wider">{card.title}</h3>
-                      </div>
-                      
-                      {/* Breed & Birth Info */}
-                      <div className="text-center mb-6">
-                        <p className="text-sm font-bold uppercase tracking-[0.15em] text-gray-700 leading-tight whitespace-pre-line">
-                          {card.stat.replace(' - Born ', '\n- BORN ')}
-                        </p>
-                      </div>
-                      
-                      {/* Description Badge */}
-                      <div className="rounded-2xl bg-white/80 px-4 py-3 text-center shadow-inner">
-                        <p className="text-sm font-black uppercase tracking-[0.1em] text-gray-800 pixel-text whitespace-pre-line">
-                          {card.description.replace(' ', '\n')}
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                )
-              })}
+            <div className="flex flex-col items-start gap-4 sm:flex-row">
+              <Link href="/mint" className="pixel-btn pixel-btn--primary px-8 py-3 text-[0.65rem]">
+                Mint a new drop
+              </Link>
+              <Link
+                href="/my-passports"
+                className="pixel-btn pixel-btn--secondary px-8 py-3 text-[0.65rem]"
+              >
+                Enter my gallery
+              </Link>
             </div>
-
-            {/* Floating Elements */}
-            <div className="absolute -top-4 -left-4 w-8 h-8 bg-gradient-to-br from-yellow-200 to-orange-200 rounded-full opacity-60 animate-pulse"></div>
-            <div className="absolute -bottom-2 -right-2 w-6 h-6 bg-gradient-to-br from-pink-200 to-rose-200 rounded-full opacity-50 animate-pulse delay-700"></div>
-            <div className="absolute top-1/2 -right-6 w-4 h-4 bg-gradient-to-br from-blue-200 to-cyan-200 rounded-full opacity-40 animate-pulse delay-1000"></div>
           </div>
-        </div>
-      </section>
 
-      {/* Problem Section */}
-      <section className="mt-20 rounded-[32px] bg-white/80 px-6 py-12 shadow-[0_24px_60px_rgba(212,177,189,0.25)] ring-1 ring-rose-100 sm:px-12">
-        <header className="max-w-3xl space-y-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-rose-500">🐾 The Problem</p>
-          <h2 className="text-3xl font-semibold text-pl-heading sm:text-4xl">A Broken System of Trust in Pet Ownership</h2>
-        </header>
-
-        <div className="mt-12 grid gap-8 lg:grid-cols-3">
-          {problemCards.map((card, index) => (
-            <div key={card.title} className={`rounded-[26px] bg-gradient-to-br ${card.gradient} p-6 ring-1 ring-white/70 shadow-[0_20px_40px_rgba(0,0,0,0.08)]`}>
-              <h3 className="text-xl font-semibold text-pl-heading">{card.title}</h3>
-              {card.stat && (
-                <div className="mt-4 rounded-lg bg-white/70 px-4 py-3">
-                  <p className="text-sm font-bold text-red-700">{card.stat}</p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {showcaseHighlights.map((highlight) => (
+              <article
+                key={highlight.id}
+                className="rounded-[18px] border border-as-border bg-as-highlight/20 p-5 text-[0.75rem] uppercase tracking-[0.35em] text-as-muted transition-all duration-300 hover:border-as-borderStrong hover:bg-as-highlight/35"
+              >
+                <p className="text-[0.55rem] text-as-muted/70">{highlight.id}</p>
+                <h3 className="mt-2 text-base normal-case tracking-normal text-as-heading">
+                  {highlight.title}
+                </h3>
+                <p className="mt-1 text-[0.7rem] normal-case tracking-[0.2em] text-as-muted">
+                  {highlight.creator}
+                </p>
+                <div className="mt-4 space-y-2 text-[0.55rem] leading-relaxed text-as-muted/80">
+                  <p>{highlight.format}</p>
+                  <p>{highlight.duration}</p>
                 </div>
-              )}
-              <p className="mt-4 text-base leading-relaxed text-pl-body opacity-80">{card.description}</p>
-              {card.source && (
-                <p className="mt-3 text-xs italic text-pl-body opacity-60">{card.source}</p>
-              )}
-            </div>
-          ))}
-        </div>
-
-        <div className="mt-12 text-center">
-          <p className="text-lg italic text-pl-body opacity-70">
-            💬 &ldquo;When data is fragmented, trust disappears.&rdquo;
-          </p>
+              </article>
+            ))}
+          </div>
         </div>
       </section>
 
-      {/* Solution Section */}
-      <section className="mt-20 rounded-[32px] bg-gradient-to-r from-rose-200/60 via-white/80 to-sky-200/60 px-6 py-12 shadow-[0_20px_60px_rgba(244,175,208,0.28)] ring-1 ring-rose-100 sm:px-12">
-        <header className="max-w-3xl space-y-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-rose-500">💡 The Solution</p>
-          <h2 className="text-3xl font-semibold text-pl-heading sm:text-4xl">PetLog — A Decentralized Trust Layer for Pets</h2>
-        </header>
+      <section className="mt-16 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
+        <div className="space-y-6">
+          <h2 className="text-3xl font-semibold text-as-heading">A gallery without walls.</h2>
+          <p className="text-lg leading-relaxed text-as-muted">
+            The public registry surfaces the most daring video, 3D, and generative art releases from
+            around the globe. Browse pristine playback, explore edition notes, and validate
+            provenance instantly.
+          </p>
+          <div className="grid gap-4 sm:grid-cols-2">
+            {showcaseHighlights.map((highlight) => (
+              <div
+                key={highlight.id}
+                className="rounded-[18px] border border-as-border bg-as-surface/80 p-4 text-[0.65rem] uppercase tracking-[0.35em] text-as-muted"
+              >
+                <p className="text-as-muted/60">{highlight.creator}</p>
+                <p className="mt-2 text-sm normal-case tracking-[0.2em] text-as-heading">
+                  {highlight.title}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
 
-        <div className="mt-12 grid gap-8 lg:grid-cols-3">
-          {solutionCards.map((card, index) => (
-            <div key={card.title} className={`rounded-[26px] bg-gradient-to-br ${card.gradient} p-6 ring-1 ring-white/70 shadow-[0_20px_40px_rgba(0,0,0,0.08)]`}>
-              <div className="flex items-center gap-3 mb-4">
-                <span className="text-2xl">{card.emoji}</span>
-                <h3 className="text-xl font-semibold text-pl-heading">{card.title}</h3>
-              </div>
-              <p className="text-base leading-relaxed text-pl-body opacity-80 mb-4">{card.description}</p>
-              <div className="rounded-lg bg-white/70 px-4 py-3">
-                <p className="text-sm font-bold text-green-700">{card.impact}</p>
-              </div>
-            </div>
+        <div className="pixel-card space-y-5 p-6">
+          <h3 className="text-xl font-semibold uppercase tracking-[0.3em] text-as-heading">
+            Gallery pillars
+          </h3>
+          <ul className="space-y-4 text-sm leading-relaxed text-as-muted">
+            {galleryPillars.map((pillar) => (
+              <li key={pillar.title} className="rounded-[16px] border border-as-border p-4">
+                <p className="text-[0.75rem] uppercase tracking-[0.3em] text-as-heading">
+                  {pillar.title}
+                </p>
+                <p className="mt-2">{pillar.description}</p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </section>
+
+      <section className="mt-20 rounded-[26px] border border-as-border bg-as-surface/70 p-8">
+        <header className="space-y-3 text-center">
+          <p className="text-[0.65rem] uppercase tracking-[0.4em] text-as-muted">Minting cadence</p>
+          <h2 className="text-3xl font-semibold text-as-heading">From render queue to registry.</h2>
+        </header>
+        <div className="mt-10 grid gap-6 sm:grid-cols-3">
+          {mintPipeline.map((step, index) => (
+            <article
+              key={step.label}
+              className="rounded-[18px] border border-as-border bg-as-highlight/25 p-6 text-sm leading-relaxed text-as-muted"
+            >
+              <p className="text-[0.65rem] uppercase tracking-[0.4em] text-as-muted/80">
+                Step {index + 1}
+              </p>
+              <h3 className="mt-3 text-base font-semibold text-as-heading">{step.label}</h3>
+              <p className="mt-3 text-as-muted">{step.detail}</p>
+            </article>
           ))}
         </div>
+      </section>
 
-        {/* Validator Network Section */}
-        <div className="mt-12 rounded-[26px] bg-gradient-to-br from-purple-100 via-indigo-50 to-blue-100 p-8 ring-1 ring-white/70 shadow-[0_20px_40px_rgba(0,0,0,0.08)]">
-          <div className="flex items-center gap-3 mb-4">
-            <span className="text-3xl">🔗</span>
-            <h3 className="text-2xl font-semibold text-pl-heading">Validator Network</h3>
-          </div>
-          <p className="text-lg leading-relaxed text-pl-body opacity-80 mb-6">
-            Pedigree associations and veterinary clinics act as trusted validators in the ecosystem, creating a decentralized network of verified pet data.
+      <section className="mt-20 grid gap-8 lg:grid-cols-[1fr_1.1fr]">
+        <div className="pixel-card p-7">
+          <h3 className="text-2xl font-semibold text-as-heading">Why artists join Arti</h3>
+          <p className="mt-4 text-as-muted">
+            We collaborate with motion designers, realtime artists, and digital galleries to capture
+            the full intent of every project. From color grading data to spatial audio stems, every
+            detail is preserved.
           </p>
-          <div className="rounded-lg bg-white/70 px-6 py-4">
-            <p className="text-base font-bold text-purple-700">Building a trusted digital identity layer for the pet industry.</p>
-          </div>
+          <ul className="mt-6 space-y-3 text-sm leading-relaxed text-as-muted">
+            <li>- Custom metadata schema for video, volumetric, and generative formats.</li>
+            <li>- Redundant IPFS pinning with verified playback endpoints.</li>
+            <li>- Cardano-native issuance with upgradeable display tooling.</li>
+          </ul>
         </div>
 
-        <div className="mt-12 text-center">
-          <Link
-            href="/app"
-            className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300 px-10 py-3 text-base font-semibold uppercase tracking-[0.3em] text-pl-heading shadow-[0_20px_50px_rgba(244,175,208,0.45)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_rgba(244,175,208,0.55)]"
-          >
-            Start Building Trust
-          </Link>
+        <div className="pixel-card p-7">
+          <h3 className="text-2xl font-semibold text-as-heading">Ecosystem commitments</h3>
+          <p className="mt-4 text-as-muted">
+            Whether you are staging a premiere, collecting a series, or integrating with tooling,
+            Arti provides a stable, transparent framework for immersive art.
+          </p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            {ecosystemCommitments.map((item) => (
+              <div
+                key={item.heading}
+                className="rounded-[18px] border border-as-border bg-as-highlight/20 p-4 text-sm text-as-muted"
+              >
+                <p className="text-[0.65rem] uppercase tracking-[0.35em] text-as-muted/60">
+                  {item.heading}
+                </p>
+                <p className="mt-2">{item.copy}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
     </div>
   )
 }
+
+
+
+

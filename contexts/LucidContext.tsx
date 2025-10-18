@@ -1,4 +1,12 @@
-import { createContext, useCallback, useContext, useEffect, useMemo, useRef, useState } from "react"
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react"
 import type { Lucid, Network } from "lucid-cardano"
 
 interface WalletAccount {
@@ -18,7 +26,6 @@ interface LucidContextState {
 
 const BLOCKFROST_API_URL =
   process.env.NEXT_PUBLIC_BLOCKFROST_API_URL ?? "https://cardano-preprod.blockfrost.io/api/v0"
-
 const BLOCKFROST_PROJECT_ID =
   process.env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID ?? process.env.BLOCKFROST_PROJECT_ID ?? ""
 
@@ -58,6 +65,7 @@ export const LucidProvider = ({ children }: { children: React.ReactNode }) => {
   const [account, setAccount] = useState<WalletAccount | null>(null)
   const [isReady, setIsReady] = useState(false)
   const [initializationError, setInitializationError] = useState<string | null>(null)
+
   const initializationPromise = useRef<Promise<Lucid> | null>(null)
 
   const initializeLucid = useCallback(async (): Promise<Lucid> => {
@@ -70,7 +78,8 @@ export const LucidProvider = ({ children }: { children: React.ReactNode }) => {
     }
 
     if (!BLOCKFROST_PROJECT_ID) {
-      const message = "Missing NEXT_PUBLIC_BLOCKFROST_PROJECT_ID or BLOCKFROST_PROJECT_ID env var. Set NEXT_PUBLIC_BLOCKFROST_PROJECT_ID in your environment."
+      const message =
+        "Missing NEXT_PUBLIC_BLOCKFROST_PROJECT_ID or BLOCKFROST_PROJECT_ID env var. Set NEXT_PUBLIC_BLOCKFROST_PROJECT_ID in your environment."
       console.error(message)
       setInitializationError(message)
       setIsReady(true)
@@ -99,7 +108,6 @@ export const LucidProvider = ({ children }: { children: React.ReactNode }) => {
     })()
 
     initializationPromise.current = promise
-
     return promise
   }, [lucid])
 
@@ -111,7 +119,6 @@ export const LucidProvider = ({ children }: { children: React.ReactNode }) => {
     async (walletName: string) => {
       try {
         const lucidInstance = lucid ?? (await initializeLucid())
-
         if (!lucidInstance) {
           throw new Error(initializationError ?? "Lucid instance not ready")
         }
@@ -123,7 +130,6 @@ export const LucidProvider = ({ children }: { children: React.ReactNode }) => {
 
         const walletApi = await cardano[walletName].enable()
         await lucidInstance.selectWallet(walletApi)
-
         const [address, rewardAddress] = await Promise.all([
           lucidInstance.wallet.address(),
           lucidInstance.wallet.rewardAddress().catch(() => null),
@@ -143,7 +149,15 @@ export const LucidProvider = ({ children }: { children: React.ReactNode }) => {
   }, [])
 
   const value = useMemo(
-    () => ({ lucid, account, connect, disconnect, isReady, network: CARDANO_NETWORK, initializationError }),
+    () => ({
+      lucid,
+      account,
+      connect,
+      disconnect,
+      isReady,
+      network: CARDANO_NETWORK,
+      initializationError,
+    }),
     [lucid, account, connect, disconnect, initializationError, isReady]
   )
 

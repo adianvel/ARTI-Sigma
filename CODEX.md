@@ -1,50 +1,26 @@
-**Alur:** `Pengguna masuk ke web` → `Menampilkan Landing Page Promosi` → `Pengguna klik Tombol Aksi (CTA)` → `Menampilkan Halaman Aplikasi Utama`.
 
-### **Prompt for AI Agent: Create a Marketing Landing Page with a Separate App Entry Point**
+**Objective:** Integrate the new ARTI Sigma logo and favicon (provided in the images) across the application, specifically updating the header and making the full square logo prominent on the landing page.
 
-**Goal:** Your primary task is to create a two-page structure that separates the marketing presentation from the functional application.
+**Instructions:**
 
-**User Flow to Implement:**
-1.  A new user visits the root URL (`/`) and sees the **promotional landing page**.
-2.  The user clicks the main Call-to-Action button on the landing page.
-3.  The user is navigated to the **main application page** at `/app`.
+1.  **Update Favicon:**
 
-Follow these instructions precisely for each page.
+      * Locate the existing favicon (currently showing the PetLog paw icon, as seen in Image 2).
+      * Replace it with a new favicon that is a **clean, monochromatic, simplified version of the 'ARTI' text from the new logo, or a simplified version of the 'Sigma' symbol.** The color should match the blue of the new logo.
 
----
+2.  **Update Header Logo:**
 
-#### **Part 1: The Promotional Landing Page**
+      * Locate the logo/project title in the application's header (currently "PetLog" or a placeholder).
+      * Replace it with the **text "ARTI Sigma"** rendered in a font that closely matches the new logo's typography. The color should be the same blue as in Image 1.
+      * Ensure the logo is appropriately sized and aligned within the header.
 
-**File to Modify/Create:** `/pages/index.tsx`
+3.  **Landing Page Full Logo Showcase:**
 
-**Strict Instructions for this file:**
-* This page is for **marketing only**. It must **NOT** contain any wallet connection logic or buttons.
-* The header on this page should be minimal, displaying only the 'PetLog' title.
+      * On the main landing page (`/pages/index.tsx`), place the **full ARTI Sigma logo (as seen in Image 1, including the tagline)** prominently.
+      * The logo should be centered or strategically placed to be a primary visual element, demonstrating the brand identity.
+      * Ensure the logo scales responsively for different screen sizes.
 
-**Content & Design:**
-* **Style:** Inspired by **Pudgy Penguins** (light, warm, friendly, soft-rounded).
-* **Theme:** Use a soft, light cream background.
-* **Hero Section:**
-    * The main visual should be a showcase of 3-4 beautifully designed, example 'PetLog Passport' NFTs.
-    * The headline (`<h1>`) should be warm and inviting: **"Welcome to the PetLog Crew."**
-* **Call-to-Action (CTA):**
-    * The **only** primary button on this page must be the **"Create a Paw-ssport" button.**
-    * This button must be a `<Link>` component that navigates the user to the `/app` page.
+**Reference Images:**
 
----
-
-#### **Part 2: The Main Application Page**
-
-**File to Modify/Create:** `/pages/app.tsx`
-
-**Strict Instructions for this file:**
-* This is the **entry point to all DApp functionality.**
-* This page **IS RESPONSIBLE** for handling the wallet connection.
-
-**Content & Design:**
-* **Initial State (Wallet Disconnected):**
-    * When a user arrives at this page, if their wallet is not connected, it should display a prompt in the center of the screen.
-    * This prompt should contain a message like "Please Connect Your Wallet to Get Started" and a prominent **"Connect Wallet" button.**
-* **Connected State:**
-    * Once the wallet is connected, the prompt should disappear.
-    * The page should then display the main application dashboard, which is the user's "My Cat Crew" NFT gallery.
+* **Image 1 (Full Logo):** The primary reference for the logo design, typography, and color.
+* **Image 2 (Favicon Reference):** Indicates the location of the old favicon that needs to be replaced.

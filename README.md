@@ -1,129 +1,60 @@
-﻿# 🐾 PetLog – Blockchain Pet Identity Platform
-> **"Every pet deserves a verified story."**
+﻿# Arti - Immersive Art Registry
 
-PetLog is a **Web3-based decentralized biodata system for pets**, built to store and verify **lineage, vaccination, and health records** on-chain.  
-By connecting breeders, veterinarians, and owners through **validator-based smart contracts**, PetLog eliminates fake certificates and fragmented data — creating **trust, transparency, and traceability** across the global pet ecosystem.
+Arti is a curator-grade platform for minting immersive video, volumetric, and generative art drops on Cardano. Artists retain full fidelity for master files while collectors receive verifiable provenance and playback-ready showcases.
 
+> "A premium digital canvas for cinematic and 3D masterpieces."
 
-PetLog revolutionizes pet ownership verification by creating immutable, blockchain-based digital identities for pets. Built on Cardano Pre-Production testnet, each pet receives a unique NFT passport containing verified lineage, health records, and ownership history.
+## Why Arti?
+- **Motion preserved** - keep source frame rates, color grades, and audio stems without automatic compression.
+- **3D ready** - publish GLB/GLTF packages that render in-browser with model-viewer support.
+- **Collector grade** - issue Cardano-native tokens with immutable credits, edition notes, and licensing guidance.
 
-> **Hackathon Project**: Building trust in pet ownership through decentralized digital passports on Cardano
+## MVP Scope
+- Minimalist dark UI optimised for video and 3D presentation.
+- Guided minting flow that outputs the `ArtPieceMetadata` and CIP-721 payload.
+- Wallet-connected gallery with inline video playback and embedded 3D viewer.
+- Certificate page with IPFS-backed media, edition details, and explorer links.
 
-## 🎯 Problem Statement
+## Data Model
+```ts
+interface ArtPieceMetadata {
+  title: string
+  artist_name: string
+  description: string
+  medium: "3D Animation" | "Video Art" | "Generative Art"
+  file_url: string
+  edition?: string
+  duration_or_dimensions?: string
+}
 
-- **42% of pedigree certificates in Asia are unverifiable** (Asian Kennel Network, 2024)
-- **73% of veterinary clinics in Indonesia use manual records** (Indonesian Veterinary Association, 2023)
-- **No standardized system** for pet data verification across developing markets
+interface ArtiCip721Metadata {
+  name: string
+  description: string
+  image: string
+  files: Array<{ name: string; mediaType: string; src: string }>
+  art_piece: ArtPieceMetadata
+}
+```
 
-## 💡 Solution: Decentralized Trust Layer
+## Tech Stack
+- Next.js 13 + TypeScript
+- Tailwind CSS with a custom Arti theme
+- Lucid Cardano + Blockfrost for blockchain access
+- Pinata IPFS for media storage
 
-PetLog creates a **blockchain-based trust network** where:
-- 🧬 **Immutable Lineage Records** from certified breeders
-- 💉 **Verified Health Logs** digitally signed by veterinarians  
-- 🪪 **NFT Pet Passports** that travel with ownership transfers
-- 🔗 **Validator Network** of trusted pedigree associations and clinics
+## Getting Started
+```bash
+npm install
+npm run dev
+```
+Set the required environment variables:
+- `NEXT_PUBLIC_BLOCKFROST_PROJECT_ID`
+- `PINATA_API_KEY`
+- `PINATA_API_SECRET`
 
-## ✨ Key Features
+## Roadmap Highlights
+- Real-time playback diagnostics for large installations
+- Render farm signing and verification
+- Collaborative multi-artist editions
 
-- **🔐 Wallet Integration**: Seamless connection with Cardano wallets (Nami, Eternl, Gero, Flint)
-- **🎨 Guided Minting Flow**: Intuitive pet passport creation with IPFS asset storage
-- **📱 Personal Gallery**: View all owned pet passports with metadata resolution via Blockfrost
-- **🔍 Passport Details**: Complete pet profiles with explorer links and provenance tracking
-- **⚡ CIP-25 Compliant**: Following Cardano NFT metadata standards
-- **🌐 IPFS Integration**: Decentralized storage via Pinata for pet photos and documents
-
-## 🔗 Quick Links
-
-| Resource | Link |
-|----------|------|
-| 🌐 **Live Demo** | https://petlog-wheat.vercel.app/ |
-| 📊 **Pitch Deck** | [View Presentation](https://drive.google.com/drive/folders/1oNKyiE2myjvWursm05h_ApxYVjej9p_4?usp=sharing) |
-| 🎥 **Demo Video** | [Watch Demo](https://drive.google.com/drive/folders/1ksKw64Bm0dSxVcXe5uGIyl83EHhYDgYi?usp=sharing) |
-| 📱 **Instagram** | [@petlog.dapp](https://instagram.com/petlog.dapp) |
-| 💻 **GitHub** | [Mofttach/petlog](https://github.com/Mofttach/petlog) |
-
----
-## 👥 Our Team
-
-1. **Project Manager** : Mohammad Fattachul 'Alim | ig : @mofttach
-2. **Smart Contract Developer** : Mohammad Ilham Adiansyah | ig : @adianvel
-3. **Frontend Developer** : Faiz Abdurrachman | ig : @faiz.abdurrachman
-4. **UI/UX Designer + Branding** : Danu Prianto | ig : @danu_prianto
-5. **Business & Documentation Specialist** : Adyana Wabilhadi Chanigia | ig : @adyanawabilhadi
-
-## 🎮 Try the Demo
-
-1. **Visit**: 
-2. **Explore** the landing page design and problem/solution overview
-3. **Connect** your Cardano Pre-Production wallet
-4. **Mint** a pet passport NFT with custom metadata
-5. **View** your collection in the personal gallery
-
-## 🏗️ Architecture & Tech Stack
-
-### Frontend
-- **⚛️ Next.js 13** + TypeScript for modern React development
-- **🎨 Tailwind CSS** with custom pixel art design system
-- **📱 Responsive Design** optimized for mobile and desktop
-
-### Blockchain Integration
-- **🔗 Lucid Cardano** for transaction building and wallet connectivity
-- **🌐 Blockfrost API** for blockchain data queries and UTxO resolution
-- **🎫 CIP-25 NFT Standard** for metadata compliance
-- **🔧 Cardano Pre-Production** testnet for development and testing
-
-### Storage & Assets
-- **📦 IPFS via Pinata** for decentralized asset storage
-- **🖼️ Image Optimization** with Next.js Image component
-- **📊 Metadata Schema** designed for pet identity verification
-
-## 🌍 Environment Configuration
-
-| Variable | Description | Default |
-|----------|-------------|---------|
-| `NEXT_PUBLIC_BLOCKFROST_API_URL` | Blockfrost endpoint | Pre-Production |
-| `NEXT_PUBLIC_IPFS_GATEWAY` | Public IPFS gateway | `ipfs.io` |
-| `NEXT_PUBLIC_CARDANO_NETWORK` | Cardano network | `Preprod` |
-| `PINATA_API_KEY` | Pinata API credentials | Required |
-| `BLOCKFROST_PROJECT_ID` | Blockfrost project ID | Required |
-
-## 🎯 Hackathon Highlights
-
-### Innovation
-- **First-of-its-kind** pet identity solution on Cardano
-- **Pixel art design** system for engaging user experience
-- **Multi-stakeholder** validator network (breeders, vets, associations)
-
-### Technical Excellence
-- **Type-safe** development with TypeScript
-- **Responsive** mobile-first design
-- **Production-ready** deployment on Vercel
-- **Comprehensive** error handling and user feedback
-
-### Social Impact
-- **Addresses real-world problem** in pet industry trust
-- **Scalable solution** for developing markets
-- **Community-driven** validation network
-
-## 📊 Project Status
-
-- ✅ **MVP Complete**: Core minting and gallery functionality
-- ✅ **Production Deployed**: Live on Vercel with Cardano integration  
-- ✅ **User Testing**: Wallet connectivity and NFT minting validated
-- 🔄 **Future Roadmap**: Validator network integration, multi-chain support
-
-## 🤝 Contributing
-
-This project is open for collaboration! Areas of interest:
-- Validator network smart contracts
-- Mobile app development  
-- Multi-language support
-- Advanced metadata schemas
-
-## 📄 License
-
-MIT License - see LICENSE file for details
-
----
-
-**Built with ❤️ for the Cardano ecosystem** | **Hackathon 2025**
+Built between Yogyakarta and Singapore for the immersive art community.

@@ -1,138 +1,204 @@
-﻿import Link from "next/link"
+import Link from "next/link"
 import { useLucid } from "../contexts/LucidContext"
-import { Cat, PawPrint, Shield, Database, Wallet } from "lucide-react"
+import { Film, Upload, Share2, Sparkles, Layers, Cpu, Headphones, Video } from "lucide-react"
 
-const features = [
+const studioModules = [
   {
-    title: "Self-attested Digital Ownership",
-    description: "Create verified digital ownership records that live permanently on blockchain",
-    icon: Shield,
-    gradient: "from-blue-100 via-sky-50 to-cyan-100",
+    icon: Upload,
+    title: "Stage assets",
+    blurb: "Ingest master renders, volumetric captures, and audio stems without automatic compression.",
   },
   {
-    title: "IPFS-backed Metadata",
-    description: "Your pet's data is stored on IPFS with immutable on-chain proof of authenticity",
-    icon: Database,
-    gradient: "from-green-100 via-emerald-50 to-teal-100",
+    icon: Film,
+    title: "Author narrative",
+    blurb: "Compose statements, lighting notes, and viewing instructions that travel with every collector.",
   },
   {
-    title: "Cardano Native Minting",
-    description: "Seamless wallet-native minting flow on Cardano Pre-Production network",
-    icon: Wallet,
-    gradient: "from-purple-100 via-violet-50 to-indigo-100",
+    icon: Share2,
+    title: "Premiere drop",
+    blurb: "Mint the Arti token, publish a showcase link, and control who previews before the release date.",
   },
 ]
 
-export default function Home() {
+const roadmap = [
+  {
+    label: "Real-time playback metrics",
+    description: "Expose viewer stats and performance diagnostics for large-scale installations.",
+  },
+  {
+    label: "Render farm signing",
+    description: "Let trusted pipelines sign outputs so collectors can verify provenance from source files.",
+  },
+  {
+    label: "Collaborative editions",
+    description: "Co-author drops with multi-artist attribution, split licensing, and shared storefronts.",
+  },
+]
+
+const formatSupport = [
+  {
+    icon: Layers,
+    title: "Volumetric ready",
+    copy: "GLB, GLTF, USDZ, and WebXR packages render in-browser with optional AR staging.",
+  },
+  {
+    icon: Video,
+    title: "Cinematic masters",
+    copy: "Preserve HDR colour profiles, surround audio, and subtitles across MP4 or WebM releases.",
+  },
+  {
+    icon: Headphones,
+    title: "Spatial sound",
+    copy: "Attach stem breakdowns, tempo maps, and album art for audio-reactive installations.",
+  },
+  {
+    icon: Cpu,
+    title: "Generative archives",
+    copy: "Encode source seeds, shader parameters, and replay instructions for live code works.",
+  },
+]
+
+export default function Studio() {
   const { account } = useLucid()
 
   return (
-    <div className="mx-auto max-w-6xl px-4 pb-24 pt-12 sm:px-6 lg:px-8">
-      {/* Hero Section */}
-      <section className="rounded-[40px] bg-gradient-to-br from-amber-50 via-rose-50 to-sky-50 px-6 py-14 shadow-[0_28px_80px_rgba(244,175,208,0.35)] ring-1 ring-rose-100 sm:px-12">
-        <div className="text-center">
-          <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-rose-500 ring-1 ring-white/60">
-            PetLog V1.1
+    <div className="mx-auto max-w-6xl px-4 pb-20 pt-12 text-as-body sm:px-6 lg:px-8">
+      <section className="pixel-card overflow-hidden px-8 py-14 sm:px-12">
+        <div className="space-y-6 text-left">
+          <span className="inline-flex items-center gap-2 rounded-full border border-as-border px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.4em] text-as-muted">
+            Arti Studio   - Creator console
           </span>
-          <h1 className="mt-6 text-4xl font-semibold leading-tight text-pl-heading sm:text-5xl md:text-6xl">
-            Create a Digital Passport
-            <br />
-            for Your Pet in Minutes
+          <h1 className="text-4xl font-semibold text-as-heading sm:text-5xl">
+            Orchestrate your immersive releases.
           </h1>
-          <p className="mx-auto mt-6 max-w-2xl text-lg leading-relaxed text-pl-body opacity-80">
-            PetLog transforms your pet&apos;s core identity into a collectible certificate. Mint on the Cardano Pre-Production testnet and preserve provenance in your wallet forever.
+          <p className="max-w-2xl text-lg leading-relaxed text-as-muted">
+            Arti Studio keeps every video, 3D, and generative asset aligned. Stage the narrative,
+            certify the media, and deliver collector-ready experiences in minutes.
           </p>
-          <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
-            <Link
-              href="/mint"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300 px-10 py-3 text-base font-semibold uppercase tracking-[0.3em] text-pl-heading shadow-[0_20px_50px_rgba(244,175,208,0.45)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_rgba(244,175,208,0.55)]"
-            >
-              <PawPrint size={18} />
-              Start Creating Now
+          <div className="flex flex-col items-start gap-4 sm:flex-row">
+            <Link href="/mint" className="pixel-btn pixel-btn--primary px-8 py-3 text-[0.65rem]">
+              {account ? "Mint new showcase" : "Connect to mint"}
             </Link>
-            <Link
-              href="/my-passports"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-white/80 px-10 py-3 text-base font-semibold uppercase tracking-[0.3em] text-pl-heading ring-1 ring-rose-200 shadow-[0_14px_32px_rgba(255,255,255,0.35)] transition duration-200 hover:-translate-y-0.5 hover:bg-white/90"
-            >
-              <Cat size={18} />
-              View My Pet Crew
+            <Link href="/my-passports" className="pixel-btn pixel-btn--secondary px-8 py-3 text-[0.65rem]">
+              View my collection
             </Link>
           </div>
         </div>
       </section>
 
-      {/* Features Section */}
-      <section className="mt-20 rounded-[32px] bg-white/80 px-6 py-12 shadow-[0_24px_60px_rgba(212,177,189,0.25)] ring-1 ring-rose-100 sm:px-12">
-        <header className="max-w-3xl space-y-4">
-          <p className="text-sm font-semibold uppercase tracking-[0.35em] text-rose-500">Why Choose PetLog?</p>
-          <h2 className="text-3xl font-semibold text-pl-heading sm:text-4xl">Built for Modern Pet Ownership</h2>
-          <p className="text-lg leading-relaxed text-pl-body opacity-80">
-            Experience the future of pet documentation with blockchain-powered security and user-friendly design.
+      <section className="mt-16 grid gap-8 lg:grid-cols-[1.3fr_1fr]">
+        <div className="pixel-card space-y-6 p-8">
+          <h2 className="text-2xl font-semibold text-as-heading">Studio modules</h2>
+          <p className="text-as-muted">
+            Follow the guided workflow to build a collector-grade release. Each module is optimised
+            for moving images, volumetric capture, and audio-reactive works.
           </p>
-        </header>
-
-        <div className="mt-12 grid gap-8 lg:grid-cols-3">
-          {features.map((feature, index) => {
-            const IconComponent = feature.icon
-            return (
-              <div key={feature.title} className={`rounded-[26px] bg-gradient-to-br ${feature.gradient} p-6 ring-1 ring-white/70 shadow-[0_20px_40px_rgba(0,0,0,0.08)]`}>
-                <div className="flex items-center gap-3 mb-4">
-                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/70">
-                    <IconComponent size={24} className="text-pl-heading" />
-                  </div>
-                  <h3 className="text-xl font-semibold text-pl-heading">{feature.title}</h3>
+          <div className="grid gap-6 sm:grid-cols-3">
+            {studioModules.map((module) => {
+              const Icon = module.icon
+              return (
+                <div
+                  key={module.title}
+                  className="rounded-[18px] border border-as-border bg-as-highlight/25 p-4 text-sm leading-relaxed text-as-muted"
+                >
+                  <Icon className="mb-3 text-as-heading" size={20} />
+                  <p className="text-[0.75rem] uppercase tracking-[0.35em] text-as-heading">
+                    {module.title}
+                  </p>
+                  <p className="mt-2">{module.blurb}</p>
                 </div>
-                <p className="text-base leading-relaxed text-pl-body opacity-80">{feature.description}</p>
-              </div>
-            )
-          })}
+              )
+            })}
+          </div>
+        </div>
+
+        <aside className="pixel-card flex flex-col gap-5 p-8">
+          <h3 className="text-xl font-semibold text-as-heading">Connection status</h3>
+          {account ? (
+            <div className="rounded-[16px] border border-as-border bg-as-highlight/25 p-4 text-sm text-as-muted">
+              <p className="text-[0.65rem] uppercase tracking-[0.35em] text-as-muted/80">
+                Wallet connected
+              </p>
+              <p className="mt-2 break-all font-mono text-[0.7rem] uppercase tracking-[0.25em] text-as-heading">
+                {account.address}
+              </p>
+            </div>
+          ) : (
+            <div className="rounded-[16px] border border-as-border bg-as-highlight/25 p-4 text-sm text-as-muted">
+              Connect a Cardano wallet to unlock the minting console.
+            </div>
+          )}
+          <Link href="/mint" className="pixel-btn px-6 py-3 text-[0.65rem]">
+            {account ? "Launch minting console" : "Connect wallet"}
+          </Link>
+        </aside>
+      </section>
+
+      <section className="mt-20 rounded-[26px] border border-as-border bg-as-surface/70 p-8">
+        <header className="space-y-3">
+          <p className="text-[0.65rem] uppercase tracking-[0.4em] text-as-muted">Roadmap</p>
+          <h2 className="text-3xl font-semibold text-as-heading">What arrives next.</h2>
+        </header>
+        <div className="mt-8 grid gap-6 sm:grid-cols-3">
+          {roadmap.map((item) => (
+            <div
+              key={item.label}
+              className="rounded-[18px] border border-as-border bg-as-highlight/25 p-5 text-sm leading-relaxed text-as-muted"
+            >
+              <p className="text-[0.65rem] uppercase tracking-[0.35em] text-as-muted/70">
+                {item.label}
+              </p>
+              <p className="mt-3">{item.description}</p>
+            </div>
+          ))}
         </div>
       </section>
 
-      {/* Coming Next Section */}
-      <section className="mt-20 rounded-[32px] bg-gradient-to-r from-rose-200/60 via-white/80 to-sky-200/60 px-6 py-12 shadow-[0_20px_60px_rgba(244,175,208,0.28)] ring-1 ring-rose-100 sm:px-12">
-        <div className="text-center">
-          <div className="mx-auto max-w-3xl space-y-4">
-            <p className="text-sm font-semibold uppercase tracking-[0.35em] text-rose-500">Coming Next</p>
-            <h2 className="text-3xl font-semibold text-pl-heading sm:text-4xl">The Future of PetLog</h2>
-            <p className="text-lg leading-relaxed text-pl-body opacity-80">
-              This release focuses on Level 1 self-attested passports. Future versions will introduce verified partners, shared galleries, and validation workflows.
-            </p>
+      <section className="mt-20 grid gap-8 lg:grid-cols-2">
+        <div className="pixel-card p-8">
+          <h3 className="text-2xl font-semibold text-as-heading">Immersive format support</h3>
+          <p className="mt-4 text-as-muted">
+            Arti handles the pipelines modern artists rely on, from volumetric sculpture to
+            feature-length video. Your media is preserved exactly as exported.
+          </p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            {formatSupport.map((item) => {
+              const Icon = item.icon
+              return (
+                <div
+                  key={item.title}
+                  className="rounded-[18px] border border-as-border bg-as-highlight/20 p-4 text-sm leading-relaxed text-as-muted"
+                >
+                  <Icon className="mb-3 text-as-heading" size={18} />
+                  <p className="text-[0.7rem] uppercase tracking-[0.3em] text-as-heading">
+                    {item.title}
+                  </p>
+                  <p className="mt-2">{item.copy}</p>
+                </div>
+              )
+            })}
           </div>
-          
-          <div className="mt-12 grid gap-6 sm:grid-cols-3">
-            <div className="rounded-[24px] bg-white/75 p-6 ring-1 ring-white/70">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-rose-100 mx-auto">
-                <Shield size={20} className="text-rose-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-pl-heading mb-2">Verified Partners</h3>
-              <p className="text-sm text-pl-body opacity-80">Connect with certified breeders and veterinarians</p>
-            </div>
-            
-            <div className="rounded-[24px] bg-white/75 p-6 ring-1 ring-white/70">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-100 mx-auto">
-                <Cat size={20} className="text-amber-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-pl-heading mb-2">Shared Galleries</h3>
-              <p className="text-sm text-pl-body opacity-80">Showcase your pet collection publicly</p>
-            </div>
-            
-            <div className="rounded-[24px] bg-white/75 p-6 ring-1 ring-white/70">
-              <div className="mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-sky-100 mx-auto">
-                <Database size={20} className="text-sky-600" />
-              </div>
-              <h3 className="text-lg font-semibold text-pl-heading mb-2">Validation Workflows</h3>
-              <p className="text-sm text-pl-body opacity-80">Multi-step verification processes</p>
-            </div>
-          </div>
+        </div>
 
-          <div className="mt-12">
-            <Link
-              href="/mint"
-              className="inline-flex items-center justify-center rounded-full bg-gradient-to-r from-rose-400 via-amber-300 to-rose-300 px-10 py-3 text-base font-semibold uppercase tracking-[0.3em] text-pl-heading shadow-[0_20px_50px_rgba(244,175,208,0.45)] transition duration-200 hover:-translate-y-0.5 hover:shadow-[0_28px_70px_rgba(244,175,208,0.55)]"
-            >
-              Get Started Now
-            </Link>
+        <div className="pixel-card p-8">
+          <h3 className="text-2xl font-semibold text-as-heading">Built with collaborators</h3>
+          <p className="mt-4 text-as-muted">
+            Arti is shaped by directors, realtime artists, and digital galleries redefining how
+            audiences experience motion. Join the creator circle and influence upcoming tooling.
+          </p>
+          <div className="mt-6 grid gap-3 text-sm uppercase tracking-[0.3em] text-as-muted">
+            <div className="rounded-[16px] border border-as-border bg-as-highlight/20 px-4 py-3">
+              <Sparkles size={14} className="mr-2 inline-block text-as-heading" />
+              Festivals & premieres
+            </div>
+            <div className="rounded-[16px] border border-as-border bg-as-highlight/20 px-4 py-3">
+              <Layers size={14} className="mr-2 inline-block text-as-heading" />
+              Digital galleries
+            </div>
+            <div className="rounded-[16px] border border-as-border bg-as-highlight/20 px-4 py-3">
+              <Cpu size={14} className="mr-2 inline-block text-as-heading" />
+              Creative technologists
+            </div>
           </div>
         </div>
       </section>

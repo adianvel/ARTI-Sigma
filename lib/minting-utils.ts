@@ -1,11 +1,11 @@
 import { Blockfrost, Lucid, MintingPolicy, Network, PolicyId, TxHash, Unit, utf8ToHex } from "lucid-cardano"
-import { DigitalPetPassport, PetLogCipMetadata } from "../types/passport"
+import { ArtiCip721Metadata } from "../types/passport"
 
 export interface MintOptions {
   lucid: Lucid
   address: string
   name: string
-  cipMetadata: PetLogCipMetadata
+  cipMetadata: ArtiCip721Metadata
 }
 
 const resolveNetwork = (value?: string | null): Network => {
@@ -41,10 +41,11 @@ export const getMintingPolicy = (lucid: Lucid, address: string): MintingPolicy =
   })
 }
 
-export const getPolicyId = (lucid: Lucid, policy: MintingPolicy): PolicyId => lucid.utils.mintingPolicyToId(policy)
+export const getPolicyId = (lucid: Lucid, policy: MintingPolicy): PolicyId =>
+  lucid.utils.mintingPolicyToId(policy)
 
 const createSafeAssetName = (input: string): string => {
-  if (!input) return "PetLog_Passport"
+  if (!input) return "ARTI_Art_Piece"
 
   const safe = input
     .normalize("NFD")
@@ -52,10 +53,15 @@ const createSafeAssetName = (input: string): string => {
     .trim()
     .replace(/\s+/g, "_")
 
-  return safe.slice(0, 30) || "PetLog_Passport"
+  return safe.slice(0, 30) || "ARTI_Art_Piece"
 }
 
-export const mintPetLogPassport = async ({ lucid, address, name, cipMetadata }: MintOptions): Promise<{ txHash: TxHash; unit: Unit; policyId: PolicyId }> => {
+export const mintArtPieceToken = async ({
+  lucid,
+  address,
+  name,
+  cipMetadata,
+}: MintOptions): Promise<{ txHash: TxHash; unit: Unit; policyId: PolicyId }> => {
   if (!lucid) throw new Error("Lucid instance is required")
   if (!address) throw new Error("Wallet address is required")
 
@@ -81,7 +87,15 @@ export const mintPetLogPassport = async ({ lucid, address, name, cipMetadata }: 
   return { txHash, unit, policyId }
 }
 
-export const burnPassport = async ({ lucid, address, name }: { lucid: Lucid; address: string; name: string }) => {
+export const burnArtPieceToken = async ({
+  lucid,
+  address,
+  name,
+}: {
+  lucid: Lucid
+  address: string
+  name: string
+}) => {
   const policy = getMintingPolicy(lucid, address)
   const policyId = getPolicyId(lucid, policy)
   const unit = getUnit(policyId, createSafeAssetName(name))
@@ -98,7 +112,8 @@ export const burnPassport = async ({ lucid, address, name }: { lucid: Lucid; add
 
 export const createLucid = async (): Promise<Lucid> => {
   const network = resolveNetwork(process.env.NEXT_PUBLIC_CARDANO_NETWORK)
-  const projectId = process.env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID ?? process.env.BLOCKFROST_PROJECT_ID
+  const projectId =
+    process.env.NEXT_PUBLIC_BLOCKFROST_PROJECT_ID ?? process.env.BLOCKFROST_PROJECT_ID
   if (!projectId) throw new Error("Missing Blockfrost project id")
 
   const blockfrost = new Blockfrost(

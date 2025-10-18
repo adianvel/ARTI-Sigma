@@ -1,8 +1,8 @@
-﻿import { useRouter } from "next/router"
+import { useRouter } from "next/router"
 import Link from "next/link"
 import { useEffect, useMemo, useState } from "react"
 
-type AssetDetail = {
+interface AssetDetail {
   asset: string
   policy_id: string
   asset_name: string
@@ -29,7 +29,8 @@ export default function AssetDetailPage() {
   const [loading, setLoading] = useState(false)
 
   const unitString = useMemo(() => (Array.isArray(unit) ? unit[0] : unit) || "", [unit])
-  const explorerBase = process.env.NEXT_PUBLIC_EXPLORER_ASSET_URL ?? "https://preprod.cexplorer.io/asset/"
+  const explorerBase =
+    process.env.NEXT_PUBLIC_EXPLORER_ASSET_URL ?? "https://preprod.cexplorer.io/asset/"
 
   useEffect(() => {
     const run = async () => {
@@ -56,39 +57,39 @@ export default function AssetDetailPage() {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center py-12 text-center text-pl-body">
+      <div className="flex flex-col items-center justify-center py-12 text-center text-as-muted">
         <div className="pixel-loader" />
-        <p className="mt-3 text-lg text-pl-muted">Loading NFT details…</p>
+        <p className="mt-3 text-lg">Loading certificate metadata...</p>
       </div>
     )
   }
 
   if (error) {
-    return (
-      <p className="text-center text-[color:var(--color-danger)]">{error}</p>
-    )
+    return <p className="text-center text-red-400">{error}</p>
   }
 
   if (!detail) return null
 
   return (
-    <section className="space-y-8 text-pl-body">
+    <section className="space-y-8 text-as-body">
       <header className="flex flex-col gap-2 text-center sm:text-left">
-        <h1 className="font-display text-2xl tracking-[0.2em] text-pl-heading">{name}</h1>
-        <p className="break-all text-sm uppercase tracking-[0.25em] text-pl-muted">{detail.asset}</p>
+        <h1 className="text-2xl font-semibold text-as-heading sm:text-3xl">{name}</h1>
+        <p className="break-all text-[0.6rem] uppercase tracking-[0.35em] text-as-muted">
+          {detail.asset}
+        </p>
       </header>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Link href="/my-passports" className="pixel-btn px-4 py-2 text-base uppercase tracking-[0.3em]">
-          Back to My Cat Crew
+        <Link href="/my-passports" className="pixel-btn px-4 py-2 text-[0.65rem]">
+          Back to collection
         </Link>
         <a
           href={`${explorerBase}${encodeURIComponent(unitString)}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="pixel-btn pixel-btn--primary px-4 py-2 text-base uppercase tracking-[0.3em]"
+          className="pixel-btn pixel-btn--primary px-4 py-2 text-[0.65rem]"
         >
-          View on Explorer
+          View on explorer
         </a>
       </div>
 
@@ -97,30 +98,30 @@ export default function AssetDetailPage() {
           {imageUrl ? (
             <img src={imageUrl} alt={name} className="w-full" />
           ) : (
-            <div className="flex h-64 items-center justify-center text-pl-muted">No image</div>
+            <div className="flex h-64 items-center justify-center text-as-muted">No image</div>
           )}
         </div>
 
-        <div className="pixel-card p-4 text-base">
+        <div className="pixel-card p-4 text-sm leading-relaxed text-as-muted">
           {description && (
             <div className="mb-4 space-y-2">
-              <h2 className="font-display text-lg tracking-[0.2em] text-pl-heading">Description</h2>
-              <p className="whitespace-pre-wrap leading-relaxed text-pl-body">{description}</p>
+              <h2 className="text-base font-semibold text-as-heading">Description</h2>
+              <p className="whitespace-pre-wrap text-as-muted">{description}</p>
             </div>
           )}
-          <div className="grid grid-cols-1 gap-3">
+          <div className="grid grid-cols-1 gap-3 text-[0.6rem] uppercase tracking-[0.35em]">
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Policy ID</p>
-              <p className="mt-1 break-all font-mono text-pl-heading">{detail.policy_id}</p>
+              <p className="text-as-muted">Policy ID</p>
+              <p className="mt-1 break-all font-mono text-as-heading">{detail.policy_id}</p>
             </div>
             <div>
-              <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Fingerprint</p>
-              <p className="mt-1 break-all font-mono text-pl-heading">{detail.fingerprint}</p>
+              <p className="text-as-muted">Fingerprint</p>
+              <p className="mt-1 break-all font-mono text-as-heading">{detail.fingerprint}</p>
             </div>
             {detail.onchain_metadata_standard && (
               <div>
-                <p className="text-sm uppercase tracking-[0.3em] text-pl-muted">Standard</p>
-                <p className="mt-1">{detail.onchain_metadata_standard}</p>
+                <p className="text-as-muted">Standard</p>
+                <p className="mt-1 text-as-heading">{detail.onchain_metadata_standard}</p>
               </div>
             )}
           </div>
@@ -128,13 +129,11 @@ export default function AssetDetailPage() {
       </div>
 
       <div className="pixel-card p-4">
-        <h2 className="font-display text-lg tracking-[0.2em] text-pl-heading">On-chain Metadata</h2>
-        <pre className="mt-3 max-h-96 overflow-auto rounded-pixel border border-pl-border bg-pl-background p-3 text-sm leading-snug text-pl-body">
+        <h2 className="text-base font-semibold text-as-heading">On-chain metadata</h2>
+        <pre className="mt-3 max-h-96 overflow-auto rounded-pixel border border-as-border bg-as-background p-3 text-xs leading-snug text-as-muted">
           {JSON.stringify(detail.onchain_metadata ?? {}, null, 2)}
         </pre>
       </div>
     </section>
   )
 }
-
-

@@ -33,9 +33,31 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     ? [req.query.all]
     : []
 
+  const baseOverrideRaw = Array.isArray(req.query.base) ? req.query.base[0] : req.query.base
+  const targetBase = (baseOverrideRaw && typeof baseOverrideRaw === "string"
+    ? baseOverrideRaw
+    : API_URL
+  ).replace(/\/$/, "")
+
+  const searchParams = new URLSearchParams()
+  Object.entries(req.query).forEach(([key, value]) => {
+    if (key === "all" || key === "base") {
+      return
+    }
+    if (Array.isArray(value)) {
+      value.forEach((entry) => {
+        if (entry !== undefined) {
+          searchParams.append(key, entry)
+        }
+      })
+    } else if (value !== undefined) {
+      searchParams.append(key, value)
+    }
+  })
+
+  const queryString = searchParams.toString()
   const path = segments.join("/")
-  const query = req.url?.includes("?") ? req.url.slice(req.url.indexOf("?")) : ""
-  const targetUrl = `${API_URL}/${path}${query}`
+  const targetUrl = `${targetBase}/${path}${queryString ? `?${queryString}` : ""}`
 
   try {
     const upstream = await fetch(targetUrl, {
