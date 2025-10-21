@@ -240,6 +240,25 @@
   }
 }
 
+/* Small UI animation helpers */
+.fade-in {
+  animation: fadeIn 180ms ease both;
+}
+
+.slide-up {
+  animation: slideUp 220ms cubic-bezier(.2,.9,.2,1) both;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(12px) scale(.995); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
 @keyframes pixel-spin {
   0% {
     transform: rotate(0deg);

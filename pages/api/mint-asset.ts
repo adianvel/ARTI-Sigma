@@ -92,7 +92,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     validateForm(formValues)
 
-    const pinata = new pinataSDK(pinataKey, pinataSecret)
+  const pinata = new pinataSDK(pinataKey, pinataSecret)
     const slug = toSlug(formValues.title || "arti_sigma_piece")
 
     const assetStream = fs.createReadStream(assetFile.filepath)
@@ -127,6 +127,9 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   } catch (error) {
     console.error("Mint asset API error", error)
     const message = error instanceof Error ? error.message : "Unknown error"
-    return res.status(500).json({ error: message })
+    const stack = error instanceof Error ? error.stack : undefined
+    const payload: any = { error: message }
+    if (process.env.NODE_ENV !== 'production') payload.stack = stack
+    return res.status(500).json(payload)
   }
 }

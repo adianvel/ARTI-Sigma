@@ -1,4 +1,9 @@
 import Link from "next/link"
+import SplitScreen from "../components/SplitScreen"
+import Timeline from "../components/Timeline"
+import PreviewCard from "../components/PreviewCard"
+import PartnersCarousel from "../components/PartnersCarousel"
+import ScrollSequence from "../components/ScrollSequence"
 
 const showcaseHighlights = [
   {
@@ -142,100 +147,128 @@ export default function LandingPage() {
         </div>
       </section>
 
-      <section className="mt-16 grid gap-8 lg:grid-cols-[1.2fr_1fr]">
+      {/* 2️⃣ Problem & Vision Section */}
+      <section className="mt-16 grid gap-8 lg:grid-cols-[1fr_1fr] items-center">
         <div className="space-y-6">
-          <h2 className="text-3xl font-semibold text-as-heading">A gallery without walls.</h2>
+          <p className="text-[0.65rem] uppercase tracking-[0.4em] text-as-muted">Problem & Vision</p>
+          <h2 className="text-3xl font-semibold text-as-heading">The Art Market Is Broken — We’re Fixing It.</h2>
           <p className="text-lg leading-relaxed text-as-muted">
-            The public registry surfaces the most daring video, 3D, and generative art releases from
-            around the globe. Browse pristine playback, explore edition notes, and validate
-            provenance instantly.
+            Traditional art markets are centralized, expensive, and limited by geography.
+            ARTI Sigma builds a decentralized ecosystem for artists, curators, and collectors — where
+            creativity meets blockchain transparency.
           </p>
-          <div className="grid gap-4 sm:grid-cols-2">
-            {showcaseHighlights.map((highlight) => (
-              <div
-                key={highlight.id}
-                className="rounded-[18px] border border-as-border bg-as-surface/80 p-4 text-[0.65rem] uppercase tracking-[0.35em] text-as-muted"
-              >
-                <p className="text-as-muted/60">{highlight.creator}</p>
-                <p className="mt-2 text-sm normal-case tracking-[0.2em] text-as-heading">
-                  {highlight.title}
-                </p>
-              </div>
-            ))}
-          </div>
+          {/* Suggestions (developer notes):
+            - Split screen: “Old World Art Gallery” (left, grayscale) vs “Decentralized NFT Mint” (right, colorful).
+            - Scrolling animation: From Canvas → Token → Investor → Impact.
+          */}
         </div>
 
-        <div className="pixel-card space-y-5 p-6">
-          <h3 className="text-xl font-semibold uppercase tracking-[0.3em] text-as-heading">
-            Gallery pillars
-          </h3>
-          <ul className="space-y-4 text-sm leading-relaxed text-as-muted">
-            {galleryPillars.map((pillar) => (
-              <li key={pillar.title} className="rounded-[16px] border border-as-border p-4">
-                <p className="text-[0.75rem] uppercase tracking-[0.3em] text-as-heading">
-                  {pillar.title}
-                </p>
-                <p className="mt-2">{pillar.description}</p>
-              </li>
-            ))}
-          </ul>
+        <div className="pixel-card p-6">
+          <SplitScreen
+            leftImage="https://images.unsplash.com/photo-1529101091764-c3526daf38fe?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=7a2d6b0d1b9d8f6b62a9a0b1b4c3dcad"
+            rightImage="https://images.unsplash.com/photo-1504198453319-5ce911bafcde?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=4d6a5b6c7d8e9f0a1b2c3d4e5f6a7b8c"
+          />
+          <ScrollSequence />
         </div>
       </section>
 
-      <section className="mt-20 rounded-[26px] border border-as-border bg-as-surface/70 p-8">
+      {/* 3️⃣ Solution Highlights */}
+      <section className="mt-20 rounded-[18px] border border-as-border bg-as-surface/70 p-8">
         <header className="space-y-3 text-center">
-          <p className="text-[0.65rem] uppercase tracking-[0.4em] text-as-muted">Minting cadence</p>
-          <h2 className="text-3xl font-semibold text-as-heading">From render queue to registry.</h2>
+          <h2 className="text-2xl font-semibold text-as-heading">Introducing the Phygital Art Tokenization Protocol.</h2>
+          <p className="text-as-muted max-w-2xl mx-auto">Convert real artworks into verified NFTs, enable fractional ownership, and power perpetual royalties — all on Cardano.</p>
         </header>
-        <div className="mt-10 grid gap-6 sm:grid-cols-3">
-          {mintPipeline.map((step, index) => (
-            <article
-              key={step.label}
-              className="rounded-[18px] border border-as-border bg-as-highlight/25 p-6 text-sm leading-relaxed text-as-muted"
-            >
-              <p className="text-[0.65rem] uppercase tracking-[0.4em] text-as-muted/80">
-                Step {index + 1}
-              </p>
-              <h3 className="mt-3 text-base font-semibold text-as-heading">{step.label}</h3>
-              <p className="mt-3 text-as-muted">{step.detail}</p>
-            </article>
+
+        <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="rounded-lg border border-as-border p-4 text-center">
+            <div className="text-2xl">🖼️</div>
+            <h4 className="mt-2 font-semibold">Tokenization</h4>
+            <p className="mt-1 text-sm text-as-muted">Convert real artworks into verified NFTs</p>
+          </div>
+
+          <div className="rounded-lg border border-as-border p-4 text-center">
+            <div className="text-2xl">💰</div>
+            <h4 className="mt-2 font-semibold">Fractional Ownership</h4>
+            <p className="mt-1 text-sm text-as-muted">Let multiple investors co-own one artwork</p>
+          </div>
+
+          <div className="rounded-lg border border-as-border p-4 text-center">
+            <div className="text-2xl">♻️</div>
+            <h4 className="mt-2 font-semibold">Perpetual Royalties</h4>
+            <p className="mt-1 text-sm text-as-muted">Set adjustable royalties that last forever</p>
+          </div>
+
+          <div className="rounded-lg border border-as-border p-4 text-center">
+            <div className="text-2xl">🌐</div>
+            <h4 className="mt-2 font-semibold">On-chain Funding</h4>
+            <p className="mt-1 text-sm text-as-muted">Crowdfund your art project directly on Cardano</p>
+          </div>
+        </div>
+
+        <div className="mt-6 text-sm text-as-muted">
+          <strong>SEO Phrases:</strong> Art NFT investment, blockchain royalties, phygital collectibles, NFT co-ownership, decentralized art fundraising.
+        </div>
+      </section>
+
+      {/* 4️⃣ How It Works (Interactive Timeline) */}
+      <section className="mt-20">
+        <h3 className="text-2xl font-semibold text-as-heading">How It Works</h3>
+        <p className="mt-2 text-as-muted">A simple, verifiable flow from creator to collector.</p>
+
+          <div className="mt-6 grid gap-6 lg:grid-cols-[1fr_380px]">
+            <div>
+              <Timeline />
+            </div>
+
+            <aside className="pixel-card p-4">
+              <PreviewCard image="https://images.unsplash.com/photo-1549880338-65ddcdfd017b?q=80&w=1200&auto=format&fit=crop&ixlib=rb-4.0.3&s=abcdef1234567890" />
+            </aside>
+          </div>
+      </section>
+
+      {/* 5️⃣ Business Pillars */}
+      <section className="mt-20">
+        <h3 className="text-2xl font-semibold text-as-heading">Business Pillars</h3>
+        <p className="mt-2 text-as-muted">One platform. Infinite art economies.</p>
+
+        <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {[
+            'Art Fundraising DApp',
+            'Tokenization Engine',
+            'NFT Marketplace',
+            'Fractional Ownership',
+            'Art-as-Collateral (DeFi)',
+            'Stake Pool Operator',
+          ].map((p) => (
+            <div key={p} className="rounded-lg border border-as-border p-4 flex items-center gap-3">
+              <div className="h-10 w-10 rounded-full bg-as-highlight/30 flex items-center justify-center">🔷</div>
+              <div>
+                <div className="font-semibold">{p}</div>
+                <div className="text-sm text-as-muted">Core infrastructure to support creators and investors.</div>
+              </div>
+            </div>
           ))}
         </div>
       </section>
 
-      <section className="mt-20 grid gap-8 lg:grid-cols-[1fr_1.1fr]">
-        <div className="pixel-card p-7">
-          <h3 className="text-2xl font-semibold text-as-heading">Why artists join Arti</h3>
-          <p className="mt-4 text-as-muted">
-            We collaborate with motion designers, realtime artists, and digital galleries to capture
-            the full intent of every project. From color grading data to spatial audio stems, every
-            detail is preserved.
-          </p>
-          <ul className="mt-6 space-y-3 text-sm leading-relaxed text-as-muted">
-            <li>- Custom metadata schema for video, volumetric, and generative formats.</li>
-            <li>- Redundant IPFS pinning with verified playback endpoints.</li>
-            <li>- Cardano-native issuance with upgradeable display tooling.</li>
-          </ul>
-        </div>
+      {/* 6️⃣ Market Adoption & Partnerships */}
+      <section className="mt-20">
+        <h3 className="text-2xl font-semibold text-as-heading">Market Adoption & Partnerships</h3>
+        <p className="mt-2 text-as-muted">Building Indonesia’s first blockchain-based art ecosystem.</p>
 
-        <div className="pixel-card p-7">
-          <h3 className="text-2xl font-semibold text-as-heading">Ecosystem commitments</h3>
-          <p className="mt-4 text-as-muted">
-            Whether you are staging a premiere, collecting a series, or integrating with tooling,
-            Arti provides a stable, transparent framework for immersive art.
-          </p>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
-            {ecosystemCommitments.map((item) => (
-              <div
-                key={item.heading}
-                className="rounded-[18px] border border-as-border bg-as-highlight/20 p-4 text-sm text-as-muted"
-              >
-                <p className="text-[0.65rem] uppercase tracking-[0.35em] text-as-muted/60">
-                  {item.heading}
-                </p>
-                <p className="mt-2">{item.copy}</p>
-              </div>
-            ))}
+        <div className="mt-6">
+          <PartnersCarousel />
+        </div>
+      </section>
+
+      {/* 7️⃣ Call to Action */}
+      <section className="mt-20 grid gap-6">
+        <div className="pixel-card p-6 text-center">
+          <h3 className="text-2xl font-semibold text-as-heading">Own a Fraction of the Future of Art.</h3>
+          <p className="mt-2 text-as-muted">Start minting or investing today on Cardano Pre-Production Testnet.</p>
+          <div className="mt-4 flex justify-center gap-4">
+            <Link href="/mint" className="pixel-btn pixel-btn--primary px-6 py-3">🎨 Create My Art NFT</Link>
+            <Link href="/transact" className="pixel-btn pixel-btn--secondary px-6 py-3">💎 Invest in Art Fundraiser</Link>
           </div>
         </div>
       </section>

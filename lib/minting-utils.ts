@@ -1,11 +1,11 @@
 import { Blockfrost, Lucid, MintingPolicy, Network, PolicyId, TxHash, Unit, utf8ToHex } from "lucid-cardano"
-import { ArtiCip721Metadata } from "../types/passport"
+import { ArtiCip721Metadata, ArtworksIDPassport } from "../types/passport"
 
 export interface MintOptions {
   lucid: Lucid
   address: string
   name: string
-  cipMetadata: ArtiCip721Metadata
+  cipMetadata: ArtiCip721Metadata | ArtworksIDPassport
 }
 
 const resolveNetwork = (value?: string | null): Network => {
@@ -44,7 +44,7 @@ export const getMintingPolicy = (lucid: Lucid, address: string): MintingPolicy =
 export const getPolicyId = (lucid: Lucid, policy: MintingPolicy): PolicyId =>
   lucid.utils.mintingPolicyToId(policy)
 
-const createSafeAssetName = (input: string): string => {
+export const createSafeAssetName = (input: string): string => {
   if (!input) return "ARTI_Art_Piece"
 
   const safe = input
@@ -85,6 +85,114 @@ export const mintArtPieceToken = async ({
   const txHash = await signedTx.submit()
 
   return { txHash, unit, policyId }
+}
+
+export const mintFractionalPieces = async ({
+  lucid,
+  address,
+  baseName,
+  cipMetadataTemplate,
+  totalUnits,
+  masterAssetIpfs,
+}: {
+  lucid: Lucid
+  address: string
+  baseName: string
+  cipMetadataTemplate: ArtiCip721Metadata | Record<string, any>
+  totalUnits: number
+  masterAssetIpfs?: string
+}): Promise<{ txHash: TxHash; units: Unit[]; policyId: PolicyId }> => {
+  if (!lucid) throw new Error('Lucid instance is required')
+  if (!address) throw new Error('Wallet address is required')
+  if (!totalUnits || totalUnits < 1) throw new Error('totalUnits must be >= 1')
+
+  const policy = getMintingPolicy(lucid, address)
+  const policyId = getPolicyId(lucid, policy)
+
+  // Build mintAssets map and metadata per unit
+  const assets: Record<string, bigint> = {}
+  const metadata721: Record<string, any> = {}
+
+  const safeBase = createSafeAssetName(baseName)
+    for (let i = 1; i <= totalUnits; i++) {
+    const unitName = `${safeBase}_${i}`
+    const unit = getUnit(policyId, unitName)
+    assets[unit] = 1n
+
+    // Per-unit metadata: clone template and add unit index
+    const assetMeta = typeof cipMetadataTemplate === 'function' ? cipMetadataTemplate(i) : { ...cipMetadataTemplate }
+    if (assetMeta && typeof assetMeta === 'object') {
+      assetMeta.unit_index = i
+      if (masterAssetIpfs) assetMeta.master_asset_ipfs = masterAssetIpfs
+    }
+
+    metadata721[unitName] = assetMeta
+  }
+
+  const tx = await lucid.newTx().mintAssets(assets).attachMintingPolicy(policy).attachMetadata(721, { [policyId]: metadata721 }).complete()
+  const signedTx = await tx.sign().complete()
+  const txHash = await signedTx.submit()
+
+  return { txHash, units: Object.keys(assets), policyId }
+}
+
+export const mintFractionalInBatches = async ({
+  lucid,
+  address,
+  baseName,
+  cipMetadataTemplate,
+  totalUnits,
+  batchSize = 20,
+  masterAssetIpfs,
+}: {
+  lucid: Lucid
+  address: string
+  baseName: string
+  cipMetadataTemplate: ArtiCip721Metadata | Record<string, any>
+  totalUnits: number
+  batchSize?: number
+  masterAssetIpfs?: string
+}): Promise<{ txHashes: TxHash[]; units: Unit[]; policyId: PolicyId }> => {
+  if (!lucid) throw new Error('Lucid instance is required')
+  if (!address) throw new Error('Wallet address is required')
+  if (!totalUnits || totalUnits < 1) throw new Error('totalUnits must be >= 1')
+
+  const policy = getMintingPolicy(lucid, address)
+  const policyId = getPolicyId(lucid, policy)
+
+  const safeBase = createSafeAssetName(baseName)
+
+  const allUnits: Unit[] = []
+  const allTxHashes: TxHash[] = []
+
+  // iterate in batches
+  for (let start = 1; start <= totalUnits; start += batchSize) {
+    const end = Math.min(totalUnits, start + batchSize - 1)
+    const assets: Record<string, bigint> = {}
+    const metadata721: Record<string, any> = {}
+
+    for (let i = start; i <= end; i++) {
+      const unitName = `${safeBase}_${i}`
+      const unit = policyId + utf8ToHex(unitName)
+      assets[unit] = 1n
+
+      const assetMeta = typeof cipMetadataTemplate === 'function' ? cipMetadataTemplate(i) : { ...cipMetadataTemplate }
+      if (assetMeta && typeof assetMeta === 'object') {
+        assetMeta.unit_index = i
+        if (masterAssetIpfs) assetMeta.master_asset_ipfs = masterAssetIpfs
+      }
+
+      metadata721[unitName] = assetMeta
+      allUnits.push(unit)
+    }
+
+    const tx = await lucid.newTx().mintAssets(assets).attachMintingPolicy(policy).attachMetadata(721, { [policyId]: metadata721 }).complete()
+    const signedTx = await tx.sign().complete()
+    const txHash = await signedTx.submit()
+    allTxHashes.push(txHash)
+  }
+
+  return { txHashes: allTxHashes, units: allUnits, policyId }
 }
 
 export const burnArtPieceToken = async ({
