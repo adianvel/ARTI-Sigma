@@ -1,4 +1,6 @@
 import Link from "next/link"
+import Image from "next/image"
+import usePrefersDark from '../hooks/use-prefers-dark'
 import { useRouter } from "next/router"
 import { useMemo, useState } from "react"
 import { Sparkles, Shapes, GalleryHorizontalEnd, Wallet } from "lucide-react"
@@ -16,26 +18,27 @@ const navLinkClass = (active: boolean) =>
 
 const BRAND_COLOR = "#2F61FF"
 
-const BrandMark = () => (
-  <Link href="/" className="group inline-flex flex-col text-left leading-tight">
-    <span
-      className="text-sm font-semibold uppercase tracking-[0.45em] transition-colors group-hover:text-as-heading"
-      style={{ color: BRAND_COLOR }}
-    >
-      ARTI Sigma
-    </span>
-    <span className="text-[0.7rem] uppercase tracking-[0.4em] text-as-muted transition-colors group-hover:text-as-heading">
-      Immersive registry
-    </span>
-  </Link>
-)
+const BrandMark = () => {
+  const prefersDark = usePrefersDark()
+  const logo = prefersDark ? '/artisigma-logo-white.png' : '/artisigma-logo-blue.png'
+  return (
+    <Link href="/" className="group inline-flex items-center gap-3 text-left leading-tight">
+      <Image src={logo} alt="ARTI Sigma" width={120} height={40} priority />
+    </Link>
+  )
+}
 
 const MarketingNavigation = () => (
   <header className="flex items-center justify-between py-8">
     <BrandMark />
-    <Link href="/mint" className="pixel-btn pixel-btn--primary px-6 py-2 text-[0.65rem]">
-      Mint a showcase
-    </Link>
+    <div className="flex items-center gap-3">
+      <Link href="/marketplace" className="pixel-btn px-5 py-2 text-[0.65rem]">
+        Marketplace
+      </Link>
+      <Link href="/mint" className="pixel-btn pixel-btn--primary px-6 py-2 text-[0.65rem]">
+        Mint a showcase
+      </Link>
+    </div>
   </header>
 )
 
@@ -46,7 +49,8 @@ const AppNavigation = ({ currentPath }: { currentPath: string }) => {
   const links = useMemo(
     () => [
       { href: "/app", label: "Studio", icon: Shapes },
-      { href: "/my-passports", label: "My collection", icon: GalleryHorizontalEnd },
+  { href: "/my-collection", label: "My collection", icon: GalleryHorizontalEnd },
+      { href: "/marketplace", label: "Marketplace", icon: GalleryHorizontalEnd },
       { href: "/mint", label: "Tokenize", icon: Sparkles },
     ],
     []

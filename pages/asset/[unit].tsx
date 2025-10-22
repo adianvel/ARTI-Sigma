@@ -80,7 +80,7 @@ export default function AssetDetailPage() {
       </header>
 
       <div className="flex flex-wrap items-center gap-3">
-        <Link href="/my-passports" className="pixel-btn px-4 py-2 text-[0.65rem]">
+        <Link href="/my-collection" className="pixel-btn px-4 py-2 text-[0.65rem]">
           Back to collection
         </Link>
         <a

@@ -81,10 +81,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       const estLovelace = baseLovelace + perByte * approxSize
       mintFeeAda = lovelaceToAda(estLovelace)
     } else {
-      const baseMintFee = 0.95
-      const perUnit = 0.03
-      const royaltySurcharge = Math.min(0.5, Math.max(0, royalty / 1000))
-      mintFeeAda = Number((baseMintFee + perUnit * totalUnits + royaltySurcharge).toFixed(6))
+  const baseMintFee = 0.95
+  const perUnit = 0.03
+  // Apply a small surcharge proportional to royalty percent; capped to 0.5 ADA to avoid runaway estimates.
+  const royaltySurcharge = Math.min(0.5, Math.max(0, (royalty / 100) * 0.05))
+  mintFeeAda = Number((baseMintFee + perUnit * totalUnits + royaltySurcharge).toFixed(6))
     }
 
     const estimatedTotalAda = Number((pinCostAda + mintFeeAda).toFixed(6))
@@ -92,11 +93,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     return res.status(200).json({ sizeMB, pinCostAda, mintFeeAda, estimatedTotalAda, details: { totalUnits } })
   } catch (err) {
     // Fallback placeholder model when Lucid/Blockfrost not available
-    const baseMintFee = 0.95 // ADA
-    const perUnit = 0.03
-    const royaltySurcharge = Math.min(0.5, Math.max(0, royalty / 1000))
+  const baseMintFee = 0.95 // ADA
+  const perUnit = 0.03
+  const royaltySurcharge = Math.min(0.5, Math.max(0, (royalty / 100) * 0.05))
 
-    const mintFeeAda = Number((baseMintFee + perUnit * (totalUnits || 1) + royaltySurcharge).toFixed(6))
+  const mintFeeAda = Number((baseMintFee + perUnit * (totalUnits || 1) + royaltySurcharge).toFixed(6))
     const estimatedTotalAda = Number((pinCostAda + mintFeeAda).toFixed(6))
 
     return res.status(200).json({ sizeMB, pinCostAda, mintFeeAda, estimatedTotalAda })

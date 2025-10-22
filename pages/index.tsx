@@ -99,10 +99,10 @@ export default function LandingPage() {
           </div>
           <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
             <div className="space-y-6 text-left">
-              <span className="inline-flex items-center gap-2 rounded-full border border-as-border px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.45em] text-as-muted">
+              <span className="inline-flex items-center gap-2 rounded-full border border-as-border px-5 py-2 text-[0.6rem] font-semibold uppercase tracking-[0.45em] text-as-muted font-display">
                 Arti - Immersive art registry
               </span>
-              <h1 className="text-4xl font-semibold text-as-heading sm:text-5xl">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-display font-semibold tracking-[-0.02em] text-as-heading">
                 A premium digital canvas for your masterpiece.
               </h1>
               <p className="max-w-xl text-lg leading-relaxed text-as-muted">
@@ -115,10 +115,10 @@ export default function LandingPage() {
                   Mint a new drop
                 </Link>
                 <Link
-                  href="/my-passports"
+                  href="/marketplace"
                   className="pixel-btn pixel-btn--secondary px-8 py-3 text-[0.65rem]"
                 >
-                  Enter my gallery
+                  Marketplace
                 </Link>
               </div>
             </div>

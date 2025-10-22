@@ -24,7 +24,7 @@ const initialForm: ArtPieceFormValues = {
   duration_or_dimensions: "",
   designed_color: "",
   royalties_percentage: 5,
-  license_type: "All Rights Reserved",
+  license: { license_type: "All Rights Reserved", license_url: "" },
   // fractional defaults
   total_units: 27,
   sale_type: 'direct',
@@ -53,8 +53,9 @@ export default function MintPage() {
   const [pendingFractional, setPendingFractional] = useState<any | null>(null)
   const [uploadedAssetCid, setUploadedAssetCid] = useState<string | null>(null)
   const [uploadedMetadataCid, setUploadedMetadataCid] = useState<string | null>(null)
+  const [uploadedDescriptionShort, setUploadedDescriptionShort] = useState<string | null>(null)
   const [uploadedMediaType, setUploadedMediaType] = useState<string | null>(null)
-  const [formErrors, setFormErrors] = useState<{ designed_color?: string; royalties_percentage?: string }>({})
+  const [formErrors, setFormErrors] = useState<{ designed_color?: string; royalties_percentage?: string; license_url?: string }>({})
   const [savedDefaultMsg, setSavedDefaultMsg] = useState<string | null>(null)
   const [apiEstimate, setApiEstimate] = useState<{
     sizeMB: number
@@ -83,13 +84,31 @@ export default function MintPage() {
     event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
   ) => {
     const { name, value } = event.target
-    setForm((prev) => ({
-      ...prev,
-      [name]: value,
-    }))
+    // If license fields, update nested license object on the form
+    if (name === 'license_url' || name === 'license_type') {
+      setForm((prev) => ({ ...prev, license: { ...(prev as any).license, [name === 'license_url' ? 'license_url' : 'license_type']: value } }))
+    } else {
+      setForm((prev) => ({
+        ...prev,
+        [name]: value,
+      }))
+    }
     // clear relevant error when user edits
     if (name === 'designed_color') setFormErrors((prev) => ({ ...prev, designed_color: undefined }))
     if (name === 'license_type') setFormErrors((prev) => ({ ...prev, license_type: undefined }))
+    if (name === 'license_url') {
+      const v = String(value).trim()
+      if (v) {
+        try {
+          const u = new URL(v)
+          setFormErrors((prev) => ({ ...prev, license_url: undefined }))
+        } catch (e) {
+          setFormErrors((prev) => ({ ...prev, license_url: 'URL lisensi tidak valid' }))
+        }
+      } else {
+        setFormErrors((prev) => ({ ...prev, license_url: undefined }))
+      }
+    }
   }
 
   // Load default royalty from localStorage on mount
@@ -117,7 +136,7 @@ export default function MintPage() {
         const json = await resp.json()
         if (json?.defaults) {
           const d = json.defaults as { royalties_percentage?: number; license_type?: string }
-          setForm((prev) => ({ ...prev, royalties_percentage: d.royalties_percentage ?? prev.royalties_percentage, license_type: d.license_type ?? prev.license_type }))
+          setForm((prev) => ({ ...prev, royalties_percentage: d.royalties_percentage ?? prev.royalties_percentage, license: { ...(prev as any).license, license_type: d.license_type ?? (prev as any).license?.license_type } }))
         }
       } catch (err) {
         // ignore
@@ -133,7 +152,7 @@ export default function MintPage() {
       fetch('/api/user-defaults', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ address: account.address, defaults: { royalties_percentage: val, license_type: form.license_type } }),
+  body: JSON.stringify({ address: account.address, defaults: { royalties_percentage: val, license_type: (form as any).license?.license_type } }),
       })
         .then((r) => r.ok && r.json())
         .then(() => {
@@ -233,6 +252,8 @@ export default function MintPage() {
   const buildArtPieceMetadata = (assetCid: string): ArtPieceMetadata => ({
     title: form.title,
     artist_name: form.artist_name,
+    // Keep art_piece.description as the full description for off-chain JSON, but
+    // avoid placing extremely long strings directly on-chain elsewhere.
     description: form.description,
     medium: form.medium as ArtMedium,
     file_url: `ipfs://${assetCid}`,
@@ -260,14 +281,17 @@ export default function MintPage() {
       setError(null)
       setStatus("Uploading media to IPFS...")
 
-      const body = new FormData()
+    const body = new FormData()
       body.append("asset", assetFile)
       body.append("title", form.title)
       body.append("artist_name", form.artist_name)
-      body.append("description", form.description)
+    body.append("description", form.description)
       body.append("medium", form.medium)
       body.append("edition", form.edition)
       body.append("duration_or_dimensions", form.duration_or_dimensions)
+  body.append("gallery_name", (form as any).gallery_name ?? "")
+  body.append("license_url", (form as any).license_url ?? "")
+  body.append("royalties_percentage", String(form.royalties_percentage ?? ""))
 
       const uploadResponse = await fetch("/api/mint-asset", {
         method: "POST",
@@ -279,10 +303,11 @@ export default function MintPage() {
         throw new Error(message.error || "Failed to upload media to IPFS")
       }
 
-      const { asset, metadata, mediaType } = (await uploadResponse.json()) as {
+      const { asset, metadata, mediaType, description_short } = (await uploadResponse.json()) as {
         asset: string
         metadata: string
         mediaType: string
+        description_short?: string
       }
 
       if (!asset || !metadata) {
@@ -328,12 +353,14 @@ export default function MintPage() {
         },
         provenance: {
           designer_name: form.artist_name,
+          gallery_name: (form as any).gallery_name?.trim() || undefined,
         },
         platform_info: {
           image_url: `ipfs://${asset}`,
           validation_tier: "Level 1 - Self Attested",
           minted_on: new Date().toISOString(),
           application_version: "1.0",
+          creator_wallet: account.address,
           royalties: {
             percentage: form.royalties_percentage ?? 5,
             recipient_wallet: account.address,
@@ -341,8 +368,9 @@ export default function MintPage() {
           },
           copyright: {
             owner_name: form.artist_name,
-            license_type: form.license_type ?? "All Rights Reserved",
+            license_type: (form as any).license?.license_type ?? "All Rights Reserved",
             disclaimer: "Artwork metadata and ownership recorded on Cardano.",
+            license_url: (form as any).license?.license_url?.trim() || undefined,
           },
         },
       }
@@ -354,12 +382,14 @@ export default function MintPage() {
         price_primary_idr: form.price_per_unit_idr,
         partner_share_percent: form.partner_share_percent,
         master_asset_ipfs: metadata ? `ipfs://${metadata}` : undefined,
+        price_set_at: new Date().toISOString(),
       }
 
   // Save uploaded IPFS details for use when user confirms
   setUploadedAssetCid(asset)
   setUploadedMetadataCid(metadata)
   setUploadedMediaType(mediaType)
+  setUploadedDescriptionShort(description_short ?? null)
 
   setPendingPassport(passport)
   setPendingFractional(fractionalPayload)
@@ -411,7 +441,8 @@ export default function MintPage() {
       // Build a CIP-721 compatible metadata object that references the passport JSON
       const cipMetadata: ArtiCip721Metadata = {
         name: `Arti Showcase - ${pendingPassport.identity.artworks_name}`,
-        description: `${pendingPassport.identity.artworks_name} by ${pendingPassport.provenance?.designer_name ?? ''}`,
+        // No long description on-chain; reference full metadata JSON via IPFS
+        description_ipfs: uploadedMetadataCid ? `ipfs://${uploadedMetadataCid}` : undefined,
         image: `ipfs://${uploadedAssetCid}`,
         files: [
           { name: pendingPassport.identity.artworks_name, mediaType: uploadedMediaType, src: `ipfs://${uploadedAssetCid}` },
@@ -419,7 +450,12 @@ export default function MintPage() {
           { name: "ArtworksIDPassport", mediaType: "application/json", src: `ipfs://${ipfsHash}` },
           ...(fractionalIpfs ? [{ name: "FractionalInfo", mediaType: "application/json", src: `ipfs://${fractionalIpfs}` }] : []),
         ],
-        art_piece: buildArtPieceMetadata(uploadedAssetCid),
+        // Do not include the full description in art_piece on-chain; keep full text in pinned metadata
+        art_piece: (() => {
+          const ap = { ...buildArtPieceMetadata(uploadedAssetCid) } as any
+          delete ap.description
+          return ap
+        })(),
       }
 
       // If fractional, choose batching strategy to avoid tx size limits
@@ -428,7 +464,7 @@ export default function MintPage() {
         const totalUnits = Number(fractional.total_units)
         const perUnitTemplate = { ...cipMetadata }
 
-        const BATCH_SIZE = 20
+  const BATCH_SIZE = 5
           if (totalUnits <= BATCH_SIZE) {
           // small enough to mint in a single tx
           const { txHash, units, policyId } = await mintFractionalPieces({
@@ -445,6 +481,15 @@ export default function MintPage() {
           query.set("medium", pendingPassport.attributes.type)
           setStatus(null)
           router.push(`/mint/success?${query.toString()}`)
+          // background: pin a passport copy with minting_record for traceability
+          ;(async () => {
+            try {
+              const issued = { ...pendingPassport, minting_record: { txHash, policyId, units, minted_at: new Date().toISOString() } } as any
+              await fetch('/api/pin-passport', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(issued) })
+            } catch (e) {
+              console.warn('Failed to pin issued passport', e)
+            }
+          })()
         } else {
           // Use batching to split into safe transactions
           const { txHashes, units, policyId } = await mintFractionalInBatches({
@@ -465,6 +510,14 @@ export default function MintPage() {
 
           setStatus(null)
           router.push(`/mint/success?${query.toString()}`)
+          ;(async () => {
+            try {
+              const issued = { ...pendingPassport, minting_record: { txHash: txHashes[0], policyId, units, minted_at: new Date().toISOString() } } as any
+              await fetch('/api/pin-passport', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(issued) })
+            } catch (e) {
+              console.warn('Failed to pin issued passport (batch)', e)
+            }
+          })()
         }
       } else {
         const { txHash, unit } = await mintArtPieceToken({
@@ -480,6 +533,14 @@ export default function MintPage() {
 
         setStatus(null)
         router.push(`/mint/success?${query.toString()}`)
+          ;(async () => {
+            try {
+              const issued = { ...pendingPassport, minting_record: { txHash, policyId: undefined, units: unit, minted_at: new Date().toISOString() } } as any
+              await fetch('/api/pin-passport', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(issued) })
+            } catch (e) {
+              console.warn('Failed to pin issued passport (single)', e)
+            }
+          })()
       }
     } catch (err) {
       console.error("Confirm mint failed", err)
@@ -521,28 +582,28 @@ export default function MintPage() {
         </div>
       </section>
 
-      <div className="flex items-center justify-center gap-3">
-        {steps.map((label, index) => (
-          <div key={label} className="flex items-center gap-3">
-            <div className="flex flex-col items-center gap-2">
-              <span
-                className={`flex h-10 w-10 items-center justify-center rounded-full border text-sm font-semibold uppercase tracking-[0.25em] transition-all duration-200 ${
+      <div className="mx-auto max-w-3xl">
+        <div className="flex items-center justify-between gap-4">
+          {steps.map((label, index) => (
+            <div key={label} className="flex flex-1 flex-col items-center gap-2">
+              <div
+                className={`mint-step-circle border transition-all duration-200 ${
                   index === step
-                    ? "border-as-borderStrong bg-as-highlight text-as-heading"
+                    ? 'mint-step-current border-as-borderStrong bg-as-highlight text-as-heading'
                     : index < step
-                    ? "border-green-400 bg-green-500/20 text-green-200"
-                    : "border-as-border bg-as-background text-as-muted"
+                    ? 'border-green-400 bg-green-500/20 text-green-200'
+                    : 'border-as-border bg-as-background text-as-muted'
                 }`}
               >
-                {index < step ? "DONE" : index + 1}
-              </span>
-              <span className="text-xs uppercase tracking-[0.25em] text-as-muted">{label}</span>
+                {index < step ? '✓' : index + 1}
+              </div>
+              <div className="text-[0.675rem] uppercase tracking-[0.25em] text-as-muted text-center mt-1">{label}</div>
             </div>
-            {index < steps.length - 1 && (
-              <span className="hidden h-px w-10 bg-gradient-to-r from-as-borderStrong/20 to-transparent sm:block" />
-            )}
-          </div>
-        ))}
+          ))}
+        </div>
+        <div className="mt-4 mint-progress-bar">
+          <div className="fill" style={{ width: `${((step) / (steps.length - 1)) * 100}%` }} />
+        </div>
       </div>
 
       <form onSubmit={handleMint} className="space-y-8">
@@ -585,11 +646,23 @@ export default function MintPage() {
                   required
                 />
               </label>
+            
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-semibold uppercase tracking-[0.3em] text-as-muted">Gallery name (optional)</span>
+                  <input
+                    type="text"
+                    name="gallery_name"
+                    value={(form as any).gallery_name ?? ''}
+                    onChange={handleInput}
+                    className="pixel-input"
+                    placeholder="Gallery or exhibition name"
+                  />
+                </label>
 
-              <label className="flex flex-col gap-2">
-                <span className="text-sm font-semibold uppercase tracking-[0.3em] text-as-muted">
-                  Curatorial statement
-                </span>
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-semibold uppercase tracking-[0.3em] text-as-muted">
+                    Curatorial statement
+                  </span>
                 <textarea
                   name="description"
                   value={form.description}
@@ -654,23 +727,48 @@ export default function MintPage() {
                   />
                 </label>
 
-                <label className="flex items-center gap-3">
-                  <input type="radio" name="sale_type" checked={form.sale_type === 'direct'} onChange={() => setForm((prev) => ({ ...prev, sale_type: 'direct' }))} />
-                  <span className="text-sm text-as-muted">Direct Artist Sale</span>
-                  <input type="radio" name="sale_type" checked={form.sale_type === 'partner'} onChange={() => setForm((prev) => ({ ...prev, sale_type: 'partner' }))} />
-                  <span className="text-sm text-as-muted">Partner Sale</span>
-                </label>
+                <div>
+                  <div className="text-sm font-semibold uppercase tracking-[0.25em] text-as-muted mb-2">Sale type</div>
+                  <div className="grid grid-cols-2 gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setForm((prev) => ({ ...prev, sale_type: 'direct' }))}
+                      className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
+                        form.sale_type === 'direct'
+                          ? 'border-as-borderStrong bg-as-highlight text-as-heading'
+                          : 'border-as-border bg-as-background text-as-muted hover:border-as-borderStrong/70'
+                      }`}
+                    >
+                      Direct Artist Sale
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => setForm((prev) => ({ ...prev, sale_type: 'partner' }))}
+                      className={`rounded-2xl border px-4 py-3 text-sm font-semibold transition ${
+                        form.sale_type === 'partner'
+                          ? 'border-as-borderStrong bg-as-highlight text-as-heading'
+                          : 'border-as-border bg-as-background text-as-muted hover:border-as-borderStrong/70'
+                      }`}
+                    >
+                      Partner Sale
+                    </button>
+                  </div>
+                </div>
 
                 <label className="flex flex-col gap-2">
                   <span className="text-sm font-semibold uppercase tracking-[0.3em] text-as-muted">Price per unit (IDR)</span>
-                  <input
-                    type="number"
-                    name="price_per_unit_idr"
-                    value={String(form.price_per_unit_idr ?? '')}
-                    onChange={(e) => setForm((prev) => ({ ...prev, price_per_unit_idr: Number(e.target.value) }))}
-                    className="pixel-input"
-                    min={0}
-                  />
+                  <div className="flex items-center gap-2">
+                    <span className="inline-block text-sm font-semibold text-as-muted">Rp</span>
+                    <input
+                      type="number"
+                      name="price_per_unit_idr"
+                      value={String(form.price_per_unit_idr ?? '')}
+                      onChange={(e) => setForm((prev) => ({ ...prev, price_per_unit_idr: Number(e.target.value) }))}
+                      className="pixel-input flex-1"
+                      min={0}
+                    />
+                  </div>
                 </label>
 
                 {form.sale_type === 'partner' && (
@@ -688,26 +786,84 @@ export default function MintPage() {
                   </label>
                 )}
 
+                {/* Royalty control (moved above distribution preview) */}
+                <label className="flex flex-col gap-2">
+                  <span className="text-sm font-semibold uppercase tracking-[0.3em] text-as-muted">Royalty percentage</span>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="number"
+                      name="royalties_percentage"
+                      value={String(form.royalties_percentage ?? 5)}
+                      onChange={(e) => {
+                        const v = Number(e.target.value)
+                        setForm((prev) => ({ ...prev, royalties_percentage: Number.isNaN(v) ? prev.royalties_percentage : v }))
+                        // clear royalty error eagerly if valid
+                        if (!Number.isNaN(v) && v >= 0 && v <= 100) {
+                          setFormErrors((prev) => ({ ...prev, royalties_percentage: undefined }))
+                        }
+                      }}
+                      className="pixel-input"
+                      min={0}
+                      max={100}
+                    />
+                    <button type="button" onClick={saveDefaultRoyalty} className="pixel-btn px-3 py-2 text-xs">Save as default</button>
+                  </div>
+                  {formErrors.royalties_percentage && (
+                    <div className="text-xs text-red-400">{formErrors.royalties_percentage}</div>
+                  )}
+                  {savedDefaultMsg && <div className="text-xs text-green-300">{savedDefaultMsg}</div>}
+                </label>
+
                 {/* Distribution preview */}
-                <div className="rounded-2xl border border-as-border bg-as-background/30 p-4 text-xs text-as-muted">
-                  <div className="font-semibold">Distribution preview</div>
-                  {(() => {
-                    const units = form.total_units ?? 27
-                    const pricePerUnit = form.price_per_unit_idr ?? 0
-                    const totalIdr = units * pricePerUnit
-                    const artistShare = form.sale_type === 'partner' ? 0.15 : 0.30
-                    const partnerShare = form.sale_type === 'partner' ? 0.15 : 0
-                    const holdersShare = 0.70
-                    const perHolder = (totalIdr * holdersShare) / units
-                    return (
-                      <div className="mt-2 grid gap-1">
-                        <div>Total raise: Rp {totalIdr.toLocaleString()}</div>
-                        <div>Artist: {Math.round((totalIdr * artistShare)).toLocaleString()} ({artistShare * 100}%)</div>
-                        {form.sale_type === 'partner' && <div>Partner: {Math.round((totalIdr * partnerShare)).toLocaleString()} ({partnerShare * 100}%)</div>}
-                        <div>NFT holders (total): {Math.round((totalIdr * holdersShare)).toLocaleString()} (~Rp {Math.round(perHolder).toLocaleString()} / unit)</div>
-                      </div>
-                    )
-                  })()}
+                <div className="rounded-2xl border border-as-border bg-as-background/30 p-4 text-as-body">
+                  <div className="flex items-center justify-between">
+                    <div className="font-semibold">Distribution preview</div>
+                    <div className="text-xs text-as-muted">Summary</div>
+                  </div>
+                  <div className="mt-3 grid grid-cols-2 gap-2">
+                    {/* Validation warning if splits exceed 100% */}
+                    {(() => {
+                      const a = (form.royalties_percentage ?? 0) / 100
+                      const p = form.sale_type === 'partner' ? ((form.partner_share_percent ?? 0) / 100) : 0
+                      if (a + p > 1) {
+                        return (
+                          <>
+                            <div className="col-span-2 text-xs text-yellow-300">Warning: Artist + Partner shares exceed 100%. NFT holders share will be 0.</div>
+                          </>
+                        )
+                      }
+                      return null
+                    })()}
+                    {(() => {
+                      const units = form.total_units ?? 27
+                      const pricePerUnit = form.price_per_unit_idr ?? 0
+                      const totalIdr = units * pricePerUnit
+                      const artistShare = (form.royalties_percentage ?? 0) / 100
+                      const partnerShare = form.sale_type === 'partner' ? ((form.partner_share_percent ?? 0) / 100) : 0
+                      let holdersShare = 1 - artistShare - partnerShare
+                      if (holdersShare < 0) holdersShare = 0
+                      const perHolder = units > 0 ? Math.round((totalIdr * holdersShare) / units) : 0
+                      return (
+                        <>
+                          <div className="text-sm text-as-muted">Total raise</div>
+                          <div className="text-sm font-semibold">Rp {totalIdr.toLocaleString('id-ID')}</div>
+
+                          <div className="text-sm text-as-muted">Artist</div>
+                          <div className="text-sm font-semibold">Rp {Math.round(totalIdr * artistShare).toLocaleString('id-ID')} <span className="text-xs text-as-muted">({Math.round(artistShare * 100)}%)</span></div>
+
+                          {form.sale_type === 'partner' && (
+                            <>
+                              <div className="text-sm text-as-muted">Partner</div>
+                              <div className="text-sm font-semibold">Rp {Math.round(totalIdr * partnerShare).toLocaleString('id-ID')} <span className="text-xs text-as-muted">({Math.round(partnerShare * 100)}%)</span></div>
+                            </>
+                          )}
+
+                          <div className="text-sm text-as-muted">NFT holders (total)</div>
+                          <div className="text-sm font-semibold">Rp {Math.round(totalIdr * holdersShare).toLocaleString('id-ID')} <span className="text-xs text-as-muted">(~Rp {perHolder.toLocaleString('id-ID')} / unit)</span></div>
+                        </>
+                      )
+                    })()}
+                  </div>
                 </div>
               </div>
 
@@ -724,6 +880,8 @@ export default function MintPage() {
                   placeholder='e.g. "1 of 1" or "Artist Proof"'
                 />
               </label>
+
+                {/* Artist wallet removed: royalties recipient defaults to connected wallet address */}
 
               <label className="flex flex-col gap-2">
                 <span className="text-sm font-semibold uppercase tracking-[0.3em] text-as-muted">
@@ -756,33 +914,18 @@ export default function MintPage() {
                 )}
               </label>
 
+              
+
               <label className="flex flex-col gap-2">
-                <span className="text-sm font-semibold uppercase tracking-[0.3em] text-as-muted">
-                  Royalty percentage
-                </span>
-                <div className="flex items-center gap-3">
-                  <input
-                  type="number"
-                  name="royalties_percentage"
-                  value={String(form.royalties_percentage ?? 5)}
-                  onChange={(e) => {
-                    const v = Number(e.target.value)
-                    setForm((prev) => ({ ...prev, royalties_percentage: Number.isNaN(v) ? prev.royalties_percentage : v }))
-                    // clear royalty error eagerly if valid
-                    if (!Number.isNaN(v) && v >= 0 && v <= 100) {
-                      setFormErrors((prev) => ({ ...prev, royalties_percentage: undefined }))
-                    }
-                  }}
+                <span className="text-sm font-semibold uppercase tracking-[0.3em] text-as-muted">License URL (optional)</span>
+                <input
+                  type="url"
+                  name="license_url"
+                  value={(form as any).license?.license_url ?? ''}
+                  onChange={handleInput}
                   className="pixel-input"
-                  min={0}
-                  max={100}
-                  />
-                  <button type="button" onClick={saveDefaultRoyalty} className="pixel-btn px-3 py-2 text-xs">Save as default</button>
-                </div>
-                {formErrors.royalties_percentage && (
-                  <div className="text-xs text-red-400">{formErrors.royalties_percentage}</div>
-                )}
-                {savedDefaultMsg && <div className="text-xs text-green-300">{savedDefaultMsg}</div>}
+                  placeholder="https://example.com/license"
+                />
               </label>
 
               <label className="flex flex-col gap-2">
@@ -791,7 +934,7 @@ export default function MintPage() {
                 </span>
                 <select
                   name="license_type"
-                  value={form.license_type}
+                  value={(form as any).license?.license_type ?? 'All Rights Reserved'}
                   onChange={handleInput}
                   className="pixel-input"
                 >
@@ -915,7 +1058,7 @@ export default function MintPage() {
             type="button"
             onClick={goBack}
             disabled={step === 0 || isMinting}
-            className="pixel-btn px-6 py-3 text-xs disabled:cursor-not-allowed disabled:opacity-50"
+            className="pixel-btn mint-btn mint-btn--small text-[0.75rem] disabled:cursor-not-allowed disabled:opacity-50"
           >
             Back
           </button>
@@ -925,7 +1068,7 @@ export default function MintPage() {
               type="button"
               onClick={goNext}
               disabled={!canProceed || isMinting}
-              className="pixel-btn pixel-btn--secondary px-6 py-3 text-xs disabled:cursor-not-allowed disabled:opacity-50"
+              className="pixel-btn pixel-btn--secondary mint-btn text-[0.75rem] disabled:cursor-not-allowed disabled:opacity-50"
             >
               Continue
             </button>
@@ -933,7 +1076,7 @@ export default function MintPage() {
             <button
               type="submit"
               disabled={!canProceed || isMinting}
-              className="pixel-btn pixel-btn--primary px-8 py-3 text-xs disabled:cursor-not-allowed disabled:opacity-50"
+              className="pixel-btn pixel-btn--primary mint-btn text-[0.85rem] disabled:cursor-not-allowed disabled:opacity-50"
             >
               {isMinting ? "Minting..." : "Mint Art Piece"}
             </button>

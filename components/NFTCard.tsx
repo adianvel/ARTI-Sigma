@@ -54,7 +54,7 @@ export const NFTCard = ({ metadata, assetId }: NFTCardProps) => {
 
       <div className="flex flex-1 flex-col gap-4 p-5">
         <header className="space-y-2">
-          <h3 className="text-lg font-semibold text-as-heading">
+          <h3 className="text-lg font-display font-semibold text-as-heading transition-all duration-200 hover:tracking-tight hover:scale-[1.01]">
             {metadata.name || "Untitled Arti Piece"}
           </h3>
           <p className="break-all text-[0.6rem] font-mono uppercase tracking-[0.35em] text-as-muted">

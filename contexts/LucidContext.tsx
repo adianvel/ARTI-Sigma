@@ -7,7 +7,12 @@ import {
   useRef,
   useState,
 } from "react"
-import type { Lucid, Network } from "lucid-cardano"
+
+// Avoid importing types from 'lucid-cardano' at top-level to prevent ESM/CJS
+// interop issues during type-checking in this mixed module environment.
+// Provide minimal local types instead.
+type Lucid = any
+type Network = "Preprod" | "Mainnet" | "Testnet" | "Preview"
 
 interface WalletAccount {
   address: string

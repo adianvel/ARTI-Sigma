@@ -79,7 +79,7 @@ export default function Studio() {
             <Link href="/mint" className="pixel-btn pixel-btn--primary px-8 py-3 text-[0.65rem]">
               {account ? "Mint new showcase" : "Connect to mint"}
             </Link>
-            <Link href="/my-passports" className="pixel-btn pixel-btn--secondary px-8 py-3 text-[0.65rem]">
+            <Link href="/my-collection" className="pixel-btn pixel-btn--secondary px-8 py-3 text-[0.65rem]">
               View my collection
             </Link>
           </div>

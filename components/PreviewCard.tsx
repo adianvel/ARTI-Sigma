@@ -16,7 +16,7 @@ export default function PreviewCard({ image }: Props) {
         </div>
         <div className="flex justify-between items-center">
           <div>
-            <div className="text-sm font-semibold">Minted On Cardano</div>
+            <div className="text-sm font-display font-semibold transition-all duration-200 hover:tracking-tight hover:scale-[1.01]">Minted On Cardano</div>
             <div className="text-xs text-as-muted">Royalty: {royalty}%</div>
           </div>
           <div className="text-xs text-as-muted">Preview</div>

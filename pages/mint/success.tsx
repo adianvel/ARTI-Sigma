@@ -2,6 +2,7 @@
 import { CheckCircle2, ExternalLink } from "lucide-react"
 import { useRouter } from "next/router"
 import { useMemo } from "react"
+import { useEffect, useState } from "react"
 
 const explorerBase = process.env.NEXT_PUBLIC_EXPLORER_URL ?? "https://preprod.cexplorer.io/tx/"
 
@@ -11,11 +12,55 @@ export default function MintSuccess() {
   const assetUnit = typeof query.asset === "string" ? query.asset : ""
   const title = typeof query.title === "string" ? query.title : ""
   const medium = typeof query.medium === "string" ? query.medium : ""
+  const [issuedCid, setIssuedCid] = useState<string | null>(null)
+  const [isPolling, setIsPolling] = useState(false)
+  const [pollError, setPollError] = useState<string | null>(null)
 
   const explorerUrl = useMemo(() => {
     if (!txHash) return null
     return `${explorerBase}${txHash}`
   }, [txHash])
+
+  useEffect(() => {
+    // Poll the server-side mapping for the issued passport IPFS CID
+    if (!txHash && !assetUnit) return
+    let cancelled = false
+    setIsPolling(true)
+    setPollError(null)
+
+    const attempt = async () => {
+      try {
+        const q = txHash ? `?tx=${encodeURIComponent(txHash)}` : `?unit=${encodeURIComponent(assetUnit)}`
+        const resp = await fetch(`/api/issued-passport${q}`)
+        if (cancelled) return
+        if (resp.ok) {
+          const json = await resp.json()
+          setIssuedCid(json.ipfsHash)
+          setIsPolling(false)
+          return
+        }
+      } catch (e) {
+        // ignore transient errors
+      }
+      if (cancelled) return
+      // try again in 2s
+      setTimeout(attempt, 2000)
+    }
+
+    attempt()
+
+    // stop polling after 2 minutes
+    const timeout = setTimeout(() => {
+      cancelled = true
+      setIsPolling(false)
+      setPollError('Issued passport not available yet')
+    }, 120000)
+
+    return () => {
+      cancelled = true
+      clearTimeout(timeout)
+    }
+  }, [txHash, assetUnit])
 
   return (
     <div className="mx-auto max-w-4xl space-y-8 pt-10 text-as-body">
@@ -69,7 +114,7 @@ export default function MintSuccess() {
         <h2 className="text-2xl font-semibold text-as-heading">Next steps</h2>
         <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:justify-center">
           <Link
-            href="/my-passports"
+            href="/my-collection"
             className="pixel-btn pixel-btn--primary inline-flex items-center justify-center px-8 py-3 text-[0.65rem]"
           >
             Go to my collection
@@ -89,6 +134,29 @@ export default function MintSuccess() {
         <p className="mt-4 text-sm text-as-muted">
           Share the explorer link with collaborators or collectors so they can verify the mint.
         </p>
+
+        <div className="mt-6">
+          <h3 className="text-sm uppercase tracking-[0.3em] text-as-muted/70">Issued passport</h3>
+          {issuedCid ? (
+            <div className="mt-2 rounded-md bg-as-highlight/10 p-3 text-sm">
+              <p className="font-mono break-all">{issuedCid}</p>
+              <a
+                href={`${process.env.NEXT_PUBLIC_IPFS_GATEWAY ?? 'https://purple-persistent-booby-135.mypinata.cloud/ipfs/'}${issuedCid}`}
+                target="_blank"
+                rel="noreferrer noopener"
+                className="text-xs underline"
+              >
+                View issued passport on IPFS gateway
+              </a>
+            </div>
+          ) : isPolling ? (
+            <p className="mt-2 text-sm text-as-muted">Waiting for issued passport to be pinned...</p>
+          ) : pollError ? (
+            <p className="mt-2 text-sm text-as-muted">{pollError}</p>
+          ) : (
+            <p className="mt-2 text-sm text-as-muted">Issued passport will appear here once pinned.</p>
+          )}
+        </div>
       </section>
     </div>
   )

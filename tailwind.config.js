@@ -40,8 +40,8 @@ module.exports = {
         120: "120ms",
       },
       fontFamily: {
-        display: ['"Playfair Display"', ...fontFamily.serif],
-        body: ['"Inter"', ...fontFamily.sans],
+        display: ['var(--font-unbounded)', ...fontFamily.serif],
+        body: ['var(--font-inter)', ...fontFamily.sans],
       },
       fontSize: {
         xs: ['0.75rem', { lineHeight: '1rem' }],

@@ -15,6 +15,8 @@ type AssetPreview = {
   mediaType: string | null
   edition?: string
   duration_or_dimensions?: string
+  // group support
+  units?: string[]
 }
 
 const ipfsToGateway = (url: unknown): string | null => {
@@ -114,7 +116,16 @@ const fetchAssetUnitsForAddress = async (address: string, blockfrostBase: string
   return Array.from(uniqueUnits.keys()).map((unit) => ({ unit }))
 }
 
+const isArtiDetail = (detail: any) => {
+  const md = detail?.onchain_metadata ?? {}
+  if (md?.art_piece) return true
+  if (Array.isArray(md?.files) && md.files.find((f: any) => f && (f.name === 'ArtworksIDPassport' || f.name === 'Arti Metadata'))) return true
+  return false
+}
+
 const toPreview = (assetUnit: string, detail: any): AssetPreview | null => {
+  // only surface ARTI-standard tokens
+  if (!isArtiDetail(detail)) return null
   const metadata = detail?.onchain_metadata ?? {}
   const files: Array<{ name?: string; mediaType?: string; src?: string }> = Array.isArray(
     metadata?.files
@@ -139,6 +150,7 @@ const toPreview = (assetUnit: string, detail: any): AssetPreview | null => {
       mediaType: primaryFile?.mediaType ?? inferMediaType(artPiece.file_url),
       edition: artPiece.edition,
       duration_or_dimensions: artPiece.duration_or_dimensions,
+      units: [assetUnit],
     }
   }
 
@@ -164,6 +176,7 @@ const toPreview = (assetUnit: string, detail: any): AssetPreview | null => {
         certificate.digital_asset.file_type ?? inferMediaType(srcUrl, certificate.digital_asset.file_type),
       edition: undefined,
       duration_or_dimensions: undefined,
+      units: [assetUnit],
     }
   }
 
@@ -180,6 +193,7 @@ const toPreview = (assetUnit: string, detail: any): AssetPreview | null => {
     mediaType: inferMediaType(imageField),
     edition: metadata?.edition,
     duration_or_dimensions: metadata?.duration_or_dimensions,
+    units: [assetUnit],
   }
 }
 
@@ -207,11 +221,18 @@ const GalleryAssetCard = ({
     }
   }
 
+  const targetUnit = asset.units && asset.units.length > 0 ? asset.units[0] : asset.assetId
+
   return (
     <Link
-      href={`/certificate/${asset.assetId}`}
-      className="group rounded-[20px] border border-as-border bg-as-surface/70 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-as-borderStrong/60"
+      href={`/certificate/${targetUnit}`}
+      className="group rounded-[20px] border border-as-border bg-as-surface/70 p-4 transition-all duration-200 hover:-translate-y-1 hover:border-as-borderStrong/60 relative"
     >
+      {asset.units && (
+        <div className="absolute right-3 top-3 rounded-full bg-as-highlight px-3 py-1 text-[0.65rem] font-semibold text-as-heading">
+          {asset.units.length} {asset.units.length === 1 ? 'unit' : 'units'}
+        </div>
+      )}
       <div className="relative aspect-square w-full overflow-hidden rounded-[16px] border border-as-border bg-as-highlight/20">
         {isVideo && asset.assetUrl ? (
           <video
@@ -260,6 +281,8 @@ const GalleryAssetCard = ({
         <p className="break-all text-[0.6rem] font-mono uppercase tracking-[0.25em] text-as-muted/70">
           {asset.assetId}
         </p>
+        {/* make total units explicit for UX */}
+        <p className="mt-1 text-[0.65rem] text-as-muted/60">Total units: <span className="font-semibold">{asset.units ? asset.units.length : 1}</span></p>
       </div>
     </Link>
   )
@@ -323,7 +346,6 @@ export const NFTGallery = () => {
           )}`
           const detail = await fetchFromBlockfrost(detailUrl)
           if (!detail) continue
-
           const preview = toPreview(asset.unit, detail)
           if (!preview) continue
 
@@ -331,8 +353,7 @@ export const NFTGallery = () => {
             preview.assetUrl ??
             ipfsToGateway(
               (detail.onchain_metadata?.image as string | undefined) ??
-                (Array.isArray(detail.onchain_metadata?.files) &&
-                detail.onchain_metadata.files.length > 0
+                (Array.isArray(detail.onchain_metadata?.files) && detail.onchain_metadata.files.length > 0
                   ? detail.onchain_metadata.files[0]?.src
                   : undefined)
             )
@@ -344,7 +365,41 @@ export const NFTGallery = () => {
           })
         }
 
-        setAssets(previews)
+        // Group previews by policyId + base title to collapse fractional/multi-unit sets
+        const groups = new Map<string, AssetPreview>()
+        const POLICY_ID_LEN = 56
+        const tryDecodeHex = (hex: string) => {
+          try {
+            if (!hex) return ''
+            // if odd length, pad
+            if (hex.length % 2 === 1) hex = '0' + hex
+            const bytes = hex.match(/.{1,2}/g)!.map((b) => parseInt(b, 16))
+            return String.fromCharCode(...bytes)
+          } catch (e) {
+            return ''
+          }
+        }
+
+        for (const p of previews) {
+          // derive policyId and asset name from assetId unit string when possible
+          const unit = p.assetId
+          const policyId = unit.slice(0, POLICY_ID_LEN)
+          const nameHex = unit.slice(POLICY_ID_LEN) || ''
+          let decoded = tryDecodeHex(nameHex)
+          if (!decoded) decoded = p.title || ''
+          // strip trailing _<index> if present
+          const baseName = decoded.replace(/_\d+$/, '')
+          const key = `${policyId}|${baseName}|${p.title}`
+
+          if (!groups.has(key)) {
+            groups.set(key, { ...p, units: p.units ? [...p.units] : [p.assetId] })
+          } else {
+            const existing = groups.get(key)!
+            existing.units = Array.from(new Set([...(existing.units || []), ...(p.units || [p.assetId])]))
+          }
+        }
+
+        setAssets(Array.from(groups.values()))
       } catch (err) {
         console.error(err)
         setError(err instanceof Error ? err.message : "Unable to load art pieces")
