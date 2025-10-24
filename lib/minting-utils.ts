@@ -592,3 +592,68 @@ export const createLucid = async (): Promise<Lucid> => {
 
   return await LucidModule.new(blockfrost, network)
 }
+
+/**
+ * Mint units using pre-pinned IPFS pointers per unit.
+ * metadataPointers: Record<unitName, ipfs://CID>
+ * This function builds minimal on-chain metadata where each unit references its IPFS JSON only.
+ */
+export const mintFractionalWithPointers = async ({
+  lucid,
+  address,
+  policy,
+  policyId,
+  pointers,
+}: {
+  lucid: Lucid
+  address: string
+  policy: MintingPolicy
+  policyId: string
+  pointers: Record<string, string> // unitName -> ipfs://CID
+}): Promise<{ txHash: TxHash; units: Unit[]; policyId: PolicyId }> => {
+  if (!lucid) throw new Error('Lucid instance is required')
+  if (!address) throw new Error('Wallet address is required')
+
+  const assets: Record<string, bigint> = {}
+  const metadata721: Record<string, any> = {}
+
+  for (const unitName of Object.keys(pointers)) {
+    const ipfs = pointers[unitName]
+    const unit = policyId + runtimeUtf8ToHex(unitName)
+    assets[unit] = 1n
+    // minimal metadata per unit: small files array with ipfs pointer
+    metadata721[unitName] = { files: [{ src: ipfs, mediaType: 'application/json' }] }
+  }
+
+  // Quick safety estimate: ensure combined metadata JSON won't exceed a conservative transaction size.
+  // If it does, throw a descriptive error so callers can fallback to batched minting.
+  try {
+    const combined = JSON.stringify({ [policyId]: metadata721 })
+    const combinedBytes = typeof Buffer !== 'undefined' ? Buffer.byteLength(combined, 'utf8') : new TextEncoder().encode(combined).length
+    const SAFE_POINTER_METADATA_BYTES = 14_000 // same conservative limit used elsewhere
+    if (combinedBytes > SAFE_POINTER_METADATA_BYTES) {
+      throw new Error(`Pointer-only metadata too large for single tx: ${combinedBytes} bytes`) 
+    }
+  } catch (e) {
+    // If our size check fails due to env constraints, still attempt safe sanitize and surface a clear error.
+    const combined = JSON.stringify({ [policyId]: metadata721 })
+    const combinedBytes = combined.length
+    if (combinedBytes > 14000) throw new Error(`Pointer-only metadata too large (fallback to batched mint recommended). Size=${combinedBytes}`)
+  }
+
+  const r = sanitizeAndReport(metadata721)
+  if (r.truncated.length > 0) {
+    try { console.warn('Sanitized pointer metadata before on-chain attach:', JSON.stringify(r.truncated, null, 2)) } catch (e) {}
+  }
+
+  const tx = await lucid.newTx().mintAssets(assets).attachMintingPolicy(policy).attachMetadata(721, { [policyId]: r.value }).complete()
+  try {
+    if (process.env.NODE_ENV !== 'production') console.warn(`[ARTI SIGN] Signing single pointer-metadata tx for ${Object.keys(assets).length} unit(s)`)
+  } catch (e) {}
+
+  const signedTx = await tx.sign().complete()
+  const txHash = await signedTx.submit()
+
+  return { txHash, units: Object.keys(assets), policyId }
+}
+

@@ -2,7 +2,7 @@
 import { useRouter } from "next/router"
 import { CertificatePreview } from "../../components/CertificatePreview"
 import { useLucid } from "../../contexts/LucidContext"
-import { mintArtPieceToken, mintFractionalPieces, mintFractionalInBatches } from "../../lib/minting-utils"
+import { mintArtPieceToken, mintFractionalPieces, mintFractionalInBatches, getMintingPolicy, getPolicyId, mintFractionalWithPointers, createSafeAssetName } from "../../lib/minting-utils"
 import PassportPreviewModal from "../../components/PassportPreviewModal"
 import { useDevError } from '../../contexts/DevErrorContext'
 import {
@@ -465,33 +465,82 @@ export default function MintPage() {
         const perUnitTemplate = { ...cipMetadata }
 
   const BATCH_SIZE = 5
-          if (totalUnits <= BATCH_SIZE) {
-          // small enough to mint in a single tx
-          const { txHash, units, policyId } = await mintFractionalPieces({
-            lucid: lucid!,
-            address: account!.address,
-            baseName: pendingPassport.identity.artworks_name,
-            cipMetadataTemplate: perUnitTemplate,
-            totalUnits,
-            masterAssetIpfs: `ipfs://${ipfsHash}`,
-          })
+          // Try the optimized single-sign pointer-based flow for larger totals as well.
+          // We'll cap attempts to a reasonable upper bound to avoid extremely large pre-pin operations.
+          const TRY_SINGLE_SIGN_MAX = 200
+          const attemptSingleSign = totalUnits <= TRY_SINGLE_SIGN_MAX
 
-          const query = new URLSearchParams({ tx: txHash, asset: units[0] })
-          query.set("title", pendingPassport.identity.artworks_name)
-          query.set("medium", pendingPassport.attributes.type)
-          setStatus(null)
-          router.push(`/mint/success?${query.toString()}`)
-          // background: pin a passport copy with minting_record for traceability
-          ;(async () => {
-            try {
-              const issued = { ...pendingPassport, minting_record: { txHash, policyId, units, minted_at: new Date().toISOString() } } as any
-              await fetch('/api/pin-passport', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(issued) })
-            } catch (e) {
-              console.warn('Failed to pin issued passport', e)
+          if (attemptSingleSign) {
+            // Build per-unit full metadata objects to pin
+            const perUnitMetadatas: any[] = []
+            for (let i = 1; i <= totalUnits; i++) {
+              const unitMeta = JSON.parse(JSON.stringify(perUnitTemplate))
+              // embed unit-specific fields
+              try { unitMeta.art_piece = { ...(unitMeta.art_piece ?? {}), unit_index: i } } catch (e) {}
+              perUnitMetadatas.push(unitMeta)
             }
-          })()
-        } else {
-          // Use batching to split into safe transactions
+
+            // Pin per-unit metadata to IPFS via server endpoint
+            setStatus('Pinning per-unit metadata to IPFS (this may take a moment)...')
+            const pinResp = await fetch('/api/pin-metadata-batch', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(perUnitMetadatas),
+            })
+            if (!pinResp.ok) throw new Error('Failed to pin per-unit metadata')
+            const pinJson = await pinResp.json()
+            const results: Array<{ index: number; IpfsHash?: string; error?: string }> = pinJson.results || []
+            // Build pointers map: unitName -> ipfs://CID
+            const pointers: Record<string, string> = {}
+            // Use the same safe base as on-chain to avoid mismatched unit names
+            const safeBaseForUnits = createSafeAssetName(pendingPassport.identity.artworks_name)
+            for (let i = 0; i < results.length; i++) {
+              const r = results[i]
+              const unitName = `${safeBaseForUnits}_${i + 1}`
+              if (r?.IpfsHash) pointers[unitName] = `ipfs://${r.IpfsHash}`
+              else console.warn('Pin result missing IpfsHash for unit', i + 1, r)
+            }
+
+            if (Object.keys(pointers).length === totalUnits) {
+              // All pinned successfully — try to mint using pointer-only metadata to aim for single signature.
+              setStatus('Minting (single transaction with IPFS pointers)...')
+              try {
+                const policy = getMintingPolicy(lucid!, account!.address)
+                const policyId = getPolicyId(lucid!, policy)
+                const { txHash, units, policyId: pid } = await mintFractionalWithPointers({
+                  lucid: lucid!,
+                  address: account!.address,
+                  policy,
+                  policyId,
+                  pointers,
+                })
+
+                const query = new URLSearchParams({ tx: txHash, asset: units[0] })
+                query.set('title', pendingPassport.identity.artworks_name)
+                query.set('medium', pendingPassport.attributes.type)
+                setStatus(null)
+                router.push(`/mint/success?${query.toString()}`)
+                ;(async () => {
+                  try {
+                    const issued = { ...pendingPassport, minting_record: { txHash, policyId: pid, units, minted_at: new Date().toISOString() } } as any
+                    await fetch('/api/pin-passport', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(issued) })
+                  } catch (e) {
+                    console.warn('Failed to pin issued passport', e)
+                  }
+                })()
+                return
+              } catch (err) {
+                // If the pointer-only mint fails (transaction too large or other), fall back to batching below
+                console.warn('Pointer-only mint attempt failed, falling back to batching:', err)
+                setStatus('Pointer-only mint failed; falling back to batched minting...')
+              }
+            } else {
+              // If pinning didn't complete for all units, we'll fall back to the existing path below
+              setStatus('Some metadata failed to pin; falling back to standard mint flow...')
+            }
+          }
+
+          // Use batching to split into safe transactions (fallback path)
           const { txHashes, units, policyId } = await mintFractionalInBatches({
             lucid: lucid!,
             address: account!.address,
@@ -518,7 +567,6 @@ export default function MintPage() {
               console.warn('Failed to pin issued passport (batch)', e)
             }
           })()
-        }
       } else {
         const { txHash, unit } = await mintArtPieceToken({
           lucid: lucid!,
@@ -1083,12 +1131,35 @@ export default function MintPage() {
           )}
         </div>
       </form>
-      <PassportPreviewModal
-        open={showPassportPreview}
-        onClose={() => setShowPassportPreview(false)}
-        onConfirm={confirmAndMint}
-        passportJson={pendingPassport}
-      />
+      {
+        (() => {
+          const fractional = pendingFractional
+          const BATCH_SIZE = 5
+          let expectedSignatures = 1
+          let willAttemptSingleSign = false
+          if (fractional && fractional.total_units && Number(fractional.total_units) > 1) {
+            const totalUnits = Number(fractional.total_units)
+            if (totalUnits <= BATCH_SIZE) {
+              expectedSignatures = 1
+              willAttemptSingleSign = true
+            } else {
+              expectedSignatures = Math.ceil(totalUnits / BATCH_SIZE)
+              willAttemptSingleSign = false
+            }
+          }
+
+          return (
+            <PassportPreviewModal
+              open={showPassportPreview}
+              onClose={() => setShowPassportPreview(false)}
+              onConfirm={confirmAndMint}
+              passportJson={pendingPassport}
+              expectedSignatures={expectedSignatures}
+              willAttemptSingleSign={willAttemptSingleSign}
+            />
+          )
+        })()
+      }
     </div>
   )
 }
